@@ -17,19 +17,13 @@ shape(rain_est) = 490*500
 """
 
 
-import os
 import numpy
-
-folder = r'C:\Project_OG\BA8186_NRR\2_technical\NRR_script_Jonne\pykrige'
-os.chdir(folder)
-
-import pykrige
+import rpy2.robjects as robj
 
 def ked_R(x, y, z, radar, xi, yi, zi):
     """
     Run the kriging method using the R module "gstat".
     """
-    import rpy2.robjects as robj
     robj.r.library('gstat')
     # Convert data readible to R
     radar = robj.FloatVector(radar)
@@ -55,16 +49,3 @@ def ked_R(x, y, z, radar, xi, yi, zi):
     result = robj.r.predict(ked, radar_frame, nsim=0)
     rain_est = numpy.array(result[2])
     return rain_est
-
-def ked_Py(x, y, z, radar, xi, yi, zi):
-    """
-    Run the kriging method using the python module "Pykrige".
-    """
-    import pykrige
-    
-    ked = pykrige.UniversalKriging(x, y, z)
-    y_pred = ked.execute('grid', xi, yi)
-
-    rain_est = numpy.squeeze(y_pred)
-    return rain_est
-
