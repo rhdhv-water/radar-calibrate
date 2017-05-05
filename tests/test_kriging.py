@@ -21,50 +21,5 @@ import os
 import numpy
 
 folder = r'C:\Project_OG\BA8186_NRR\2_technical\NRR_script_Jonne\pykrige'
-os.chdir(folder)
 
-import pykrige
-
-def ked_R(x, y, z, radar, xi, yi, zi):
-    """
-    Run the kriging method using the R module "gstat".
-    """
-    import rpy2.robjects as robj
-    robj.r.library('gstat')
-    # Convert data readible to R
-    radar = robj.FloatVector(radar)
-    x, y, z = robj.FloatVector(x), robj.FloatVector(y), robj.FloatVector(z)
-    rain_radar_frame = robj.DataFrame({'x': x, 'y': y, 'z': z,'radar': radar})
-    radar_frame = robj.DataFrame({'x': xi, 'y': yi, 'radar': rxi})
-    
-    # Create predictor
-    vgm = robj.r.variogram(robj.r("z~radar"), 
-                           robj.r('~ x + y'),
-                           data=rain_radar_frame,
-                           cutoff=50000, 
-                           width=5000)
-    residual_callable = robj.r('fit.variogram')
-    residual = residual_callable(vgm, robj.r.vgm(1, 'Sph', 25000, 1))
-    ked = robj.r('NULL')
-    ked = robj.r.gstat(ked, 'raingauge', robj.r("z~radar"),
-                       robj.r('~ x + y'),
-                       data=rain_radar_frame,
-                       model=residual, nmax=40)
-    
-    # Run predictor
-    result = robj.r.predict(ked, radar_frame, nsim=0)
-    rain_est = numpy.array(result[2])
-    return rain_est
-
-def ked_Py(x, y, z, radar, xi, yi, zi):
-    """
-    Run the kriging method using the python module "Pykrige".
-    """
-    import pykrige
-    
-    ked = pykrige.UniversalKriging(x, y, z)
-    y_pred = ked.execute('grid', xi, yi)
-
-    rain_est = numpy.squeeze(y_pred)
-    return rain_est
 
