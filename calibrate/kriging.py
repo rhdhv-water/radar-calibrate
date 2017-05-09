@@ -4,10 +4,10 @@
 
 """
 # IN:
-len(x) = 71
-len(y) = 71
-len(z) = 71
-len(radar) = 71
+len(x) = 42
+len(y) = 42
+len(z) = 42
+len(radar) = 42
 len(xi) = 245000
 len(yi) = 245000
 len(zi) = 245000
@@ -61,4 +61,34 @@ def ked_Py(x, y, z, radar, xi, yi, zi):
 
     rain_est = numpy.squeeze(y_pred)
     return rain_est
+
+import os
+import numpy
+import pandas
+import h5py
+import matplotlib.pyplot as plt
+import json 
+
+root = r'C:\Project_OG\BA8186_NRR\2_technical\radar-calibrate'
+file_json = r'\data\2017_grounddata.json'
+file_h5 = r'\data\24uur_20170223080000.h5'
+os.chdir(root)
+
+
+# Open files 
+with open(root + file_json) as json_data:
+    data = json.load(json_data)
+with h5py.File(root+file_h5) as ds:
+    precip = numpy.array(ds['precipitation'][:])
+
+# Prep data as numpy arrays, as the required format of the krige modules
+rainstation = pandas.DataFrame.from_dict(data['2017-02-23T08:00:00'])
+coords = rainstation.as_matrix(['coords'])
+#x = 
+#y = 
+z = rainstation.as_matrix(['value']).T
+
+#xi = 
+#yi = 
+zi = precip.ravel()
 
