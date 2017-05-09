@@ -20,13 +20,18 @@ shape(rain_est) = 490 (r) * 500 (c)
 
 import os
 import numpy
-import pandas as pd
+import pandas
 
-folder = r'C:\Project_OG\BA8186_NRR\2_technical\radar-calibrate\data'
-csvfile = r'\rainstations.csv'
-rainstation = pd.read_csv(folder + csvfile)
-x = rainstation['x']
-y = rainstation['y']
-z = rainstation['z']
+root = r'C:\Project_OG\BA8186_NRR\2_technical\radar-calibrate'
+file = '\data\grounddata2.json'
+os.chdir(root)
+
+pandas.read_json(root + file)
+
+
+#rainstation = pd.read_csv(root + file)
+#x = rainstation['x']
+#y = rainstation['y']
+#z = rainstation['z']
 
 
