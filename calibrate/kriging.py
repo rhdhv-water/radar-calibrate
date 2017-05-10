@@ -32,6 +32,7 @@ def ked_R(x, y, z, radar, xi, yi, zi):
     
     # Modification to prevent singular matrix (Tom)
     radar += (1e-9 * numpy.random.rand(len(radar)))
+
     # Convert data readible to R        
     radar = robj.FloatVector(radar)
     x, y, z = robj.FloatVector(x), robj.FloatVector(y), robj.FloatVector(z)
@@ -56,7 +57,15 @@ def ked_R(x, y, z, radar, xi, yi, zi):
     # Run predictor
     result = robj.r.predict(ked, radar_frame, nsim=0)
     rain_est = numpy.array(result[2])
-#    zero_or_no_data = numpy.logical_or(aggregate == 0, aggregate == -9999)
+    
+    # Correction 0's and extreme kriged values
+    zi = numpy.array(zi)
+    zero_or_no_data = numpy.logical_or(zi == 0, zi == -9999)
+    correction_factor = numpy.ones(zi.shape)
+    correction_factor[~zero_or_no_data] = (rain_est[~zero_or_no_data] / zi[~zero_or_no_data])
+    leave_uncalibrated = numpy.logical_or(correction_factor < 0, correction_factor > 10)
+    logging.info('Leaving {} extreme pixels uncalibrated.'.format(leave_uncalibrated.sum(),))
+    rain_est[leave_uncalibrated] = zi[leave_uncalibrated]
     
     return rain_est
 
@@ -86,14 +95,15 @@ import h5py
 import json 
 import matplotlib.pyplot as plt
 from datetime import datetime
+import logging
 
 #==============================================================================
 # INPUT
 #==============================================================================
 root = r'C:\Project_OG\BA8186_NRR\2_technical\radar-calibrate'
 file_station = r'\data\2017_grounddata.json'
-file_aggregate = r'\data\24uur_20170223080000.h5'
-file_calibrate = r'\data\RAD_TF2400_U_20170223080000.h5'
+file_aggregate = r'\data\24uur_20170228080000.h5'
+file_calibrate = r'\data\RAD_TF2400_U_20170228080000.h5'
 date = '2017-02-23T08:00:00'
 os.chdir(root)
 
@@ -137,7 +147,6 @@ zi = aggregate.flatten()
 start_time = datetime.now()
 rain_est_R = ked_R(x, y, z, radar, xi, yi, zi)
 calibrate_R = rain_est_R.reshape([490,500]) # TODO: Make general
-#calibrate_R = 
 end_time = datetime.now()
 print("It took R",end_time - start_time, "seconds to complete ked with a grid of",xstep)
 
