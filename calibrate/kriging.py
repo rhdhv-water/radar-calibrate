@@ -69,7 +69,7 @@ def ked_py(x, y, z, radar, xi, yi, zi):
     # Create predictor
     ked = pykrige.UniversalKriging(x, y, z)
     # Run predictor
-    y_pred = ked.execute('points', xi, yi)
+    y_pred = ked.execute('points', xi, yi,specified_drift_arrays=radar)
     rain_est = numpy.squeeze(y_pred)[0]
     return rain_est
 
@@ -151,25 +151,28 @@ print("It took py",end_time - start_time, "seconds to complete ked with a grid o
 plt.figure(0)
 plt.scatter(z,radar)
 plt.plot([0,40],[0,40],'k')
-plt.xlabel(r'$P_{station}\/(mm)$')
-plt.ylabel("$P_{radar}\/(mm)$")
+plt.xlabel('$P_{station}\/(mm)$')
+plt.ylabel('$P_{radar}\/(mm)$')
 plt.axis([0, 40, 0, 40])
+plt.show()
 
 # Plot radar_calibrate_R
 plt.figure(1)
 plt.subplot(2, 2, 1)
 plt.imshow(aggregate, cmap='rainbow', vmin=0, vmax=20)
-plt.xlabel(r'x-coordinate')
-plt.ylabel(r'y-coordinate')
+plt.ylabel('y-coordinate')
+plt.title('aggregate')
 plt.subplot(2, 2, 2)
 plt.imshow(calibrate/100, cmap='rainbow', vmin=0, vmax=20)
-plt.xlabel(r'x-coordinate')
-plt.ylabel(r'y-coordinate')
+plt.title('$calibrate_{original}$')
 plt.subplot(2, 2, 3)
 plt.imshow(calibrate_R, cmap='rainbow', vmin=0, vmax=20)
-plt.xlabel(r'x-coordinate')
-plt.ylabel(r'y-coordinate')
+plt.xlabel('x-coordinate')
+plt.ylabel('y-coordinate')
+plt.title('$calibrate_R$')
 plt.subplot(2, 2, 4)
 plt.imshow(calibrate_py, cmap='rainbow', vmin=0, vmax=20)
-plt.xlabel(r'x-coordinate')
-plt.ylabel(r'y-coordinate')
+plt.xlabel('x-coordinate')
+plt.title('$calibrate_{py}$')
+plt.tight_layout()
+plt.show()
