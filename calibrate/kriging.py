@@ -56,6 +56,8 @@ def ked_R(x, y, z, radar, xi, yi, zi):
     # Run predictor
     result = robj.r.predict(ked, radar_frame, nsim=0)
     rain_est = numpy.array(result[2])
+#    zero_or_no_data = numpy.logical_or(aggregate == 0, aggregate == -9999)
+    
     return rain_est
 
 def ked_py(x, y, z, radar, xi, yi, zi):
@@ -126,15 +128,16 @@ for i in range(len(rainstation)):
 z = rainstation.as_matrix(['value']).T[0]
 
 xi = numpy.tile(numpy.arange(grid_extent[0],grid_extent[1],xstep),len(aggregate[:]))
-yi = numpy.tile(numpy.arange(grid_extent[3],grid_extent[2],ystep),len(aggregate[0]))
-zi = aggregate.ravel()
+yi = numpy.repeat(numpy.arange(grid_extent[3],grid_extent[2],ystep),len(aggregate[0]))
+zi = aggregate.flatten()
 
 #==============================================================================
 # # Run the KED functions
 #==============================================================================
 start_time = datetime.now()
 rain_est_R = ked_R(x, y, z, radar, xi, yi, zi)
-calibrate_R = rain_est_R.reshape([490,500])
+calibrate_R = rain_est_R.reshape([490,500]) # TODO: Make general
+#calibrate_R = 
 end_time = datetime.now()
 print("It took R",end_time - start_time, "seconds to complete ked with a grid of",xstep)
 
