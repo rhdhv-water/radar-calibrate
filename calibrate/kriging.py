@@ -38,7 +38,9 @@ def ked_R(x, y, z, radar, xi, yi, zi):
     x, y, z = robj.FloatVector(x), robj.FloatVector(y), robj.FloatVector(z)
     xi, yi, zi = robj.FloatVector(xi), robj.FloatVector(yi), robj.FloatVector(zi)
     rain_radar_frame = robj.DataFrame({'x': x, 'y': y, 'z': z,'radar': radar})
+    rain_radar_frame_py = numpy.array(rain_radar_frame)
     radar_frame = robj.DataFrame({'x': xi, 'y': yi, 'radar': zi})
+#    radar_frame_py = numpy.array(radar_frame)
     
     # Create predictor
     vgm = robj.r.variogram(robj.r("z~radar"), 
@@ -48,6 +50,7 @@ def ked_R(x, y, z, radar, xi, yi, zi):
                            width=5000)
     residual_callable = robj.r('fit.variogram')
     residual = residual_callable(vgm, robj.r.vgm(1, 'Sph', 25000, 1))
+    residual_py = numpy.array(residual)
     ked = robj.r('NULL')
     ked = robj.r.gstat(ked, 'raingauge', robj.r("z~radar"),
                        robj.r('~ x + y'),
@@ -102,14 +105,14 @@ import logging
 #==============================================================================
 root = r'C:\Project_OG\BA8186_NRR\2_technical\radar-calibrate'
 file_station = r'\data\2017_grounddata.json'
-file_aggregate = r'\data\24uur_20170228080000.h5'
-file_calibrate = r'\data\RAD_TF2400_U_20170228080000.h5'
+file_aggregate = r'\data\24uur_20170223080000.h5'
+file_calibrate = r'\data\RAD_TF2400_U_20170223080000.h5'
 date = '2017-02-23T08:00:00'
-os.chdir(root)
 
 #==============================================================================
 # Read files
 #==============================================================================
+os.chdir(root)
 with open(root + file_station) as json_data:
     data = json.load(json_data)
 with h5py.File(root + file_aggregate, 'r') as ds:
@@ -132,8 +135,8 @@ for i in range(len(rainstation)):
     x = numpy.append(x,rainstation.ix[i][0][0])
     y = numpy.append(y,rainstation.ix[i][0][1])
     radar = numpy.append(radar,aggregate
-                         [int(round((x[i] - grid_extent[0]) / xstep))]
                          [int(round((y[i] - grid_extent[3]) / ystep))]
+                         [int(round((x[i] - grid_extent[0]) / xstep))]
                         )
 z = rainstation.as_matrix(['value']).T[0]
 
