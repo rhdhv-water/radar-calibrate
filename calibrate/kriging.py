@@ -19,6 +19,47 @@ shape(rain_est) = 490*500
 #==============================================================================
 # FUNCTIONS
 #==============================================================================
+
+def get_radar_for_locations(rainstation, aggregate, block=2):
+    '''
+    Radar "pixel"values for location closest to weather station.
+    Returns those pixels that are closest to the rain stations
+    '''
+    # Changes name size to block as size is a function as well and might confuse
+    block = block # use number of surrounding pixels
+    x = []
+    y = []
+    z = []
+    radar = []
+    for i in range(len(rainstation)):
+        x.append(rainstation.ix[i][0][0])
+        y.append(rainstation.ix[i][0][1])
+        z.append(rainstation.ix[i][2])
+        xoff = int((x[i] - grid_extent[0]) / pixelwidth)
+        yoff = int((y[i] - grid_extent[3]) / pixelheight) # 700000 moet 0 zijn
+        data = aggregate[xoff:xoff + block, yoff:yoff + block] # - half block + half block? (i.e. size)
+        radar.append(numpy.median(data))
+    return x, y, z, radar
+
+def get_grid(aggregate,grid_extent):
+    """
+    Return x and y coordinates of cell centers.
+    """
+#    cellwidth, cellheight = aggregate.get_cellsize()
+    left, right, top, bottom = grid_extent
+
+    nx = numpy.size(aggregate,0)
+    ny = numpy.size(aggregate,1)
+    xmin = left + pixelwidth / 2
+    xmax = right - pixelwidth / 2
+    ymin = bottom + pixelheight / 2
+    ymax = top - pixelheight / 2
+
+    xi, yi = numpy.mgrid[ xmin:xmax:nx * 1j, ymax:ymin:ny * 1j,]
+    xi = numpy.float32(xi).flatten()
+    yi = numpy.float32(yi).flatten()
+    return xi, yi
+    
 def ked_R(x, y, z, radar, xi, yi, zi):
     """
     Run the kriging method using the R module "gstat".
@@ -40,7 +81,7 @@ def ked_R(x, y, z, radar, xi, yi, zi):
     rain_radar_frame = robj.DataFrame({'x': x, 'y': y, 'z': z,'radar': radar})
     rain_radar_frame_py = numpy.array(rain_radar_frame)
     radar_frame = robj.DataFrame({'x': xi, 'y': yi, 'radar': zi})
-#    radar_frame_py = numpy.array(radar_frame)
+    radar_frame_py = numpy.array(radar_frame)
     
     # Create predictor
     vgm = robj.r.variogram(robj.r("z~radar"), 
@@ -116,32 +157,20 @@ os.chdir(root)
 with open(root + file_station) as json_data:
     data = json.load(json_data)
 with h5py.File(root + file_aggregate, 'r') as ds:
-    aggregate = numpy.float64(ds['precipitation'][:])
+    aggregate = numpy.float64(ds['precipitation'][:]).T # Index is [x][y]
     grid_extent = ds.attrs['grid_extent']
     grid_size = ds.attrs['grid_size']
-    xstep = (grid_extent[1] - grid_extent[0]) / grid_size[0]
-    ystep = (grid_extent[2] - grid_extent[3]) / grid_size[1]
+    pixelwidth = (grid_extent[1] - grid_extent[0]) / grid_size[0]
+    pixelheight = (grid_extent[2] - grid_extent[3]) / grid_size[1]
 with h5py.File(root + file_calibrate, 'r') as ds:
-    calibrate = numpy.float64(ds['image1/image_data'])
+    calibrate = numpy.float64(ds['image1/image_data']).T # Index is [x][y]
 
 #==============================================================================
 # Prep data as numpy arrays, as the required format of the krige modules
 #==============================================================================
 rainstation = pandas.DataFrame.from_dict(data[date])
-x = numpy.empty((len(rainstation),0))
-y = numpy.empty((len(rainstation),0))
-radar = numpy.empty((len(rainstation),0))
-for i in range(len(rainstation)):
-    x = numpy.append(x,rainstation.ix[i][0][0])
-    y = numpy.append(y,rainstation.ix[i][0][1])
-    radar = numpy.append(radar,aggregate
-                         [int(round((y[i] - grid_extent[3]) / ystep))]
-                         [int(round((x[i] - grid_extent[0]) / xstep))]
-                        )
-z = rainstation.as_matrix(['value']).T[0]
-
-xi = numpy.tile(numpy.arange(grid_extent[0],grid_extent[1],xstep),len(aggregate[:]))
-yi = numpy.repeat(numpy.arange(grid_extent[3],grid_extent[2],ystep),len(aggregate[0]))
+x, y, z, radar = get_radar_for_locations(rainstation, aggregate, block=2)
+xi, yi = get_grid(aggregate,grid_extent)
 zi = aggregate.flatten()
 
 #==============================================================================
@@ -149,15 +178,15 @@ zi = aggregate.flatten()
 #==============================================================================
 start_time = datetime.now()
 rain_est_R = ked_R(x, y, z, radar, xi, yi, zi)
-calibrate_R = rain_est_R.reshape([490,500]) # TODO: Make general
+calibrate_R = rain_est_R.reshape([500,490]) # TODO: Make general
 end_time = datetime.now()
-print("It took R",end_time - start_time, "seconds to complete ked with a grid of",xstep)
+print("It took R",end_time - start_time, "seconds to complete ked with a grid of 1000")
 
 start_time = datetime.now()
 rain_est_py = ked_py(x, y, z, radar, xi, yi, zi)
 calibrate_py = rain_est_py.reshape([490,500])
 end_time = datetime.now()
-print("It took py",end_time - start_time, "seconds to complete ked with a grid of",xstep)
+print("It took py",end_time - start_time, "seconds to complete ked with a grid of 1000")
 
 #==============================================================================
 # VISUALISATION
@@ -174,19 +203,19 @@ plt.show()
 # Plot radar_calibrate_R
 plt.figure(1)
 plt.subplot(2, 2, 1)
-plt.imshow(aggregate, cmap='rainbow', vmin=0, vmax=20)
+plt.imshow(aggregate, cmap='rainbow', vmin=0, vmax=40)
 plt.ylabel('y-coordinate')
 plt.title('aggregate')
 plt.subplot(2, 2, 2)
-plt.imshow(calibrate/100, cmap='rainbow', vmin=0, vmax=20)
+plt.imshow(calibrate/100, cmap='rainbow', vmin=0, vmax=40)
 plt.title('$calibrate_{original}$')
 plt.subplot(2, 2, 3)
-plt.imshow(calibrate_R, cmap='rainbow', vmin=0, vmax=20)
+plt.imshow(calibrate_R, cmap='rainbow', vmin=0, vmax=40)
 plt.xlabel('x-coordinate')
 plt.ylabel('y-coordinate')
 plt.title('$calibrate_R$')
 plt.subplot(2, 2, 4)
-plt.imshow(calibrate_py, cmap='rainbow', vmin=0, vmax=20)
+plt.imshow(calibrate_R / (calibrate/100), cmap='rainbow', vmin=0, vmax=40)
 plt.xlabel('x-coordinate')
 plt.title('$calibrate_{py}$')
 plt.tight_layout()
