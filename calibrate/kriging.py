@@ -15,32 +15,26 @@ len(zi) = 245000
 # OUT:
 shape(rain_est) = 490*500
 """
+## TODO: Insert shapefile NL
 
 #==============================================================================
 # FUNCTIONS
 #==============================================================================
-
-def get_radar_for_locations(rainstation, grid_extent, aggregate, block=2):
-    '''
+def get_radar_for_locations(x, y, grid_extent, aggregate, block=2):
+    """
     Radar "pixel"values for location closest to weather station.
     Returns those pixels that are closest to the rain stations
-    '''
+    """
     # Changes name size to block as size is a function as well and might confuse
     left, right, top, bottom = grid_extent
     block = block # use number of surrounding pixels
-    x = []
-    y = []
-    z = []
     radar = []
-    for i in range(len(rainstation)):
-        x.append(rainstation[i]['coords'][0])
-        y.append(rainstation[i]['coords'][1])
-        z.append(rainstation[i]['value'])
+    for i in range(len(x)):
         xoff = int((x[i] - left) / pixelwidth)
         yoff = int((y[i] - bottom) / pixelheight) # pixelheight is -1000
         data = aggregate[xoff:xoff + block, yoff:yoff + block]
         radar.append(numpy.median(data))
-    return x, y, z, radar
+    return radar
 
 def get_grid(aggregate, grid_extent):
     """
@@ -104,13 +98,13 @@ def ked_R(x, y, z, radar, xi, yi, zi):
     rain_est = numpy.array(result[2])
 
     # Correction 0's and extreme kriged values
-#    zi = numpy.array(zi)
-#    zero_or_no_data = numpy.logical_or(zi == 0, zi == -9999)
-#    correction_factor = numpy.ones(zi.shape)
-#    correction_factor[~zero_or_no_data] = (rain_est[~zero_or_no_data] / zi[~zero_or_no_data])
-#    leave_uncalibrated = numpy.logical_or(correction_factor < 0, correction_factor > 10)
-#    logging.info('Leaving {} extreme pixels uncalibrated.'.format(leave_uncalibrated.sum(),))
-#    rain_est[leave_uncalibrated] = zi[leave_uncalibrated]
+    zi = numpy.array(zi)
+    zero_or_no_data = numpy.logical_or(zi == 0, zi == -9999)
+    correction_factor = numpy.ones(zi.shape)
+    correction_factor[~zero_or_no_data] = (rain_est[~zero_or_no_data] / zi[~zero_or_no_data])
+    leave_uncalibrated = numpy.logical_or(correction_factor < 0, correction_factor > 10)
+    logging.info('Leaving {} extreme pixels uncalibrated.'.format(leave_uncalibrated.sum(),))
+    rain_est[leave_uncalibrated] = zi[leave_uncalibrated]
     
     return rain_est
 
@@ -139,7 +133,7 @@ from datetime import datetime
 import numpy
 import h5py
 import matplotlib.pyplot as plt
-
+import logging
 
 #==============================================================================
 # INPUT
@@ -164,13 +158,17 @@ with h5py.File(os.path.join(root + file_aggregate), 'r') as ds:
     pixelheight = (bottom - top) / grid_size[1]
 with h5py.File(os.path.join(root + file_calibrate), 'r') as ds:
     calibrate = numpy.float64(ds['image1/image_data']).T # Index is [x][y]
+    coords = numpy.array(ds.attrs['cal_station_coords'])
+    x = coords[:,0]
+    y = coords[:,1]
+    z = numpy.array(ds.attrs['cal_station_measurements'])
 
 #==============================================================================
 # Prep data as numpy arrays, as the required format of the krige modules
 #==============================================================================
 
 rainstation = numpy.array(data[date])
-x, y, z, radar = get_radar_for_locations(rainstation, grid_extent, aggregate, block=2)
+radar = get_radar_for_locations(x, y, grid_extent, aggregate, block=2)
 xi, yi = get_grid(aggregate, grid_extent)
 zi = aggregate.flatten()
 
@@ -216,8 +214,12 @@ plt.xlabel('x-coordinate')
 plt.ylabel('y-coordinate')
 plt.title('$calibrate_R$')
 plt.subplot(2, 2, 4)
-plt.imshow(calibrate_R / (calibrate/100), cmap='rainbow', vmin=0, vmax=40)
+plt.imshow(calibrate_R - (calibrate/100), cmap='rainbow', vmin=0, vmax=40)
 plt.xlabel('x-coordinate')
 plt.title('$calibrate_{R}\//\/ calibrate_{original}$')
+#plt.subplot(2, 2, 4)
+#plt.imshow(calibrate_R - (calibrate/100), cmap='rainbow', vmin=0, vmax=40)
+#plt.xlabel('x-coordinate')
+#plt.title('$calibrate_{R}\//\/ calibrate_{original}$')
 plt.tight_layout()
 plt.show()
