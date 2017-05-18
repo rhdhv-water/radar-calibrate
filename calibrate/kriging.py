@@ -2,20 +2,12 @@
 # -*- coding: utf-8 -*-
 # Jonne Kleijer, Royal HaskoningDHV
 
-"""
-# IN:
-len(x) = 407
-len(y) = 407
-len(z) = 407
-len(radar) = 407
-len(xi) = 245000
-len(yi) = 245000
-len(zi) = 245000
-
-# OUT:
-shape(rain_est) = 490*500
-"""
-## TODO: Insert shapefile NL
+## TODO: Insert shapefile NL / loc rainstations
+## TODO: Test various KED functions
+## TODO: Test time performance of functions
+## TODO: Script to test file
+## TODO: Make reshapes general
+## TODO: Pykrige can uses 0 OR 3 parameters (i.e. sill, range and nugget) for variogram
 
 #==============================================================================
 # FUNCTIONS
@@ -55,6 +47,15 @@ def get_grid(aggregate, grid_extent):
     yi = numpy.float32(yi).flatten()
     return xi, yi
 
+def plot_vgm_R(vgm_py, residual_py):
+    figure = plt.figure()
+    plt.plot(vgm_py[1,:],vgm_py[0,:],'r*')
+    plt.xlabel('distance')
+    plt.ylabel('semivariance')
+    plt.title('R variogram')
+    return figure
+    
+    
 def ked_R(x, y, z, radar, xi, yi, zi):
     """
     Run the kriging method using the R module "gstat".
@@ -84,9 +85,12 @@ def ked_R(x, y, z, radar, xi, yi, zi):
                            data=rain_radar_frame,
                            cutoff=50000,
                            width=5000)
+    vgm_py = numpy.array(vgm)
     residual_callable = robj.r('fit.variogram')
     residual = residual_callable(vgm, robj.r.vgm(1, 'Sph', 25000, 1))
     residual_py = numpy.array(residual)
+    plot_vgm_R(vgm_py, residual_py).show()
+
     ked = robj.r('NULL')
     ked = robj.r.gstat(ked, 'raingauge', robj.r("z~radar"),
                        robj.r('~ x + y'),
@@ -104,9 +108,10 @@ def ked_R(x, y, z, radar, xi, yi, zi):
     correction_factor[~zero_or_no_data] = (rain_est[~zero_or_no_data] / zi[~zero_or_no_data])
     leave_uncalibrated = numpy.logical_or(correction_factor < 0, correction_factor > 10)
     logging.info('Leaving {} extreme pixels uncalibrated.'.format(leave_uncalibrated.sum(),))
-    rain_est[leave_uncalibrated] = zi[leave_uncalibrated]
+#    rain_est[leave_uncalibrated] = zi[leave_uncalibrated]
     
-    return rain_est
+    leave_uncalibrated = leave_uncalibrated.reshape([500, 490])
+    return rain_est, correction_factor
 
 def ked_py(x, y, z, radar, xi, yi, zi):
     """
@@ -117,9 +122,24 @@ def ked_py(x, y, z, radar, xi, yi, zi):
     """
     import pykrige
     # Create predictor
-    ked = pykrige.UniversalKriging(x, y, z)
+    ked = pykrige.UniversalKriging(x, y, z, 
+                                   drift_terms = ["specified"],
+                                   specified_drift = [radar,],
+                                   variogram_model = "spherical",
+                                   variogram_parameters = {'sill': 100, 'range': 50000, 'nugget': 0},
+#                                   variogram_model = 'custom',
+#                                   variogram_function([100,50000,0], 5000)
+                                   nlags = 10,
+                                   verbose = True,
+                                   
+    )
+    ked.display_variogram_model()
+    
     # Run predictor
-    y_pred = ked.execute('points', xi, yi, specified_drift_arrays=radar)
+    y_pred = ked.execute('points', xi, yi, 
+                         specified_drift_arrays = [zi,],
+                         backend="vectorized",
+    )
     rain_est = numpy.squeeze(y_pred)[0]
     return rain_est
 
@@ -129,12 +149,12 @@ def ked_py(x, y, z, radar, xi, yi, zi):
 
 import os
 import json
-from datetime import datetime
+from time import time
 import numpy
 import h5py
 import matplotlib.pyplot as plt
 import logging
-
+plt.close('all')
 #==============================================================================
 # INPUT
 #==============================================================================
@@ -169,29 +189,29 @@ with h5py.File(os.path.join(root + file_calibrate), 'r') as ds:
 
 rainstation = numpy.array(data[date])
 radar = get_radar_for_locations(x, y, grid_extent, aggregate, block=2)
+numpy.array(radar)
 xi, yi = get_grid(aggregate, grid_extent)
 zi = aggregate.flatten()
 
 #==============================================================================
 # # Run the KED functions
 #==============================================================================
-start_time = datetime.now()
-rain_est_R = ked_R(x, y, z, radar, xi, yi, zi)
-calibrate_R = rain_est_R.reshape([500, 490]) # TODO: Make general
-end_time = datetime.now()
-print("It took R", end_time - start_time, "seconds to complete ked with a grid of 1000m")
+tic = time()
+rain_est_R, correction_factor = ked_R(x, y, z, radar, xi, yi, zi)
+calibrate_R = rain_est_R.reshape([500, 490])
+correction_factor = correction_factor.reshape([500, 490])
+logging.info("It took R {} seconds to complete ked with a grid of 1000m".format(time() - tic))
 
-#start_time = datetime.now()
-#rain_est_py = ked_py(x, y, z, radar, xi, yi, zi)
-#calibrate_py = rain_est_py.reshape([490,500])
-#end_time = datetime.now()
-#print("It took py",end_time - start_time, "seconds to complete ked with a grid of 1000m")
+tic = time()
+rain_est_py = ked_py(x, y, z, radar, xi, yi, zi)
+calibrate_py = rain_est_py.reshape([500,490])
+logging.info("It took py {} seconds to complete ked with a grid of 1000m".format(time() - tic))
 
 #==============================================================================
 # VISUALISATION
 #==============================================================================
 #Plot error of rainstations vs radar in (mm)
-plt.figure(0)
+plt.figure()
 plt.scatter(z, radar)
 plt.plot([0, 40], [0, 40],'k')
 plt.xlabel('$P_{station}\/(mm)$')
@@ -200,26 +220,35 @@ plt.axis([0, 40, 0, 40])
 plt.show()
 
 # Plot radar_calibrate_R
-plt.figure(1)
-plt.subplot(2, 2, 1)
+plt.figure()
+f221 = plt.subplot(2, 2, 1)
 plt.imshow(aggregate, cmap='rainbow', vmin=0, vmax=40)
 plt.ylabel('y-coordinate')
 plt.title('aggregate')
-plt.subplot(2, 2, 2)
+f222 = plt.subplot(2, 2, 2, sharex=f221, sharey=f221)
 plt.imshow(calibrate/100, cmap='rainbow', vmin=0, vmax=40)
 plt.title('$calibrate_{original}$')
-plt.subplot(2, 2, 3)
-plt.imshow(calibrate_R, cmap='rainbow', vmin=0, vmax=40)
+f223 = plt.subplot(2, 2, 3, sharex=f221, sharey=f221)
+plt.imshow(calibrate_R, cmap='rainbow', vmin=-40, vmax=40)
 plt.xlabel('x-coordinate')
 plt.ylabel('y-coordinate')
 plt.title('$calibrate_R$')
-plt.subplot(2, 2, 4)
-plt.imshow(calibrate_R - (calibrate/100), cmap='rainbow', vmin=0, vmax=40)
+plt.subplot(2, 2, 4, sharex=f221, sharey=f221)
+plt.imshow(calibrate_py, cmap='rainbow', vmin=-40, vmax=40)
 plt.xlabel('x-coordinate')
-plt.title('$calibrate_{R}\//\/ calibrate_{original}$')
-#plt.subplot(2, 2, 4)
-#plt.imshow(calibrate_R - (calibrate/100), cmap='rainbow', vmin=0, vmax=40)
-#plt.xlabel('x-coordinate')
-#plt.title('$calibrate_{R}\//\/ calibrate_{original}$')
+plt.title('$calibrate_{py}$')
+plt.tight_layout()
+plt.show()
+
+# Plot histgram error
+plt.figure()
+plt.subplot(2,1,1)
+plt.hist(calibrate_R.flatten() - calibrate.flatten(), bins = range(-10,10,1))
+plt.xlim([-10, 10])
+plt.title('$histogram\/\/of\/\/error\/\/ked_R$')
+plt.subplot(2,1,2)
+plt.hist(calibrate_py.flatten() - calibrate.flatten(), bins = range(-10,10,1))
+plt.xlim([-10, 10])
+plt.title('$histogram\/\/of\/\/error\/\/ked_{py}$')
 plt.tight_layout()
 plt.show()
