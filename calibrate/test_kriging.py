@@ -13,9 +13,14 @@ import matplotlib.pyplot as plt
 
 import os
 from time import time
-import logging
 
 import kriging
+
+import sys
+if "kriging" in sys.modules:
+    import importlib
+    importlib.reload(kriging)
+
 plt.close('all')
 
 #==============================================================================
@@ -59,12 +64,12 @@ zi = aggregate.flatten()
 # # Run the KED functions
 #==============================================================================
 tic = time()
-rain_est_R = kriging.ked_R(x, y, z, radar, xi, yi, zi, True)
+rain_est_R = kriging.ked_R(x, y, z, radar, xi, yi, zi, False)
 calibrate_R = rain_est_R.reshape(aggregate.shape)
 print("R:" + str(time() - tic) + "seconds")
 
 tic = time()
-rain_est_py = kriging.ked_py(x, y, z, radar, xi, yi, zi, True)
+rain_est_py = kriging.ked_py(x, y, z, radar, xi, yi, zi, False)
 calibrate_py = rain_est_py.reshape(aggregate.shape)
 print("py:" + str(time() - tic) + "seconds")
 

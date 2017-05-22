@@ -123,7 +123,7 @@ def ked_py(x, y, z, radar, xi, yi, zi, vario=False):
                                    drift_terms = ["specified"],
                                    specified_drift = [radar,],
                                    variogram_model = "spherical",
-#                                   variogram_parameters = {'sill': 80, 'range': 25000, 'nugget': 0},
+                                   variogram_parameters = {'sill': 80, 'range': 25000, 'nugget': 0},
 #                                   variogram_model = 'custom',
 #                                   variogram_function([100,50000,0], 5000)
                                    nlags = 10,
