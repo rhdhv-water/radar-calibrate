@@ -16,6 +16,7 @@ from time import time
 
 import kriging
 
+# Debug
 import sys
 if "kriging" in sys.modules:
     import importlib
@@ -27,16 +28,12 @@ plt.close('all')
 # INPUT
 #==============================================================================
 root = r'C:\Project_OG\BA8186_NRR\2_technical'
-file_station = r'\radar-calibrate\data\2017_grounddata.json'
 file_aggregate = r'\radar-calibrate\data\24uur_20170223080000.h5'
 file_calibrate = r'\radar-calibrate\data\RAD_TF2400_U_20170223080000.h5'
-date = '2017-02-23T08:00:00'
 
 #==============================================================================
 # Read files
 #==============================================================================
-with open(os.path.join(root + file_station)) as json_data:
-    data = json.load(json_data)
 with h5py.File(os.path.join(root + file_aggregate), 'r') as ds:
     aggregate = numpy.float64(ds['precipitation'][:]).T # Index is [x][y]
     grid_extent = ds.attrs['grid_extent']
@@ -54,9 +51,7 @@ with h5py.File(os.path.join(root + file_calibrate), 'r') as ds:
 #==============================================================================
 # Prep data as numpy arrays, as the required format of the krige modules
 #==============================================================================
-rainstation = numpy.array(data[date])
 radar = kriging.get_radar_for_locations(x, y, grid_extent, aggregate, pixelwidth, pixelheight)
-numpy.array(radar)
 xi, yi = kriging.get_grid(aggregate, grid_extent, pixelwidth, pixelheight)
 zi = aggregate.flatten()
 
@@ -95,12 +90,12 @@ f222 = plt.subplot(2, 2, 2, sharex=f221, sharey=f221)
 plt.imshow(calibrate/100, cmap='rainbow', vmin=0, vmax=40)
 plt.title('$calibrate_{original}$')
 f223 = plt.subplot(2, 2, 3, sharex=f221, sharey=f221)
-plt.imshow(calibrate_R, cmap='rainbow', vmin=0, vmax=40)
+plt.imshow(calibrate_R, cmap='rainbow', vmin=-10, vmax=10)
 plt.xlabel('x-coordinate')
 plt.ylabel('y-coordinate')
 plt.title('$calibrate_R$')
 plt.subplot(2, 2, 4, sharex=f221, sharey=f221)
-plt.imshow(calibrate_py, cmap='rainbow', vmin=0, vmax=40)
+plt.imshow(calibrate_py, cmap='rainbow', vmin=-10, vmax=10)
 plt.xlabel('x-coordinate')
 plt.title('$calibrate_{py}$')
 plt.tight_layout()
