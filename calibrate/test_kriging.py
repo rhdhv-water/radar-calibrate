@@ -6,22 +6,20 @@
 # Main
 #==============================================================================
 import h5py
-import json
-
 import numpy
 import matplotlib.pyplot as plt
 
 import os
 from time import time
 
-import kriging
-
 # Debug
 import sys
 if "kriging" in sys.modules:
     import importlib
     importlib.reload(kriging)
-
+else: 
+    import kriging
+    
 plt.close('all')
 
 #==============================================================================
@@ -53,6 +51,8 @@ with h5py.File(os.path.join(root + file_calibrate), 'r') as ds:
 #==============================================================================
 radar = kriging.get_radar_for_locations(x, y, grid_extent, aggregate, pixelwidth, pixelheight)
 xi, yi = kriging.get_grid(aggregate, grid_extent, pixelwidth, pixelheight)
+xi = numpy.float32(xi).flatten()
+yi = numpy.float32(yi).flatten()
 zi = aggregate.flatten()
 
 #==============================================================================
@@ -90,12 +90,12 @@ f222 = plt.subplot(2, 2, 2, sharex=f221, sharey=f221)
 plt.imshow(calibrate/100, cmap='rainbow', vmin=0, vmax=40)
 plt.title('$calibrate_{original}$')
 f223 = plt.subplot(2, 2, 3, sharex=f221, sharey=f221)
-plt.imshow(calibrate_R, cmap='rainbow', vmin=-10, vmax=10)
+plt.imshow(calibrate_R, cmap='rainbow', vmin=0, vmax=40)
 plt.xlabel('x-coordinate')
 plt.ylabel('y-coordinate')
 plt.title('$calibrate_R$')
 plt.subplot(2, 2, 4, sharex=f221, sharey=f221)
-plt.imshow(calibrate_py, cmap='rainbow', vmin=-10, vmax=10)
+plt.imshow(calibrate_py, cmap='rainbow', vmin=0, vmax=40)
 plt.xlabel('x-coordinate')
 plt.title('$calibrate_{py}$')
 plt.tight_layout()

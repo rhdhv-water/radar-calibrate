@@ -5,7 +5,14 @@
 import h5py
 import numpy
 import os
+import importlib
 
+import sys
+if "kriging" in sys.modules:
+    importlib.reload(kriging)
+else: 
+    import kriging
+    
 root = r'C:\Project_OG\BA8186_NRR\2_technical'
 file_aggregate = r'\radar-calibrate\data\24uur_20170223080000.h5'
 
@@ -18,6 +25,4 @@ with h5py.File(os.path.join(root + file_aggregate), 'r') as ds:
     pixelheight = (bottom - top) / grid_size[1]
     
 #with h5py.File(os.path.join(root + "_smooth_" + file_aggregate), 'w') as ds:
-    
-
-    
+xi, yi = kriging.get_grid(aggregate, grid_extent, pixelwidth, pixelheight)

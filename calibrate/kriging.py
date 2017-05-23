@@ -37,8 +37,6 @@ def get_grid(aggregate, grid_extent, pixelwidth, pixelheight):
     ymax = top + pixelheight / 2
 
     xi, yi = numpy.mgrid[xmin:xmax:nx * 1j, ymax:ymin:ny * 1j,]
-    xi = numpy.float32(xi).flatten()
-    yi = numpy.float32(yi).flatten()
     return xi, yi
 
 def plot_vgm_R(vgm_py, residual_py):
