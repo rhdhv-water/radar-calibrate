@@ -14,11 +14,11 @@ from time import time
 
 # Debug
 import sys
-if "kriging" in sys.modules:
-    import importlib
-    importlib.reload(kriging)
-else: 
+import importlib
+if "kriging" not in sys.modules:
     import kriging
+else: 
+    importlib.reload(kriging)
     
 plt.close('all')
 
