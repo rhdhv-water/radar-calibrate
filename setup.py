@@ -11,8 +11,8 @@ setup(name='radar-calibrate',
       author='Flying Circus',
       author_email='flyingcircus@example.com',
       license='GPL',
-      packages=['radar-calibrate'],
+      packages=['calibrate'],
       install_requires=[
-          'PyKrige',
+          # 'PyKrige',
       ],
       zip_safe=False)
