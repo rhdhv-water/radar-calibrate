@@ -37,8 +37,6 @@ def get_grid(aggregate, grid_extent, pixelwidth, pixelheight):
     ymax = top + pixelheight / 2
 
     xi, yi = numpy.mgrid[xmin:xmax:nx * 1j, ymax:ymin:ny * 1j,]
-    xi = numpy.float32(xi).flatten()
-    yi = numpy.float32(yi).flatten()
     return xi, yi
 
 def plot_vgm_R(vgm_py, residual_py):
@@ -123,7 +121,7 @@ def ked_py(x, y, z, radar, xi, yi, zi, vario=False):
                                    drift_terms = ["specified"],
                                    specified_drift = [radar,],
                                    variogram_model = "spherical",
-#                                   variogram_parameters = {'sill': 80, 'range': 25000, 'nugget': 0},
+                                   variogram_parameters = {'sill': 80, 'range': 25000, 'nugget': 0},
 #                                   variogram_model = 'custom',
 #                                   variogram_function([100,50000,0], 5000)
                                    nlags = 10,

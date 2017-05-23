@@ -6,32 +6,32 @@
 # Main
 #==============================================================================
 import h5py
-import json
-
 import numpy
 import matplotlib.pyplot as plt
 
 import os
 from time import time
-import logging
 
-import kriging
+# Debug
+import sys
+if "kriging" in sys.modules:
+    import importlib
+    importlib.reload(kriging)
+else: 
+    import kriging
+    
 plt.close('all')
 
 #==============================================================================
 # INPUT
 #==============================================================================
 root = r'C:\Project_OG\BA8186_NRR\2_technical'
-file_station = r'\radar-calibrate\data\2017_grounddata.json'
 file_aggregate = r'\radar-calibrate\data\24uur_20170223080000.h5'
 file_calibrate = r'\radar-calibrate\data\RAD_TF2400_U_20170223080000.h5'
-date = '2017-02-23T08:00:00'
 
 #==============================================================================
 # Read files
 #==============================================================================
-with open(os.path.join(root + file_station)) as json_data:
-    data = json.load(json_data)
 with h5py.File(os.path.join(root + file_aggregate), 'r') as ds:
     aggregate = numpy.float64(ds['precipitation'][:]).T # Index is [x][y]
     grid_extent = ds.attrs['grid_extent']
@@ -49,22 +49,22 @@ with h5py.File(os.path.join(root + file_calibrate), 'r') as ds:
 #==============================================================================
 # Prep data as numpy arrays, as the required format of the krige modules
 #==============================================================================
-rainstation = numpy.array(data[date])
 radar = kriging.get_radar_for_locations(x, y, grid_extent, aggregate, pixelwidth, pixelheight)
-numpy.array(radar)
 xi, yi = kriging.get_grid(aggregate, grid_extent, pixelwidth, pixelheight)
+xi = numpy.float32(xi).flatten()
+yi = numpy.float32(yi).flatten()
 zi = aggregate.flatten()
 
 #==============================================================================
 # # Run the KED functions
 #==============================================================================
 tic = time()
-rain_est_R = kriging.ked_R(x, y, z, radar, xi, yi, zi, True)
+rain_est_R = kriging.ked_R(x, y, z, radar, xi, yi, zi, False)
 calibrate_R = rain_est_R.reshape(aggregate.shape)
 print("R:" + str(time() - tic) + "seconds")
 
 tic = time()
-rain_est_py = kriging.ked_py(x, y, z, radar, xi, yi, zi, True)
+rain_est_py = kriging.ked_py(x, y, z, radar, xi, yi, zi, False)
 calibrate_py = rain_est_py.reshape(aggregate.shape)
 print("py:" + str(time() - tic) + "seconds")
 
