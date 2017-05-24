@@ -5,7 +5,6 @@
 import h5py
 import numpy
 import matplotlib.pyplot as plt
-import os
 from time import time
 from calibrate import kriging
 
@@ -52,7 +51,7 @@ calibrate_R = rain_est_R.reshape(aggregate.shape)
 print("R:" + str(time() - tic) + "seconds")
 
 tic = time()
-rain_est_py = kriging.ked_py(x, y, z, radar, xi, yi, zi, False)
+rain_est_py = kriging.ked_py_v(x, y, z, radar, xi, yi, zi, False)
 calibrate_py = rain_est_py.reshape(aggregate.shape)
 print("py:" + str(time() - tic) + "seconds")
 
