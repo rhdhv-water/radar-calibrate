@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-# Jonne Kleijer, Royal HaskoningDHV
+# Royal HaskoningDHV
 
 import h5py
 import numpy

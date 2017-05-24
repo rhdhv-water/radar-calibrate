@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-# Jonne Kleijer, Royal HaskoningDHV
+# Royal HaskoningDHV
 
 import numpy
 import logging
@@ -46,8 +46,8 @@ def plot_vgm_R(vgm_py, residual_py):
     plt.ylabel('semivariance')
     plt.title('R variogram')
     return figure
-    
-    
+
+
 def ked_R(x, y, z, radar, xi, yi, zi, vario=False):
     """
     Run the kriging method using the R module "gstat".
@@ -55,13 +55,13 @@ def ked_R(x, y, z, radar, xi, yi, zi, vario=False):
     Input x, y, z and radar (rainstation size) shoud be equally long.
     Inputs xi, yi and zi (radar size) should be equally long.
     Input vario will display the variogram.
-    
+
     Returns calibrated grid
     """
 
     import rpy2.robjects as robj
     robj.r.library('gstat')
-    
+
     # Modification to prevent singular matrix (Tom)
     radar += (1e-9 * numpy.random.rand(len(radar)))
     radar = robj.FloatVector(radar)
@@ -71,7 +71,7 @@ def ked_R(x, y, z, radar, xi, yi, zi, vario=False):
     rain_radar_frame_py = numpy.array(rain_radar_frame)
     radar_frame = robj.DataFrame({'x': xi, 'y': yi, 'radar': zi})
     radar_frame_py = numpy.array(radar_frame)
-    
+
     # Create predictor
     vgm = robj.r.variogram(robj.r("z~radar"),
                            robj.r('~ x + y'),
@@ -103,7 +103,7 @@ def ked_R(x, y, z, radar, xi, yi, zi, vario=False):
     leave_uncalibrated = numpy.logical_or(correction_factor < 0, correction_factor > 10)
     logging.info('Leaving {} extreme pixels uncalibrated.'.format(leave_uncalibrated.sum(),))
 #    rain_est[leave_uncalibrated] = zi[leave_uncalibrated]
-    
+
     leave_uncalibrated = leave_uncalibrated.reshape([500, 490])
     return rain_est
 
@@ -111,15 +111,15 @@ def ked_py_v(x, y, z, radar, xi, yi, zi, vario=False):
     """
     Run the kriging method using the Python module Pykrige using vectorized backend to save time (high memory).
     Kriging External Drift (or universal kriging).
-    Input x, y, z and radar (rainstation size) shoud be equally long and as numpy array. 
+    Input x, y, z and radar (rainstation size) shoud be equally long and as numpy array.
     Input xi, yi and zi (radar size) should be equally long and as numpy array.
     Input vario will display the variogram.
-    
+
     Returns calibrated grid
     """
     import pykrige
     # Create predictor
-    ked = pykrige.UniversalKriging(x, y, z, 
+    ked = pykrige.UniversalKriging(x, y, z,
                                    drift_terms = ["specified"],
                                    specified_drift = [radar,],
                                    variogram_model = "spherical",
@@ -128,12 +128,12 @@ def ked_py_v(x, y, z, radar, xi, yi, zi, vario=False):
 #                                   variogram_function([100,50000,0], 5000)
                                    nlags = 10,
                                    verbose = False,
-                                   
+
     )
     if vario == True:
         ked.display_variogram_model()
     # Run predictor
-    y_pred = ked.execute('points', xi, yi, 
+    y_pred = ked.execute('points', xi, yi,
                          specified_drift_arrays = [zi,],
                          backend="vectorized",
     )
@@ -144,15 +144,15 @@ def ked_py_l(x, y, z, radar, xi, yi, zi, vario=False):
     """
     Run the kriging method using the Python module Pykrige using loop backend to save memory (long runtime).
     Kriging External Drift (or universal kriging).
-    Input x, y, z and radar (rainstation size) shoud be equally long and as numpy array. 
+    Input x, y, z and radar (rainstation size) shoud be equally long and as numpy array.
     Input xi, yi and zi (radar size) should be equally long and as numpy array.
     Input vario will display the variogram.
-    
+
     Returns calibrated grid
     """
     import pykrige
     # Create predictor
-    ked = pykrige.UniversalKriging(x, y, z, 
+    ked = pykrige.UniversalKriging(x, y, z,
                                    drift_terms = ["specified"],
                                    specified_drift = [radar,],
                                    variogram_model = "spherical",
@@ -161,12 +161,12 @@ def ked_py_l(x, y, z, radar, xi, yi, zi, vario=False):
 #                                   variogram_function([100,50000,0], 5000)
                                    nlags = 10,
                                    verbose = False,
-                                   
+
     )
     if vario == True:
         ked.display_variogram_model()
     # Run predictor
-    y_pred = ked.execute('points', xi, yi, 
+    y_pred = ked.execute('points', xi, yi,
                          specified_drift_arrays = [zi,],
                          backend="loop",
     )
