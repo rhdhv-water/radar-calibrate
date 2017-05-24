@@ -6,7 +6,7 @@ import h5py
 import numpy
 import matplotlib.pyplot as plt
 from time import time
-from calibrate import kriging
+from radar_calibrate import kriging
 
 plt.close('all')
 
