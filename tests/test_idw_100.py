@@ -2,16 +2,19 @@
 # -*- coding: utf-8 -*-
 # Jonne Kleijer, Royal HaskoningDHV
 
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+# Jonne Kleijer, Royal HaskoningDHV
+
 import h5py
 import numpy
 import matplotlib.pyplot as plt
 import scipy.interpolate as inter
 from time import time
 
-from calibrate import kriging
+from calibrate import idw, kriging
 
 file_aggregate = r'..\data\24uur_20170223080000.h5'
-file_smooth = r'..\data\24uur_20170223080000_smooth.h5'
 file_calibrate = r'..\data\RAD_TF2400_U_20170223080000.h5'
 
 with h5py.File(file_aggregate, 'r') as ds:
@@ -45,29 +48,18 @@ vals = numpy.reshape(aggregate, (len(aggregate[:][0]) * len(aggregate[:])))
 pts = numpy.array([[i,j] for i in xi[:,0] for j in yi[0,:]] )
 zi_smooth = inter.griddata(pts, vals, (xi_smooth, yi_smooth), method='linear')
 
-xi_smooth = numpy.float32(xi_smooth).flatten()
-yi_smooth = numpy.float32(yi_smooth).flatten()
-zi_smooth = numpy.float32(zi_smooth).flatten()
-
 #==============================================================================
 # RUN FUNCTIONS
 #==============================================================================
-#tic = time()
-#rain_est_R = kriging.ked_R(x, y, z, radar, xi_smooth, yi_smooth, zi_smooth, False)
-#calibrate_R = rain_est_R.reshape(zi_smooth.shape)
-#print("R:" + str(time() - tic) + "seconds")
-
 tic = time()
-rain_est_py = kriging.ked_py_l(x, y, z, radar, xi_smooth, yi_smooth, zi_smooth, False)
-calibrate_py = rain_est_py.reshape(zi_smooth.shape)
+rain_est_idw = idw.idw(x, y, z, xi_smooth, yi_smooth)
 print("py:" + str(time() - tic) + "seconds")
 
-# Plot radar_calibrate_R
 plt.figure()
 f221 = plt.subplot(2, 1, 1)
 plt.imshow(aggregate, cmap='rainbow', vmin=0, vmax=40)
 plt.ylabel('y-coordinate')
 plt.title('aggregate')
-f222 = plt.subplot(2, 1, 2)
-plt.imshow(zi_smooth, cmap='rainbow', vmin=0, vmax=40)
-plt.title('$calibrate_{original}$')
+f222 = plt.subplot(2, 1, 2, sharex=f221, sharey=f221)
+plt.imshow(rain_est_idw, cmap='rainbow', vmin=0, vmax=40)
+plt.title('$calibrate_{IDW}$')
