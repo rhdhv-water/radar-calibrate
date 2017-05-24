@@ -13,7 +13,12 @@ setup(name='radar_calibrate',
       license='GPL',
       packages=['radar_calibrate'],
       install_requires=[
-          'PyKrige',
           'pytest',
+          'numpy',
+          'scipy',
+          'matplotlib',
+          'rpy2',
+          'PyKrige',
+
       ],
       zip_safe=False)
