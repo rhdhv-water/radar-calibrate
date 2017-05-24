@@ -1,42 +1,14 @@
 # -*- coding: utf-8 -*-
 # Royal HaskoningDHV
 
-import numpy
-import logging
+# import rpy2.robjects as robj
+import pykrige
+
 import matplotlib.pyplot as plt
+import numpy
 
-def get_radar_for_locations(x, y, grid_extent, aggregate, pixelwidth, pixelheight, block=2):
-    """
-    Radar "pixel"values for location closest to weather station.
-    Returns those pixels that are closest to the rain stations
-    """
-    # Changes name size to block as size is a function as well and might confuse
-    left, right, top, bottom = grid_extent
-    block = block # use number of surrounding pixels
-    radar = []
-    for i in range(len(x)):
-        xoff = int((x[i] - left) / pixelwidth)
-        yoff = int((y[i] - bottom) / pixelheight) # pixelheight is -1000
-        data = aggregate[xoff:xoff + block, yoff:yoff + block]
-        radar.append(numpy.median(data))
-    return radar
+import logging
 
-def get_grid(aggregate, grid_extent, pixelwidth, pixelheight):
-    """
-    Return x and y coordinates of cell centers.
-    """
-#    cellwidth, cellheight = aggregate.get_cellsize()
-    left, right, top, bottom = grid_extent
-
-    nx = numpy.size(aggregate, 0)
-    ny = numpy.size(aggregate, 1)
-    xmin = left + pixelwidth / 2
-    xmax = right - pixelwidth / 2
-    ymin = bottom - pixelheight / 2
-    ymax = top + pixelheight / 2
-
-    xi, yi = numpy.mgrid[xmin:xmax:nx * 1j, ymax:ymin:ny * 1j,]
-    return xi, yi
 
 def plot_vgm_R(vgm_py, residual_py):
     figure = plt.figure()
@@ -57,8 +29,6 @@ def ked_R(x, y, z, radar, xi, yi, zi, vario=False):
 
     Returns calibrated grid
     """
-
-    import rpy2.robjects as robj
     robj.r.library('gstat')
 
     # Modification to prevent singular matrix (Tom)
@@ -116,7 +86,6 @@ def ked_py_v(x, y, z, radar, xi, yi, zi, vario=False):
 
     Returns calibrated grid
     """
-    import pykrige
     # Create predictor
     ked = pykrige.UniversalKriging(x, y, z,
                                    drift_terms = ["specified"],
@@ -149,7 +118,6 @@ def ked_py_l(x, y, z, radar, xi, yi, zi, vario=False):
 
     Returns calibrated grid
     """
-    import pykrige
     # Create predictor
     ked = pykrige.UniversalKriging(x, y, z,
                                    drift_terms = ["specified"],

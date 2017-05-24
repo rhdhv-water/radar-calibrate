@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+"""Summary
+"""
 # Royal HaskoningDHV
 
-import numpy as np
+import numpy
 
-def sample_grid(coords, grid, extent, res, blocksize=2, agg=numpy.median):
+
+def sample_grid(coords, grid, geotransform, blocksize=2, agg=numpy.median):
     """
     Parameters
     ----------
@@ -11,9 +14,7 @@ def sample_grid(coords, grid, extent, res, blocksize=2, agg=numpy.median):
         Description
     grid : TYPE
         Description
-    extent : TYPE
-        Description
-    res : TYPE
+    geogeotransform : TYPE
         Description
     blocksize : int, optional
         Description
@@ -26,18 +27,27 @@ def sample_grid(coords, grid, extent, res, blocksize=2, agg=numpy.median):
         Description
 
 
-    """
-    # unpack extent
-    left, right, top, bottom = grid_extent
+    Deleted Parameters
+    ------------------
+    extent : TYPE
+        Description
+    res : TYPE
+        Description
 
-     # unpack resolution
-    xres, yres = res
+
+    """
+    # unpack geotransform
+    left, cellwidth, _, top, _, cellheight, = geotransform
 
     values = []
     for x, y in coords:
         # x, y to row and column indices
-        col_left = int((x - left) / xres)
-        row_top = int((y - top) / yres) # yres is < 0
+        col_left = int(numpy.floor((x - left) / cellwidth))
+        row_top = int(numpy.floor((y - top) / cellheight)) # cellheight is < 0
+
+        if (col_left < 0) or (row_top < 0):  # prevent negative indexing
+            yield numpy.nan
+            continue
 
         # add blocksize
         col_idx = slice(col_left, col_left + blocksize)
@@ -47,7 +57,5 @@ def sample_grid(coords, grid, extent, res, blocksize=2, agg=numpy.median):
         try:
             block = grid[row_idx, col_idx]
         except IndexError:
-            block = np.nan
-        values.append(agg(block))
-    return values
-
+            block = numpy.nan
+        yield agg(block)
