@@ -14,5 +14,6 @@ setup(name='radar_calibrate',
       packages=['radar_calibrate'],
       install_requires=[
           'PyKrige',
+          'pytest',
       ],
       zip_safe=False)
