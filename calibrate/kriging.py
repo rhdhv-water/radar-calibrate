@@ -55,6 +55,7 @@ def ked_R(x, y, z, radar, xi, yi, zi, vario=False):
     Input x, y, z and radar (rainstation size) shoud be equally long.
     Inputs xi, yi and zi (radar size) should be equally long.
     Input vario will display the variogram.
+    
     Returns calibrated grid
     """
 
@@ -113,6 +114,7 @@ def ked_py(x, y, z, radar, xi, yi, zi, vario=False):
     Input x, y, z and radar (rainstation size) shoud be equally long and as numpy array. 
     Input xi, yi and zi (radar size) should be equally long and as numpy array.
     Input vario will display the variogram.
+    
     Returns calibrated grid
     """
     import pykrige

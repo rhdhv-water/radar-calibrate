@@ -7,8 +7,8 @@ import numpy
 import matplotlib.pyplot as plt
 import os
 from time import time
-
 from calibrate import kriging
+
 plt.close('all')
 
 #==============================================================================
@@ -20,14 +20,14 @@ file_calibrate = r'..\data\RAD_TF2400_U_20170223080000.h5'
 #==============================================================================
 # Read files
 #==============================================================================
-with h5py.File(os.path.join(file_aggregate), 'r') as ds:
+with h5py.File(file_aggregate, 'r') as ds:
     aggregate = numpy.float64(ds['precipitation'][:]).T # Index is [x][y]
     grid_extent = ds.attrs['grid_extent']
     grid_size = ds.attrs['grid_size']
     left, right, top, bottom = grid_extent
     pixelwidth = (right - left) / grid_size[0]
     pixelheight = (bottom - top) / grid_size[1]
-with h5py.File(os.path.join(file_calibrate), 'r') as ds:
+with h5py.File(file_calibrate, 'r') as ds:
     calibrate = numpy.float64(ds['image1/image_data']).T # Index is [x][y]
     coords = numpy.array(ds.attrs['cal_station_coords'])
     x = coords[:, 0]
