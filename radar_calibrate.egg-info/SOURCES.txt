@@ -1,9 +1,0 @@
-README.rst
-setup.py
-calibrate/__init__.py
-calibrate/kriging.py
-radar_calibrate.egg-info/PKG-INFO
-radar_calibrate.egg-info/SOURCES.txt
-radar_calibrate.egg-info/dependency_links.txt
-radar_calibrate.egg-info/not-zip-safe
-radar_calibrate.egg-info/top_level.txt

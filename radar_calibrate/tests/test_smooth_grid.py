@@ -1,6 +1,5 @@
-#! /usr/bin/env python
 # -*- coding: utf-8 -*-
-# Jonne Kleijer, Royal HaskoningDHV
+# Royal HaskoningDHV
 
 import h5py
 import numpy
@@ -8,7 +7,7 @@ import matplotlib.pyplot as plt
 import scipy.interpolate as inter
 from time import time
 
-from calibrate import kriging
+from radar_calibrate import kriging
 
 file_aggregate = r'..\data\24uur_20170223080000.h5'
 file_smooth = r'..\data\24uur_20170223080000_smooth.h5'
@@ -40,7 +39,7 @@ pixelwidth_smooth = pixelwidth/factor_x
 pixelheight_smooth = pixelheight/factor_y
 zi_smooth = numpy.empty(numpy.array(aggregate.shape) * 10)
 xi_smooth, yi_smooth = kriging.get_grid(zi_smooth, grid_extent, pixelwidth_smooth, pixelheight_smooth)
-# Interpolate grid with inter from scipy. 
+# Interpolate grid with inter from scipy.
 vals = numpy.reshape(aggregate, (len(aggregate[:][0]) * len(aggregate[:])))
 pts = numpy.array([[i,j] for i in xi[:,0] for j in yi[0,:]] )
 zi_smooth = inter.griddata(pts, vals, (xi_smooth, yi_smooth), method='linear')
