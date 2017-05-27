@@ -1,92 +1,25 @@
 # -*- coding: utf-8 -*-
 # Royal HaskoningDHV
 
-from radar_calibrate import kriging
 from radar_calibrate import gridtools
-from openradar import gridtools as openradar_gridtools
+from radar_calibrate import files
+from radar_calibrate import kriging
+from radar_calibrate import kriging_r
+from radar_calibrate import utils
 
-import matplotlib.pyplot as plt
 import numpy
-import h5py
 
-import time
-
-plt.close('all')
+import logging
 
 
-def precipitation_grid(dataset):
-    """Summary
-
-    Parameters
-    ----------
-    dataset : TYPE
-        Description
-
-    Returns
-    -------
-    TYPE
-        Description
-    """
-    return dataset['image1/image_data'][:].astype(numpy.float64) * 1e-2
-
-
-def data_from_files(aggregatefile, calibratefile):
-    """Summary
-
-    Parameters
-    ----------
-    aggregatefile : TYPE
-        Description
-    calibratefile : TYPE
-        Description
-
-    Returns
-    -------
-    TYPE
-        Description
-    """
-    # read aggregate and grid properties from aggregate file
-    with h5py.File(aggregatefile, 'r') as ds:
-        aggregate = precipitation_grid(ds)
-        grid_extent = ds.attrs['grid_extent']
-        grid_size = [int(i) for i in ds.attrs['grid_size']]
-
-    # construct basegrid
-    basegrid = openradar_gridtools.BaseGrid(extent=grid_extent,
-        size=grid_size)
-
-    # read calibrate and station measurements from calibrate file
-    with h5py.File(calibratefile, 'r') as ds:
-        calibrate = precipitation_grid(ds)
-        cal_station_coords = ds.attrs['cal_station_coords']
-        cal_station_values = ds.attrs['cal_station_measurements']
-
-    # sample aggregate at calibration station coordinates
-    radar_values = gridtools.sample_grid(
-        coords=cal_station_coords,
-        grid=aggregate,
-        geotransform=basegrid.get_geotransform(),
-        )
-
-    # transform aggregate grid to coordinate and value vectors
-    xi, yi = basegrid.get_grid()
-    zi = aggregate.flatten()
-
-    # back to vague naming
-    x = cal_station_coords[:, 0]
-    y = cal_station_coords[:, 1]
-    z = cal_station_values
-    radar = radar_values
-
-    # return tuple
-    return x, y, z, radar, xi, yi, zi
-
-
-def main():
+def test_ked():
     # test data files
     aggregatefile = r'data\24uur_20170223080000.h5'
     calibratefile = r'data\RAD_TF2400_U_20170223080000.h5'
-    x, y, z, radar, xi, yi, zi = data_from_files(aggregatefile, calibratefile)
+    x, y, z, radar, xi, yi, zi = files.get_testdata(
+        aggregatefile,
+        calibratefile,
+        )
 
     tic = time.time()
     rain_est_R = kriging.ked_R(x, y, z, radar, xi, yi, zi)
@@ -95,7 +28,7 @@ def main():
     print("R took" + str(time() - tic) + "seconds")
 
 if __name__ == '__main__':
-    logging.basicConfig(level=)
+    logging.basicConfig(level=logging.DEBUG)
     main()
 
 # with h5py.File(file_aggregate, 'r') as ds:

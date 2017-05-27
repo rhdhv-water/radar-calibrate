@@ -1,43 +1,39 @@
 # -*- coding: utf-8 -*-
-"""Summary
+"""Collection of functions operating on georeferenced grids.
+
+To be merged with openradar.gridtools.
+
 """
 # Royal HaskoningDHV
+
+# add all from openradar.gridtools
+from openradar.gridtools import *
 
 import numpy
 
 
 def sample_grid(coords, grid, geotransform, blocksize=2, agg=numpy.median):
-    """
+    """Sample georeferenced grid at given coordinates
     Parameters
     ----------
-    coords : TYPE
+    coords : Sequence
+        Sequence or iterator yielding X,Y coordinate pairs
+    grid : Array
         Description
-    grid : TYPE
-        Description
-    geogeotransform : TYPE
+    geotransform : TYPE
         Description
     blocksize : int, optional
         Description
     agg : TYPE, optional
         Description
 
-    Returns
-    -------
+    Yields
+    ------
     TYPE
         Description
-
-
-    Deleted Parameters
-    ------------------
-    extent : TYPE
-        Description
-    res : TYPE
-        Description
-
-
     """
     # unpack geotransform
-    left, cellwidth, _, top, _, cellheight, = geotransform
+    left, cellwidth, _, top, _, cellheight = geotransform
 
     values = []
     for x, y in coords:
