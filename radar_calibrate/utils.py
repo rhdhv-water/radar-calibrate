@@ -9,7 +9,7 @@ import time
 Timedresult = namedtuple('timedresult', 'dt', 'result')
 
 
-def timeit(func):
+def timethis(func):
     """Function or method decorator measuring execution time
 
     See https://www.andreas-jung.com/contents/a-python-decorator-for-measuring-the-execution-time-of-funcs
