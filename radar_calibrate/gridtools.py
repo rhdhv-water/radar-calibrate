@@ -7,7 +7,7 @@ To be merged with openradar.gridtools.
 # Royal HaskoningDHV
 
 # add all from openradar.gridtools
-from openradar.gridtools import *
+from openradar.gridtools import BaseGrid
 
 import numpy
 
