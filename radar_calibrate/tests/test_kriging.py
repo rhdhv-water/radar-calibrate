@@ -34,12 +34,12 @@ def test_ked():
 
     # ked using R
     timedresult_r = krige_r(x, y, z, radar, xi, yi, zi)
-    logging.info('ked in R took {dt:2f} seconds'.format(dt=timedresult_r.dt))
+    logging.info('ked in R took {dt:.2f} seconds'.format(dt=timedresult_r.dt))
     calibrate_r = timedresult_r.result.reshape(calibrate.shape)
 
     # ked using Python
     timedresult_py = krige_py(x, y, z, radar, xi, yi, zi)
-    logging.info('ked in python took {dt:2f} seconds'.format(
+    logging.info('ked in python took {dt:.2f} seconds'.format(
         dt=timedresult_py.dt))
     calibrate_py = timedresult_py.result.reshape(calibrate.shape)
 
