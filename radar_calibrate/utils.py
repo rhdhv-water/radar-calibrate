@@ -6,7 +6,7 @@
 from collections import namedtuple
 import time
 
-Timedresult = namedtuple('timedresult', 'dt', 'result')
+Timedresult = namedtuple('timedresult', 'dt result')
 
 
 def timethis(func):
@@ -28,7 +28,7 @@ def timethis(func):
         tic = time.time()
         result = func(*args, **kwargs)
         toc = time.time()
-        dt = tic - toc
+        dt = toc - tic
         return Timedresult(dt=dt, result=result)
 
     return timed
