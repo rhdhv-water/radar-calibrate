@@ -1,0 +1,431 @@
+ID,EXT_ID,NAAM,PARENTID,OMSCHRIJVI,REGIO,AFKORTING,INSTANTIE,KWALITEIT,RESOLUTIE,FREQUENTIE,TIJDZONE,X,Y,COMPLEET,TYPE,TYPE_DATA,KWALITEIT_,VERBINDING,WNS1400_1M,WNS1400_5M,WNS1400_10,WNS1400_15,WNS1400_20,WNS1400_1H,WNS1400_1D
+OS039,OS039,Dante,Velt,Deelnemers,Velt & Vecht,Velt,Deelnemers,3,0.1,15 minuten,,224291,504895,nee,Disdro,CSV,2 of 3,"Ja, via FEWS-WIS Velt enVecht, verzending instelbaar",,,,Rainfall,,P.meting.disdro,
+OS016,OS016,Baalder,Velt,Deelnemers,Velt & Vecht,Velt,Deelnemers,3,0.1,15 minuten,,239310,510860,nee,Disdro,CSV,2 of 3,"Ja, via FEWS-WIS Velt enVecht, verzending instelbaar",,,,Rainfall,,P.meting.disdro,
+OS009,OS009,TBC Erica,Velt,Deelnemers,Velt & Vecht,Velt,Deelnemers,3,0.1,15 minuten,,257150,524150,nee,Disdro,CSV,2 of 3,"Ja, via FEWS-WIS Velt enVecht, verzending instelbaar",,,,Rainfall,,P.meting.disdro,
+OS156,OS156,Kibbelveen,Velt,Deelnemers,Velt & Vecht,Velt,Deelnemers,3,0.1,15 minuten,,251493,538739,nee,Disdro,CSV,2 of 3,"Nee, nog niet operationeel. Verwacht ja, vanaf augustus 2012",,,,Rainfall,,P.meting.disdro,
+OS155,OS155,Padhuizerweide,Velt,Deelnemers,Velt & Vecht,Velt,Deelnemers,3,0.1,15 minuten,,253583,519124,nee,Disdro,CSV,2 of 3,"Nee, nog niet operationeel. Verwacht ja, vanaf augustus 2012",,,,Rainfall,,P.meting.disdro,
+1338_NSG,1338_NSG,Wehl,Rijn,Deelnemers,Rijn & Ijssel,Rijn,Deelnemers,3,0.1,10 minuten,,210603,441421,nee,,,,nat 1peruur droog 1per6uur,,,WNS9028,,,,
+1337_NSG,1337_NSG,Lochem,Rijn,Deelnemers,Rijn & Ijssel,Rijn,Deelnemers,3,0.1,10 minuten,,221540,465450,nee,,,,nat 1peruur droog 1per6uur,,,WNS9028,,,,
+1339_NSG,1339_NSG,Haart/Aalten,Rijn,Deelnemers,Rijn & Ijssel,Rijn,Deelnemers,3,0.1,10 minuten,,241846,436961,nee,,,,nat 1peruur droog 1per6uur,,,WNS9028,,,,
+205S310,205S310,nr.205 rwzi Den Ham,Regge,Deelnemers,Regge & Dinkel,Regge,Deelnemers,3,0.1,continu cum. 20 min/uur/dag,,229125,498025,nee,,ASCII zrxp,,ja Atis GPRS,,,,,205S310,,
+072S310,072S310,nr.072 rwzi Goor,Regge,Deelnemers,Regge & Dinkel,Regge,Deelnemers,3,0.1,continu cum. 20 min/uur/dag,,235970,473880,nee,,ASCII zrxp,,ja Atis GPRS,,,,,072S310,,
+223S310,223S310,nr.223 rwzi Enschede,Regge,Deelnemers,Regge & Dinkel,Regge,Deelnemers,3,0.1,continu cum. 20 min/uur/dag,,254415,472750,nee,,ASCII zrxp,,ja Atis GPRS,,,,,223S310,,
+218S310,218S310,nr.218 rwzi Haaksbergen,Regge,Deelnemers,Regge & Dinkel,Regge,Deelnemers,3,0.1,continu cum. 20 min/uur/dag,,245840,466200,nee,,ASCII zrxp,,ja Atis GPRS,,,,,218S310,,
+232S310,232S310,nr.232 rwzi Losser,Regge,Deelnemers,Regge & Dinkel,Regge,Deelnemers,3,0.1,continu cum. 20 min/uur/dag,,266040,476020,nee,,ASCII zrxp,,ja Atis GPRS,,,,,232S310,,
+215S310,215S310,nr.215 rwzi Hengelo,Regge,Deelnemers,Regge & Dinkel,Regge,Deelnemers,3,0.1,continu cum. 20 min/uur/dag,,249560,477520,nee,,ASCII zrxp,,ja Atis GPRS,,,,,215S310,,
+208S310,208S310,nr.208 rwzi Nijverdal,Regge,Deelnemers,Regge & Dinkel,Regge,Deelnemers,3,0.1,continu cum. 20 min/uur/dag,,228878,487516,nee,,ASCII zrxp,,ja Atis GPRS,,,,,208S310,,
+0401,0401,Scheemda,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,15 minuten,,263398,576481,nee,Observator TB,CSV,3,ja,,neerslagintensiteit[mm/5min],,,,X,
+0501,0501,Stadskanaal,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,15 minuten,,260248,559484,nee,Observator TB,CSV,3,ja,,neerslagintensiteit,,,,X,
+0566,0566,Emmer Compascuum,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,1uur,,267908,537467,nee,Observator TB,CSV,3,ja,,X,,,,X,
+0611,0611,Jipsingboertange,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,1uur,,270711,554762,ja,Observator TB,CSV,3,ja,,X,,,,X,
+0640,0640,Tweede Exloermond,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,15 minuten,,260089,548925,nee,Observator TB,CSV,3,ja,,neerslagintensiteit,,,,X,
+4612,4612,Egypteneinde,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,1uur,,256063,572970,nee,Observator TB,CSV,3,ja,,X,,,,X,
+6060,6060,De Bult,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,1uur,,271572,575349,ja,Observator TB,CSV,3,ja,,X,,,,X,
+6354,6354,Hongerige Wolf,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,1uur,,271841,582455,nee,Observator TB,CSV,3,ja,,X,,,,X,
+0725,0725,Zuidlaren,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,5 minuten/oud,,242000,568500,,,,,,,X,,,,X,
+2016,2016,Borgercompagnie,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,5 minuten/oud,,249339,574495,,,,,,,X,,,,X,
+2022,2022,Folkerts,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,5 minuten/oud,,237818,579261,,,,,,,X,,,,X,
+2048,2048,Rolde,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,5 minuten/oud,,240222,556426,,,,,,,X,,,,X,
+2055,2055,Borger,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,5 minuten/oud,,249707,548397,,,,,,,X,,,,X,
+4360,4360,Ter Apelersluis,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,5 minuten/oud,,270208,544892,,,,,,,X,,,,X,
+6234,6234,Lageland,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,5 minuten/oud,,242675,584028,,,,,,,X,,,,X,
+6370,6370,Scheve klap,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,5 minuten/oud,,260601,587199,,,,,,,X,,,,X,
+6487,6487,Veele,Hunze,Deelnemers,Hunze & Aa's,Hunze,Deelnemers,3,,5 minuten/oud,,269611,562881,,,,,,,X,,,,X,
+1.P.1,1.P.1,Heisterhof,Roer,Deelnemers,Roer & Overmaas,Roer,Deelnemers,3,0.1,5 minuten,,200225,355290,nee,,CSV,3,"SMS, op dit moment 1 keer per 4 uren",,neerslagintensiteit [mm/5min],,,,,
+3.P.29,3.P.29,Mariahoop,Roer,Deelnemers,Roer & Overmaas,Roer,Deelnemers,3,0.1,5 minuten,,193962,345513,nee,,CSV,3,"SMS, op dit moment 1 keer per 4 uren",,neerslagintensiteit [mm/5min],,,,,
+6.P.21,6.P.21,Millen,Roer,Deelnemers,Roer & Overmaas,Roer,Deelnemers,3,0.1,1 minuut,,188947,337109,nee,,CSV,3,GPRS,,neerslagintensiteit [mm/5min],,,,,
+6.P.40,6.P.40,Schimmert - Spaubeek,Roer,Deelnemers,Roer & Overmaas,Roer,Deelnemers,3,0.1,5 minuten,,186546,326311,nee,,CSV,3,"SMS, op dit moment 1 keer per 4 uren",,neerslagintensiteit [mm/5min],,,,,
+8.P.18,8.P.18,Stein,Roer,Deelnemers,Roer & Overmaas,Roer,Deelnemers,3,0.1,1 minuut,,180697,331691,nee,,CSV,3,GPRS,,neerslagintensiteit [mm/5min],,,,,
+10.P.30,10.P.30,Ransdaal,Roer,Deelnemers,Roer & Overmaas,Roer,Deelnemers,3,0.1,5 minuten,,191246,318627,nee,,CSV,3,"SMS, op dit moment 1 keer per 4 uren",,neerslagintensiteit [mm/5min],,,,,
+10.P.36,10.P.36,Maastricht,Roer,Deelnemers,Roer & Overmaas,Roer,Deelnemers,3,0.1,1 minuut,,177314,320266,nee,,CSV,3,GPRS,,neerslagintensiteit [mm/5min],,,,,
+12.P.25,12.P.25,Vaals,Roer,Deelnemers,Roer & Overmaas,Roer,Deelnemers,3,0.1,5 minuten,,198505,308661,nee,,CSV,3,"SMS, op dit moment 1 keer per 4 uren",,neerslagintensiteit [mm/5min],,,,,
+15.P.41,15.P.41,Noorbeek,Roer,Deelnemers,Roer & Overmaas,Roer,Deelnemers,3,0.1,5 minuten,,185950,308371,nee,,CSV,3,"SMS, op dit moment 1 keer per 4 uren",,neerslagintensiteit [mm/5min],,,,,
+18.P.37,18.P.37,Kaffeberg,Roer,Deelnemers,Roer & Overmaas,Roer,Deelnemers,3,0.1,1 minuut,,201510,321755,nee,,CSV,3,GPRS,,neerslagintensiteit [mm/5min],,,,,
+X19,X17,Groningen,Groningen,Deelnemers,Groningen,Groningen,Deelnemers,3,0.1,10 minuten,,220000,610000,nee,,CSV,2 of 3,"ja, via Mous Aquaweb,GSM, 1 keer per 12 uur",,,,,,X,
+X20,X18,Groningen,Groningen,Deelnemers,Groningen,Groningen,Deelnemers,3,0.1,10 minuten,,230000,620000,nee,,CSV,2 of 3,"ja, via Mous Aquaweb,GSM, 1 keer per 12 uur",,,,,,X,
+X21,X19,Groningen,Groningen,Deelnemers,Groningen,Groningen,Deelnemers,3,0.1,10 minuten,,240000,630000,nee,,CSV,2 of 3,"ja, via Mous Aquaweb,GSM, 1 keer per 12 uur",,,,,,X,
+L0006,L0006,Sneek,Friesland,Deelnemers,Wetterskip Fryslan,Friesland,Deelnemers,3,0.1,5 minuten,,171980,559690,nee,,CSV,,gprs,,,,,,neerslagintensiteit,
+L0050,L0050,Kootstertille,Friesland,Deelnemers,Wetterskip Fryslan,Friesland,Deelnemers,3,0.1,5 minuten,,203667,582248,nee,,CSV,,gprs,,,,,,neerslagintensiteit,
+L0051,L0051,Gorredijk,Friesland,Deelnemers,Wetterskip Fryslan,Friesland,Deelnemers,3,0.1,5 minuten,,200450,557520,nee,,CSV,,gprs,,,,,,neerslagintensiteit,
+L0052,L0052,Harlingen,Friesland,Deelnemers,Wetterskip Fryslan,Friesland,Deelnemers,3,0.1,5 minuten,,159619,576229,nee,,CSV,,gprs,,,,,,neerslagintensiteit,
+L0053,L0053,Ravenswoude,Friesland,Deelnemers,Wetterskip Fryslan,Friesland,Deelnemers,3,0.1,5 minuten,,223533,554903,nee,,CSV,,gprs,,,,,,neerslagintensiteit,
+L0054,L0054,Nijelamer,Friesland,Deelnemers,Wetterskip Fryslan,Friesland,Deelnemers,3,0.1,5 minuten,,192867,545198,nee,,CSV,,gprs,,,,,,neerslagintensiteit,
+06210,06210,Valkenburg,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,88604,466467,,,,,,,,X,,,RhRhRh,
+06229,06229,Texelhors,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,112197,557072,,,,,,,,X,,,RhRhRh,
+06235,06235,De Kooy *),,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,114358,547781,,,,,,,,X,,,RhRhRh,
+06240,06240,Amsterdam/Schiphol *),,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,112648,479183,,,,,,,,X,,,RhRhRh,
+06249,06249,Berkhout,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,127642,518017,,,,,,,,X,,,RhRhRh,
+06257,06257,Wijk aan Zee,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,101523,501543,,,,,,,,X,,,RhRhRh,
+06260,06260,De Bilt *),,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,141003,456772,,,,,,,,X,,,RhRhRh,
+06265,06265,Soesterberg,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,147859,460466,,,,,,,,X,,,RhRhRh,
+06267,06267,Stavoren,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,154710,543902,,,,,,,,X,,,RhRhRh,
+06269,06269,Lelystad *),,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,164903,495700,,,,,,,,X,,,RhRhRh,
+06270,06270,Leeuwarden*),,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,180316,581059,,,,,,,,X,,,RhRhRh,
+06273,06273,Marknesse,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,188503,523619,,,,,,,,X,,,RhRhRh,
+06275,06275,Deelen,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,188985,453160,,,,,,,,X,,,RhRhRh,
+06278,06278,Heino,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,214772,494198,,,,,,,,X,,,RhRhRh,
+06279,06279,Hoogeveen,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,231249,527808,,,,,,,,X,,,RhRhRh,
+06280,06280,Groningen *),,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,235014,572383,,,,,,,,X,,,RhRhRh,
+06283,06283,Hupsel,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,241546,453797,,,,,,,,X,,,RhRhRh,
+06286,06286,Nieuw Beerta,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,272749,580578,,,,,,,,X,,,RhRhRh,
+06290,06290,Twenthe *),,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,258220,476370,,,,,,,,X,,,RhRhRh,
+06310,06310,Vlissingen *),,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,30760,385969,,,,,,,,X,,,RhRhRh,
+06315,06315,Hansweert,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,58557,385363,,,,,,,,X,,,RhRhRh,
+06319,06319,Westdorpe,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,46461,361499,,,,,,,,X,,,RhRhRh,
+06323,06323,Wilhelminadorp,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,51797,394769,,,,,,,,X,,,RhRhRh,
+06330,06330,Hoek van Holland,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,66557,444557,,,,,,,,X,,,RhRhRh,
+06340,06340,Woensdrecht,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,81723,384975,,,,,,,,X,,,RhRhRh,
+06343,06343,Rotterdam Geulhaven,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,81274,433192,,,,,,,,X,,,RhRhRh,
+06344,06344,Rotterdam *),,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,90548,440481,,,,,,,,X,,,RhRhRh,
+06348,06348,Cabauw,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,123783,442017,,,,,,,,X,,,RhRhRh,
+06350,06350,Gilze Rijen,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,123505,397521,,,,,,,,X,,,RhRhRh,
+06356,06356,Herwijnen,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,138634,430822,,,,,,,,X,,,RhRhRh,
+0637X,0637X,Eindhoven*),,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,157018,384446,,,,,,,,X,,,RhRhRh,
+06375,06375,Volkel,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,176615,406739,,,,,,,,X,,,RhRhRh,
+06377,06377,Ell,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,181488,356705,,,,,,,,X,,,RhRhRh,
+06380,06380,Maastricht *),,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,182824,325194,,,,,,,,X,,,RhRhRh,
+06391,06391,Arcen,,AWS,AWS,AWS,KNMI,1,'0.1mm/uur,10 minuten,,211400,390321,,,,,,,,X,,,RhRhRh,
+10,10,HOLLUM,,STN,STN,STN,KNMI,2,,1 uur,,172000,605000,,,,,,,,,,,,X
+11,11,WEST TERSCHELLING,,STN,STN,STN,KNMI,2,,1 uur,,144000,598000,,,,,,,,,,,,X
+12,12,SCHIERMONNIKOOG,,STN,STN,STN,KNMI,2,,1 uur,,208000,610000,,,,,,,,,,,,X
+15,15,OOST VLIELAND,,STN,STN,STN,KNMI,2,,1 uur,,133000,590000,,,,,,,,,,,,X
+16,16,PETTEN,,STN,STN,STN,KNMI,2,,1 uur,,106000,531000,,,,,,,,,,,,X
+17,17,DEN BURG,,STN,STN,STN,KNMI,2,,1 uur,,116000,563000,,,,,,,,,,,,X
+18,18,NES AMELAND,,STN,STN,STN,KNMI,2,,1 uur,,180000,607000,,,,,,,,,,,,X
+19,19,DE COCKSDORP,,STN,STN,STN,KNMI,2,,1 uur,,121000,575000,,,,,,,,,,,,X
+21,21,CALLANTSOOG,,STN,STN,STN,KNMI,2,,1 uur,,109000,539000,,,,,,,,,,,,X
+22,22,DE KOOG,,STN,STN,STN,KNMI,2,,1 uur,,114000,568000,,,,,,,,,,,,X
+24,24,VLIELAND,,STN,STN,STN,KNMI,2,,1 uur,,125000,585000,,,,,,,,,,,,X
+25,25,DE KOOY N,,STN,STN,STN,KNMI,2,,1 uur,,115000,548000,,,,,,,,,,,,X
+26,26,FORMERUM,,STN,STN,STN,KNMI,2,,1 uur,,149000,601000,,,,,,,,,,,,X
+61,61,SKRINS,,STN,STN,STN,KNMI,2,,1 uur,,173000,571000,,,,,,,,,,,,X
+64,64,SNEEK,,STN,STN,STN,KNMI,2,,1 uur,,172000,561000,,,,,,,,,,,,X
+65,65,MAKKUM,,STN,STN,STN,KNMI,2,,1 uur,,156000,564000,,,,,,,,,,,,X
+66,66,HARLINGEN,,STN,STN,STN,KNMI,2,,1 uur,,158000,577000,,,,,,,,,,,,X
+67,67,DOKKUM,,STN,STN,STN,KNMI,2,,1 uur,,195000,594000,,,,,,,,,,,,X
+68,68,ST AN  PAROCHIE,,STN,STN,STN,KNMI,2,,1 uur,,174000,588000,,,,,,,,,,,,X
+69,69,APPELSCHA,,STN,STN,STN,KNMI,2,,1 uur,,220000,553000,,,,,,,,,,,,X
+70,70,OUDEMIRDUM,,STN,STN,STN,KNMI,2,,1 uur,,163000,541000,,,,,,,,,,,,X
+73,73,DRACHTEN,,STN,STN,STN,KNMI,2,,1 uur,,203000,570000,,,,,,,,,,,,X
+75,75,OLDEHOLTPADE,,STN,STN,STN,KNMI,2,,1 uur,,200000,546000,,,,,,,,,,,,X
+76,76,KORNWERDERZAND,,STN,STN,STN,KNMI,2,,1 uur,,152000,565000,,,,,,,,,,,,X
+77,77,KOLLUM,,STN,STN,STN,KNMI,2,,1 uur,,205000,588000,,,,,,,,,,,,X
+78,78,HERBAYUM,,STN,STN,STN,KNMI,2,,1 uur,,163000,577000,,,,,,,,,,,,X
+79,79,HEEG,,STN,STN,STN,KNMI,2,,1 uur,,169000,553000,,,,,,,,,,,,X
+80,80,STAVOREN,,STN,STN,STN,KNMI,2,,1 uur,,153000,544000,,,,,,,,,,,,X
+81,81,JOURE,,STN,STN,STN,KNMI,2,,1 uur,,184000,555000,,,,,,,,,,,,X
+82,82,GORREDIJK,,STN,STN,STN,KNMI,2,,1 uur,,200000,557000,,,,,,,,,,,,X
+84,84,EZUMAZIJL,,STN,STN,STN,KNMI,2,,1 uur,,206000,597000,,,,,,,,,,,,X
+85,85,LEEUWARDEN N,,STN,STN,STN,KNMI,2,,1 uur,,178000,581000,,,,,,,,,,,,X
+86,86,NIJ BEETS,,STN,STN,STN,KNMI,2,,1 uur,,196000,564000,,,,,,,,,,,,X
+87,87,BERGUMERDAM,,STN,STN,STN,KNMI,2,,1 uur,,197000,577000,,,,,,,,,,,,X
+89,89,AKKRUM,,STN,STN,STN,KNMI,2,,1 uur,,184000,563000,,,,,,,,,,,,X
+90,90,EERNEWOUDE,,STN,STN,STN,KNMI,2,,1 uur,,192000,572000,,,,,,,,,,,,X
+91,91,TER ARD,,STN,STN,STN,KNMI,2,,1 uur,,194000,599000,,,,,,,,,,,,X
+134,134,MIDDELSTUM,,STN,STN,STN,KNMI,2,,1 uur,,237000,594000,,,,,,,,,,,,X
+135,135,WOLTERSUM,,STN,STN,STN,KNMI,2,,1 uur,,244000,588000,,,,,,,,,,,,X
+136,136,EZINGE,,STN,STN,STN,KNMI,2,,1 uur,,226000,590000,,,,,,,,,,,,X
+139,139,GRONINGEN,,STN,STN,STN,KNMI,2,,1 uur,,235000,578000,,,,,,,,,,,,X
+140,140,ASSEN,,STN,STN,STN,KNMI,2,,1 uur,,236000,558000,,,,,,,,,,,,X
+141,141,DELFZIJL,,STN,STN,STN,KNMI,2,,1 uur,,258000,594000,,,,,,,,,,,,X
+142,142,WARFFUM,,STN,STN,STN,KNMI,2,,1 uur,,233000,602000,,,,,,,,,,,,X
+143,143,FINSTERWOLDE,,STN,STN,STN,KNMI,2,,1 uur,,270000,581000,,,,,,,,,,,,X
+144,144,TER APEL,,STN,STN,STN,KNMI,2,,1 uur,,269000,544000,,,,,,,,,,,,X
+145,145,ZOUTKAMP,,STN,STN,STN,KNMI,2,,1 uur,,215000,595000,,,,,,,,,,,,X
+147,147,VEENDAM,,STN,STN,STN,KNMI,2,,1 uur,,251000,569000,,,,,,,,,,,,X
+148,148,SAPPEMEER,,STN,STN,STN,KNMI,2,,1 uur,,245000,575000,,,,,,,,,,,,X
+150,150,UITHUIZEN,,STN,STN,STN,KNMI,2,,1 uur,,241000,603000,,,,,,,,,,,,X
+151,151,ROODESCHOOL,,STN,STN,STN,KNMI,2,,1 uur,,248000,606000,,,,,,,,,,,,X
+152,152,GIETERVEEN,,STN,STN,STN,KNMI,2,,1 uur,,252000,561000,,,,,,,,,,,,X
+153,153,WINSCHOTEN,,STN,STN,STN,KNMI,2,,1 uur,,266000,573000,,,,,,,,,,,,X
+154,154,EENRUM,,STN,STN,STN,KNMI,2,,1 uur,,227000,598000,,,,,,,,,,,,X
+155,155,EEXT,,STN,STN,STN,KNMI,2,,1 uur,,246000,558000,,,,,,,,,,,,X
+156,156,VLAGTWEDDE,,STN,STN,STN,KNMI,2,,1 uur,,271000,562000,,,,,,,,,,,,X
+158,158,ONNEN,,STN,STN,STN,KNMI,2,,1 uur,,241000,575000,,,,,,,,,,,,X
+159,159,NIEUW BUINEN,,STN,STN,STN,KNMI,2,,1 uur,,260000,554000,,,,,,,,,,,,X
+160,160,VEENHUIZEN,,STN,STN,STN,KNMI,2,,1 uur,,222000,563000,,,,,,,,,,,,X
+161,161,EELDE N,,STN,STN,STN,KNMI,2,,1 uur,,235000,571000,,,,,,,,,,,,X
+162,162,NIEKERK,,STN,STN,STN,KNMI,2,,1 uur,,219000,582000,,,,,,,,,,,,X
+163,163,RODEN,,STN,STN,STN,KNMI,2,,1 uur,,225000,574000,,,,,,,,,,,,X
+164,164,ZEERIJP,,STN,STN,STN,KNMI,2,,1 uur,,246000,596000,,,,,,,,,,,,X
+166,166,MARUM,,STN,STN,STN,KNMI,2,,1 uur,,215000,574000,,,,,,,,,,,,X
+171,171,ANJUM,,STN,STN,STN,KNMI,2,,1 uur,,205000,600000,,,,,,,,,,,,X
+172,172,NIEUWOLDA,,STN,STN,STN,KNMI,2,,1 uur,,262000,586000,,,,,,,,,,,,X
+210,210,BEVERWIJK,,STN,STN,STN,KNMI,2,,1 uur,,106000,499000,,,,,,,,,,,,X
+217,217,HEILOO,,STN,STN,STN,KNMI,2,,1 uur,,112000,512000,,,,,,,,,,,,X
+221,221,ENKHUIZEN,,STN,STN,STN,KNMI,2,,1 uur,,148000,525000,,,,,,,,,,,,X
+222,222,HOORN,,STN,STN,STN,KNMI,2,,1 uur,,132000,518000,,,,,,,,,,,,X
+223,223,SCHELLINGWOUDE,,STN,STN,STN,KNMI,2,,1 uur,,126000,489000,,,,,,,,,,,,X
+224,224,EDAM,,STN,STN,STN,KNMI,2,,1 uur,,132000,502000,,,,,,,,,,,,X
+225,225,OVERVEEN,,STN,STN,STN,KNMI,2,,1 uur,,101000,490000,,,,,,,,,,,,X
+226,226,WIJK AAN ZEE,,STN,STN,STN,KNMI,2,,1 uur,,101000,499000,,,,,,,,,,,,X
+227,227,AN  PAULOW,,STN,STN,STN,KNMI,2,,1 uur,,118000,542000,,,,,,,,,,,,X
+228,228,SCHAGEN,,STN,STN,STN,KNMI,2,,1 uur,,116000,532000,,,,,,,,,,,,X
+229,229,ZANDVOORT,,STN,STN,STN,KNMI,2,,1 uur,,95000,484000,,,,,,,,,,,,X
+230,230,ZAANDIJK,,STN,STN,STN,KNMI,2,,1 uur,,116000,499000,,,,,,,,,,,,X
+233,233,ZAANDAM HEMBRUG,,STN,STN,STN,KNMI,2,,1 uur,,117000,493000,,,,,,,,,,,,X
+234,234,BERGEN,,STN,STN,STN,KNMI,2,,1 uur,,107000,522000,,,,,,,,,,,,X
+235,235,CASTRICUM,,STN,STN,STN,KNMI,2,,1 uur,,105000,507000,,,,,,,,,,,,X
+236,236,MEDEMBLIK,,STN,STN,STN,KNMI,2,,1 uur,,136000,530000,,,,,,,,,,,,X
+238,238,DE HAUKES,,STN,STN,STN,KNMI,2,,1 uur,,125000,544000,,,,,,,,,,,,X
+239,239,DEN OEVER,,STN,STN,STN,KNMI,2,,1 uur,,131000,549000,,,,,,,,,,,,X
+240,240,KREILEROORD,,STN,STN,STN,KNMI,2,,1 uur,,135000,542000,,,,,,,,,,,,X
+242,242,PURMEREND,,STN,STN,STN,KNMI,2,,1 uur,,125000,503000,,,,,,,,,,,,X
+249,249,HOOGKARSPEL,,STN,STN,STN,KNMI,2,,1 uur,,140000,522000,,,,,,,,,,,,X
+251,251,WEST BEEMSTER,,STN,STN,STN,KNMI,2,,1 uur,,122000,511000,,,,,,,,,,,,X
+252,252,KOLHORN,,STN,STN,STN,KNMI,2,,1 uur,,122000,534000,,,,,,,,,,,,X
+255,255,OBDAM,,STN,STN,STN,KNMI,2,,1 uur,,121000,521000,,,,,,,,,,,,X
+256,256,MARKEN,,STN,STN,STN,KNMI,2,,1 uur,,137000,497000,,,,,,,,,,,,X
+257,257,HOOGWOUD,,STN,STN,STN,KNMI,2,,1 uur,,126000,527000,,,,,,,,,,,,X
+298,298,STEENWIJKSMOER,,STN,STN,STN,KNMI,2,,1 uur,,242000,520000,,,,,,,,,,,,X
+317,317,MARKNESSE,,STN,STN,STN,KNMI,2,,1 uur,,189000,524000,,,,,,,,,,,,X
+323,323,LAAGHALEN,,STN,STN,STN,KNMI,2,,1 uur,,232000,549000,,,,,,,,,,,,X
+326,326,FREDERIKSOORD,,STN,STN,STN,KNMI,2,,1 uur,,209000,540000,,,,,,,,,,,,X
+327,327,DWINGELOO,,STN,STN,STN,KNMI,2,,1 uur,,224000,538000,,,,,,,,,,,,X
+328,328,HEERDE,,STN,STN,STN,KNMI,2,,1 uur,,199000,488000,,,,,,,,,,,,X
+329,329,WAPENVELD,,STN,STN,STN,KNMI,2,,1 uur,,202000,494000,,,,,,,,,,,,X
+330,330,ZWOLLE,,STN,STN,STN,KNMI,2,,1 uur,,206000,505000,,,,,,,,,,,,X
+331,331,DENEKAMP,,STN,STN,STN,KNMI,2,,1 uur,,267000,489000,,,,,,,,,,,,X
+332,332,HOOGEVEEN,,STN,STN,STN,KNMI,2,,1 uur,,228000,526000,,,,,,,,,,,,X
+333,333,EMMEN,,STN,STN,STN,KNMI,2,,1 uur,,256000,534000,,,,,,,,,,,,X
+335,335,IJSSELMUIDEN,,STN,STN,STN,KNMI,2,,1 uur,,193000,508000,,,,,,,,,,,,X
+336,336,OLDEBROEK,,STN,STN,STN,KNMI,2,,1 uur,,191000,489000,,,,,,,,,,,,X
+337,337,SCHOONLOO,,STN,STN,STN,KNMI,2,,1 uur,,244000,547000,,,,,,,,,,,,X
+338,338,GIETHOORN,,STN,STN,STN,KNMI,2,,1 uur,,201000,526000,,,,,,,,,,,,X
+339,339,RHEEZERVEEN,,STN,STN,STN,KNMI,2,,1 uur,,235000,509000,,,,,,,,,,,,X
+340,340,HEINO,,STN,STN,STN,KNMI,2,,1 uur,,215000,495000,,,,,,,,,,,,X
+341,341,ZWEELOO,,STN,STN,STN,KNMI,2,,1 uur,,246000,535000,,,,,,,,,,,,X
+342,342,VILSTEREN,,STN,STN,STN,KNMI,2,,1 uur,,221000,505000,,,,,,,,,,,,X
+343,343,SCHOONEBEEK,,STN,STN,STN,KNMI,2,,1 uur,,257000,523000,,,,,,,,,,,,X
+344,344,TOLLEBEEK,,STN,STN,STN,KNMI,2,,1 uur,,171000,520000,,,,,,,,,,,,X
+345,345,VROOMSHOOP,,STN,STN,STN,KNMI,2,,1 uur,,236000,498000,,,,,,,,,,,,X
+348,348,EMMELOORD,,STN,STN,STN,KNMI,2,,1 uur,,181000,525000,,,,,,,,,,,,X
+349,349,KLAZIE VEEN,,STN,STN,STN,KNMI,2,,1 uur,,264000,529000,,,,,,,,,,,,X
+350,350,ELBURG,,STN,STN,STN,KNMI,2,,1 uur,,185000,495000,,,,,,,,,,,,X
+352,352, GELE,,STN,STN,STN,KNMI,2,,1 uur,,178000,515000,,,,,,,,,,,,X
+353,353,BLOKZIJL,,STN,STN,STN,KNMI,2,,1 uur,,193000,527000,,,,,,,,,,,,X
+354,354,DEDEMSVAART,,STN,STN,STN,KNMI,2,,1 uur,,227000,512000,,,,,,,,,,,,X
+356,356,KUINRE,,STN,STN,STN,KNMI,2,,1 uur,,186000,533000,,,,,,,,,,,,X
+358,358,ROUVEEN,,STN,STN,STN,KNMI,2,,1 uur,,209000,514000,,,,,,,,,,,,X
+359,359,LEMMER BUMA,,STN,STN,STN,KNMI,2,,1 uur,,177000,539000,,,,,,,,,,,,X
+361,361,TUBBERGEN,,STN,STN,STN,KNMI,2,,1 uur,,250000,491000,,,,,,,,,,,,X
+362,362,RUINERWOLD,,STN,STN,STN,KNMI,2,,1 uur,,213000,526000,,,,,,,,,,,,X
+364,364,DRONTEN,,STN,STN,STN,KNMI,2,,1 uur,,187000,506000,,,,,,,,,,,,X
+365,365,SWIFTERBANT,,STN,STN,STN,KNMI,2,,1 uur,,171000,508000,,,,,,,,,,,,X
+366,366,BIDDINGHUIZEN,,STN,STN,STN,KNMI,2,,1 uur,,174000,501000,,,,,,,,,,,,X
+367,367,OOSTVAARDERSDIEP,,STN,STN,STN,KNMI,2,,1 uur,,144000,492000,,,,,,,,,,,,X
+369,369,LELYSTAD EENDENWEG,,STN,STN,STN,KNMI,2,,1 uur,,165000,496000,,,,,,,,,,,,X
+371,371,ZEEWOLDE,,STN,STN,STN,KNMI,2,,1 uur,,154000,489000,,,,,,,,,,,,X
+372,372,ZEEWOLDE SCHILLINKWEG,,STN,STN,STN,KNMI,2,,1 uur,,157000,479000,,,,,,,,,,,,X
+426,426,ZOETERMEER,,STN,STN,STN,KNMI,2,,1 uur,,96000,454000,,,,,,,,,,,,X
+434,434,GROOT AMMERS,,STN,STN,STN,KNMI,2,,1 uur,,117000,438000,,,,,,,,,,,,X
+435,435,HEEMSTEDE,,STN,STN,STN,KNMI,2,,1 uur,,104000,484000,,,,,,,,,,,,X
+437,437,LIJNDEN,,STN,STN,STN,KNMI,2,,1 uur,,112000,485000,,,,,,,,,,,,X
+438,438,HOOFDDORP,,STN,STN,STN,KNMI,2,,1 uur,,108000,481000,,,,,,,,,,,,X
+439,439,ROELOFARENDSVEEN,,STN,STN,STN,KNMI,2,,1 uur,,103000,470000,,,,,,,,,,,,X
+440,440,SCHEVENINGEN,,STN,STN,STN,KNMI,2,,1 uur,,81000,459000,,,,,,,,,,,,X
+441,441,AMSTERDAM,,STN,STN,STN,KNMI,2,,1 uur,,123000,487000,,,,,,,,,,,,X
+442,442,BOSKOOP,,STN,STN,STN,KNMI,2,,1 uur,,107000,455000,,,,,,,,,,,,X
+443,443,GOUDA,,STN,STN,STN,KNMI,2,,1 uur,,109000,447000,,,,,,,,,,,,X
+444,444,KATWIJK,,STN,STN,STN,KNMI,2,,1 uur,,88000,467000,,,,,,,,,,,,X
+446,446,GOEDEREEDE,,STN,STN,STN,KNMI,2,,1 uur,,57000,428000,,,,,,,,,,,,X
+447,447,DEN BOMMEL,,STN,STN,STN,KNMI,2,,1 uur,,79000,415000,,,,,,,,,,,,X
+449,449,DELFT,,STN,STN,STN,KNMI,2,,1 uur,,85000,447000,,,,,,,,,,,,X
+450,450,NUMANSDORP,,STN,STN,STN,KNMI,2,,1 uur,,88000,417000,,,,,,,,,,,,X
+451,451,IJSSELMONDE,,STN,STN,STN,KNMI,2,,1 uur,,97000,434000,,,,,,,,,,,,X
+453,453,BERGSCHENHOEK,,STN,STN,STN,KNMI,2,,1 uur,,93000,445000,,,,,,,,,,,,X
+454,454,LISSE,,STN,STN,STN,KNMI,2,,1 uur,,98000,475000,,,,,,,,,,,,X
+455,455,STRIJEN,,STN,STN,STN,KNMI,2,,1 uur,,100000,420000,,,,,,,,,,,,X
+456,456,OOSTVOORNE,,STN,STN,STN,KNMI,2,,1 uur,,66000,436000,,,,,,,,,,,,X
+458,458,AALSMEER,,STN,STN,STN,KNMI,2,,1 uur,,113000,475000,,,,,,,,,,,,X
+459,459,DORDRECHT,,STN,STN,STN,KNMI,2,,1 uur,,106000,425000,,,,,,,,,,,,X
+461,461,BARENDRECHT,,STN,STN,STN,KNMI,2,,1 uur,,97000,430000,,,,,,,,,,,,X
+462,462,DIRKSLAND,,STN,STN,STN,KNMI,2,,1 uur,,65000,419000,,,,,,,,,,,,X
+463,463,NIEUW HELVOET,,STN,STN,STN,KNMI,2,,1 uur,,68000,428000,,,,,,,,,,,,X
+464,464,BRIELLE,,STN,STN,STN,KNMI,2,,1 uur,,70000,435000,,,,,,,,,,,,X
+465,465,OUD ALBLAS,,STN,STN,STN,KNMI,2,,1 uur,,107000,430000,,,,,,,,,,,,X
+466,466,WASSE AR,,STN,STN,STN,KNMI,2,,1 uur,,87000,463000,,,,,,,,,,,,X
+467,467,POORTUGAAL,,STN,STN,STN,KNMI,2,,1 uur,,86000,430000,,,,,,,,,,,,X
+469,469,LEIDEN,,STN,STN,STN,KNMI,2,,1 uur,,94000,465000,,,,,,,,,,,,X
+470,470,ZEGVELD,,STN,STN,STN,KNMI,2,,1 uur,,117000,461000,,,,,,,,,,,,X
+471,471,OUDDORP POLDER,,STN,STN,STN,KNMI,2,,1 uur,,51000,427000,,,,,,,,,,,,X
+473,473,ROTTERDAM WAALHAVEN,,STN,STN,STN,KNMI,2,,1 uur,,89000,434000,,,,,,,,,,,,X
+474,474,VALKENBURG N,,STN,STN,STN,KNMI,2,,1 uur,,90000,465000,,,,,,,,,,,,X
+477,477,HOEK VAN HOLLAND MOLENPAD,,STN,STN,STN,KNMI,2,,1 uur,,70000,445000,,,,,,,,,,,,X
+479,479,MAASLAND,,STN,STN,STN,KNMI,2,,1 uur,,77000,443000,,,,,,,,,,,,X
+480,480,HONSELERSDIJK,,STN,STN,STN,KNMI,2,,1 uur,,77000,447000,,,,,,,,,,,,X
+509,509,DOORN,,STN,STN,STN,KNMI,2,,1 uur,,151000,452000,,,,,,,,,,,,X
+510,510,VAASSEN,,STN,STN,STN,KNMI,2,,1 uur,,195000,477000,,,,,,,,,,,,X
+514,514,EPE,,STN,STN,STN,KNMI,2,,1 uur,,197000,484000,,,,,,,,,,,,X
+516,516,HARDERWIJK,,STN,STN,STN,KNMI,2,,1 uur,,167000,488000,,,,,,,,,,,,X
+523,523,WIJK BIJ DUURSTEDE,,STN,STN,STN,KNMI,2,,1 uur,,151000,442000,,,,,,,,,,,,X
+539,539,NIJMEGEN,,STN,STN,STN,KNMI,2,,1 uur,,190000,429000,,,,,,,,,,,,X
+541,541,ARNHEM,,STN,STN,STN,KNMI,2,,1 uur,,192000,446000,,,,,,,,,,,,X
+542,542,PUTTEN,,STN,STN,STN,KNMI,2,,1 uur,,170000,472000,,,,,,,,,,,,X
+543,543,APELDOORN,,STN,STN,STN,KNMI,2,,1 uur,,195000,471000,,,,,,,,,,,,X
+546,546,WOUDENBERG,,STN,STN,STN,KNMI,2,,1 uur,,160000,455000,,,,,,,,,,,,X
+547,547,NIJKERK GLD,,STN,STN,STN,KNMI,2,,1 uur,,161000,472000,,,,,,,,,,,,X
+548,548,LOENEN AAN DE VECHT,,STN,STN,STN,KNMI,2,,1 uur,,131000,469000,,,,,,,,,,,,X
+549,549,CULEMBORG,,STN,STN,STN,KNMI,2,,1 uur,,144000,438000,,,,,,,,,,,,X
+550,550,DE BILT UNIVERSITEITSWEG,,STN,STN,STN,KNMI,2,,1 uur,,141000,457000,,,,,,,,,,,,X
+557,557,EERBEEK,,STN,STN,STN,KNMI,2,,1 uur,,202000,458000,,,,,,,,,,,,X
+558,558,LUNTEREN,,STN,STN,STN,KNMI,2,,1 uur,,170000,456000,,,,,,,,,,,,X
+559,559,VLEUTEN,,STN,STN,STN,KNMI,2,,1 uur,,129000,456000,,,,,,,,,,,,X
+560,560,AMERONGEN,,STN,STN,STN,KNMI,2,,1 uur,,160000,445000,,,,,,,,,,,,X
+561,561,BENSCHOP,,STN,STN,STN,KNMI,2,,1 uur,,124000,446000,,,,,,,,,,,,X
+562,562,TIEL,,STN,STN,STN,KNMI,2,,1 uur,,159000,438000,,,,,,,,,,,,X
+563,563,WEESP,,STN,STN,STN,KNMI,2,,1 uur,,131000,480000,,,,,,,,,,,,X
+564,564,HULSHORST,,STN,STN,STN,KNMI,2,,1 uur,,177000,485000,,,,,,,,,,,,X
+565,565,VOORTHUIZEN,,STN,STN,STN,KNMI,2,,1 uur,,170000,466000,,,,,,,,,,,,X
+567,567,KOOTWIJK RADIO,,STN,STN,STN,KNMI,2,,1 uur,,184000,465000,,,,,,,,,,,,X
+569,569,HEUMEN,,STN,STN,STN,KNMI,2,,1 uur,,186000,420000,,,,,,,,,,,,X
+570,570,ELSPEET,,STN,STN,STN,KNMI,2,,1 uur,,182000,479000,,,,,,,,,,,,X
+571,571,HARSKAMP,,STN,STN,STN,KNMI,2,,1 uur,,179000,463000,,,,,,,,,,,,X
+572,572,ABCOUDE,,STN,STN,STN,KNMI,2,,1 uur,,127000,475000,,,,,,,,,,,,X
+573,573,BEEKBERGEN,,STN,STN,STN,KNMI,2,,1 uur,,193000,464000,,,,,,,,,,,,X
+576,576,SPAKENBURG,,STN,STN,STN,KNMI,2,,1 uur,,155000,474000,,,,,,,,,,,,X
+578,578,OOSTERBEEK,,STN,STN,STN,KNMI,2,,1 uur,,186000,447000,,,,,,,,,,,,X
+579,579,VEENENDAAL,,STN,STN,STN,KNMI,2,,1 uur,,170000,447000,,,,,,,,,,,,X
+580,580,BARNEVELD,,STN,STN,STN,KNMI,2,,1 uur,,167000,461000,,,,,,,,,,,,X
+582,582,HAMERSVELD,,STN,STN,STN,KNMI,2,,1 uur,,157000,462000,,,,,,,,,,,,X
+583,583,WAGENINGEN PD,,STN,STN,STN,KNMI,2,,1 uur,,175000,443000,,,,,,,,,,,,X
+584,584,GELDERMALSEN,,STN,STN,STN,KNMI,2,,1 uur,,147000,432000,,,,,,,,,,,,X
+588,588,DUIVEN,,STN,STN,STN,KNMI,2,,1 uur,,199000,441000,,,,,,,,,,,,X
+589,589,ZETTEN,,STN,STN,STN,KNMI,2,,1 uur,,177000,439000,,,,,,,,,,,,X
+591,591,DEELEN N,,STN,STN,STN,KNMI,2,,1 uur,,190000,454000,,,,,,,,,,,,X
+593,593,LAREN,,STN,STN,STN,KNMI,2,,1 uur,,142000,472000,,,,,,,,,,,,X
+595,595,SOEST,,STN,STN,STN,KNMI,2,,1 uur,,151000,464000,,,,,,,,,,,,X
+596,596,EEMNES,,STN,STN,STN,KNMI,2,,1 uur,,147000,476000,,,,,,,,,,,,X
+645,645,HENGELO GLD,,STN,STN,STN,KNMI,2,,1 uur,,218000,453000,,,,,,,,,,,,X
+663,663,LOCHEM,,STN,STN,STN,KNMI,2,,1 uur,,224000,464000,,,,,,,,,,,,X
+664,664,ALMELO,,STN,STN,STN,KNMI,2,,1 uur,,242000,485000,,,,,,,,,,,,X
+665,665,ENSCHEDE,,STN,STN,STN,KNMI,2,,1 uur,,259000,470000,,,,,,,,,,,,X
+666,666,WINTERSWIJK,,STN,STN,STN,KNMI,2,,1 uur,,245000,443000,,,,,,,,,,,,X
+667,667,DOETINCHEM,,STN,STN,STN,KNMI,2,,1 uur,,218000,444000,,,,,,,,,,,,X
+668,668,HENGELO,,STN,STN,STN,KNMI,2,,1 uur,,253000,475000,,,,,,,,,,,,X
+669,669,BORCULO,,STN,STN,STN,KNMI,2,,1 uur,,232000,457000,,,,,,,,,,,,X
+670,670,TWENTHE N,,STN,STN,STN,KNMI,2,,1 uur,,259000,476000,,,,,,,,,,,,X
+672,672,HELLENDOORN,,STN,STN,STN,KNMI,2,,1 uur,,227000,489000,,,,,,,,,,,,X
+673,673,GENDRINGEN,,STN,STN,STN,KNMI,2,,1 uur,,221000,431000,,,,,,,,,,,,X
+674,674,REKKEN,,STN,STN,STN,KNMI,2,,1 uur,,247000,456000,,,,,,,,,,,,X
+675,675,WEERSELO,,STN,STN,STN,KNMI,2,,1 uur,,256000,486000,,,,,,,,,,,,X
+677,677,DEVENTER,,STN,STN,STN,KNMI,2,,1 uur,,208000,475000,,,,,,,,,,,,X
+678,678,ALMEN,,STN,STN,STN,KNMI,2,,1 uur,,218000,464000,,,,,,,,,,,,X
+679,679,HERWEN,,STN,STN,STN,KNMI,2,,1 uur,,204000,434000,,,,,,,,,,,,X
+680,680,AALTEN,,STN,STN,STN,KNMI,2,,1 uur,,236000,437000,,,,,,,,,,,,X
+681,681,LETTELE,,STN,STN,STN,KNMI,2,,1 uur,,216000,476000,,,,,,,,,,,,X
+682,682,MARKELO,,STN,STN,STN,KNMI,2,,1 uur,,231000,471000,,,,,,,,,,,,X
+683,683,LICHTENVOORDE,,STN,STN,STN,KNMI,2,,1 uur,,236000,446000,,,,,,,,,,,,X
+684,684,LIEVELDE,,STN,STN,STN,KNMI,2,,1 uur,,241000,448000,,,,,,,,,,,,X
+686,686,WOOLD,,STN,STN,STN,KNMI,2,,1 uur,,248000,438000,,,,,,,,,,,,X
+687,687,HOLTEN,,STN,STN,STN,KNMI,2,,1 uur,,228000,480000,,,,,,,,,,,,X
+688,688,HUPSEL,,STN,STN,STN,KNMI,2,,1 uur,,241000,454000,,,,,,,,,,,,X
+705,705,BRESKENS,,STN,STN,STN,KNMI,2,,1 uur,,27000,380000,,,,,,,,,,,,X
+733,733,VLISSINGEN N,,STN,STN,STN,KNMI,2,,1 uur,,32000,387000,,,,,,,,,,,,X
+735,735,KAPELLE,,STN,STN,STN,KNMI,2,,1 uur,,55000,389000,,,,,,,,,,,,X
+736,736,BROUWERSHAVEN,,STN,STN,STN,KNMI,2,,1 uur,,51000,417000,,,,,,,,,,,,X
+737,737,KERKWERVE,,STN,STN,STN,KNMI,2,,1 uur,,49000,411000,,,,,,,,,,,,X
+738,738,BIERVLIET,,STN,STN,STN,KNMI,2,,1 uur,,37000,373000,,,,,,,,,,,,X
+740,740,ST KRUIS,,STN,STN,STN,KNMI,2,,1 uur,,23000,367000,,,,,,,,,,,,X
+741,741,STAVENISSE,,STN,STN,STN,KNMI,2,,1 uur,,62000,401000,,,,,,,,,,,,X
+742,742,TERNEUZEN,,STN,STN,STN,KNMI,2,,1 uur,,49000,370000,,,,,,,,,,,,X
+743,743,NOORDGOUWE,,STN,STN,STN,KNMI,2,,1 uur,,57000,413000,,,,,,,,,,,,X
+744,744,AN  JACOBAPOLDER,,STN,STN,STN,KNMI,2,,1 uur,,68000,406000,,,,,,,,,,,,X
+746,746,WESTKAPELLE,,STN,STN,STN,KNMI,2,,1 uur,,20000,395000,,,,,,,,,,,,X
+747,747,KRABBENDIJKE,,STN,STN,STN,KNMI,2,,1 uur,,66000,384000,,,,,,,,,,,,X
+749,749,WILHELMI DORP,,STN,STN,STN,KNMI,2,,1 uur,,52000,394000,,,,,,,,,,,,X
+750,750,RILLAND,,STN,STN,STN,KNMI,2,,1 uur,,71000,382000,,,,,,,,,,,,X
+751,751,VROUWENPOLDER,,STN,STN,STN,KNMI,2,,1 uur,,30000,401000,,,,,,,,,,,,X
+752,752,HAAMSTEDE,,STN,STN,STN,KNMI,2,,1 uur,,40000,412000,,,,,,,,,,,,X
+754,754,OVEZANDE,,STN,STN,STN,KNMI,2,,1 uur,,46000,383000,,,,,,,,,,,,X
+755,755,KORTGENE,,STN,STN,STN,KNMI,2,,1 uur,,47000,398000,,,,,,,,,,,,X
+756,756,MIDDELBURG,,STN,STN,STN,KNMI,2,,1 uur,,30000,390000,,,,,,,,,,,,X
+757,757,THOLEN,,STN,STN,STN,KNMI,2,,1 uur,,74000,394000,,,,,,,,,,,,X
+758,758,WOLPHAARTSDIJK,,STN,STN,STN,KNMI,2,,1 uur,,41000,395000,,,,,,,,,,,,X
+760,760,S HEERENHOEK,,STN,STN,STN,KNMI,2,,1 uur,,43000,388000,,,,,,,,,,,,X
+761,761,PHILIPPINE,,STN,STN,STN,KNMI,2,,1 uur,,41000,369000,,,,,,,,,,,,X
+762,762,SCHOONDIJKE,,STN,STN,STN,KNMI,2,,1 uur,,27000,376000,,,,,,,,,,,,X
+763,763,CADZAND,,STN,STN,STN,KNMI,2,,1 uur,,17000,378000,,,,,,,,,,,,X
+764,764,KLOOSTERZANDE,,STN,STN,STN,KNMI,2,,1 uur,,60000,378000,,,,,,,,,,,,X
+767,767,KAPELLEBRUG,,STN,STN,STN,KNMI,2,,1 uur,,62000,363000,,,,,,,,,,,,X
+770,770,WESTDORPE,,STN,STN,STN,KNMI,2,,1 uur,,49000,360000,,,,,,,,,,,,X
+827,827,TILBURG,,STN,STN,STN,KNMI,2,,1 uur,,137000,397000,,,,,,,,,,,,X
+828,828,OUDENBOSCH,,STN,STN,STN,KNMI,2,,1 uur,,95000,399000,,,,,,,,,,,,X
+829,829,ZUNDERT,,STN,STN,STN,KNMI,2,,1 uur,,106000,387000,,,,,,,,,,,,X
+830,830,HERWIJNEN,,STN,STN,STN,KNMI,2,,1 uur,,139000,426000,,,,,,,,,,,,X
+831,831,ESBEEK,,STN,STN,STN,KNMI,2,,1 uur,,138000,386000,,,,,,,,,,,,X
+832,832,BERGEN OP ZOOM,,STN,STN,STN,KNMI,2,,1 uur,,76000,391000,,,,,,,,,,,,X
+833,833,OOSTERHOUT,,STN,STN,STN,KNMI,2,,1 uur,,117000,405000,,,,,,,,,,,,X
+834,834,CHAAM,,STN,STN,STN,KNMI,2,,1 uur,,119000,391000,,,,,,,,,,,,X
+835,835,ANDEL,,STN,STN,STN,KNMI,2,,1 uur,,132000,422000,,,,,,,,,,,,X
+836,836,GORINCHEM,,STN,STN,STN,KNMI,2,,1 uur,,127000,428000,,,,,,,,,,,,X
+837,837,STEENBERGEN,,STN,STN,STN,KNMI,2,,1 uur,,82000,401000,,,,,,,,,,,,X
+838,838,GINNEKEN,,STN,STN,STN,KNMI,2,,1 uur,,112000,397000,,,,,,,,,,,,X
+839,839,HOOGERHEIDE,,STN,STN,STN,KNMI,2,,1 uur,,80000,383000,,,,,,,,,,,,X
+840,840,NIEUWENDIJK,,STN,STN,STN,KNMI,2,,1 uur,,123000,420000,,,,,,,,,,,,X
+841,841,KLUNDERT,,STN,STN,STN,KNMI,2,,1 uur,,96000,408000,,,,,,,,,,,,X
+843,843,GILZE RIJEN N,,STN,STN,STN,KNMI,2,,1 uur,,123000,397000,,,,,,,,,,,,X
+844,844,CAPELLE,,STN,STN,STN,KNMI,2,,1 uur,,127000,410000,,,,,,,,,,,,X
+883,883,SEVENUM,,STN,STN,STN,KNMI,2,,1 uur,,199000,379000,,,,,,,,,,,,X
+892,892,GIERSBERGEN,,STN,STN,STN,KNMI,2,,1 uur,,139000,408000,,,,,,,,,,,,X
+896,896,HELMOND,,STN,STN,STN,KNMI,2,,1 uur,,171000,388000,,,,,,,,,,,,X
+897,897,VENLO,,STN,STN,STN,KNMI,2,,1 uur,,211000,374000,,,,,,,,,,,,X
+899,899,GEMERT,,STN,STN,STN,KNMI,2,,1 uur,,175000,395000,,,,,,,,,,,,X
+901,901,NULAND,,STN,STN,STN,KNMI,2,,1 uur,,157000,415000,,,,,,,,,,,,X
+902,902,EINDHOVEN,,STN,STN,STN,KNMI,2,,1 uur,,161000,381000,,,,,,,,,,,,X
+903,903,MEGEN,,STN,STN,STN,KNMI,2,,1 uur,,167000,426000,,,,,,,,,,,,X
+904,904,SOMEREN,,STN,STN,STN,KNMI,2,,1 uur,,177000,378000,,,,,,,,,,,,X
+905,905,ST ANTHONIS,,STN,STN,STN,KNMI,2,,1 uur,,189000,405000,,,,,,,,,,,,X
+906,906,OIRSCHOT,,STN,STN,STN,KNMI,2,,1 uur,,151000,391000,,,,,,,,,,,,X
+907,907,BOXTEL,,STN,STN,STN,KNMI,2,,1 uur,,151000,399000,,,,,,,,,,,,X
+908,908,DEURNE,,STN,STN,STN,KNMI,2,,1 uur,,182000,385000,,,,,,,,,,,,X
+909,909,MILL,,STN,STN,STN,KNMI,2,,1 uur,,183000,410000,,,,,,,,,,,,X
+910,910,AMMERZODEN,,STN,STN,STN,KNMI,2,,1 uur,,143000,418000,,,,,,,,,,,,X
+911,911,DINTHER,,STN,STN,STN,KNMI,2,,1 uur,,162000,406000,,,,,,,,,,,,X
+912,912,LEENDE,,STN,STN,STN,KNMI,2,,1 uur,,165000,371000,,,,,,,,,,,,X
+913,913,IJSSELSTEYN,,STN,STN,STN,KNMI,2,,1 uur,,190000,389000,,,,,,,,,,,,X
+914,914,OSS,,STN,STN,STN,KNMI,2,,1 uur,,166000,420000,,,,,,,,,,,,X
+915,915,EERSEL,,STN,STN,STN,KNMI,2,,1 uur,,146000,373000,,,,,,,,,,,,X
+917,917,ZALTBOMMEL,,STN,STN,STN,KNMI,2,,1 uur,,147000,423000,,,,,,,,,,,,X
+918,918,MAARHEEZE,,STN,STN,STN,KNMI,2,,1 uur,,169000,369000,,,,,,,,,,,,X
+919,919,EINDHOVEN N,,STN,STN,STN,KNMI,2,,1 uur,,153000,386000,,,,,,,,,,,,X
+920,920,VOLKEL N,,STN,STN,STN,KNMI,2,,1 uur,,177000,407000,,,,,,,,,,,,X
+921,921,VENRAY,,STN,STN,STN,KNMI,2,,1 uur,,197000,388000,,,,,,,,,,,,X
+922,922,SIEBENGEWALD,,STN,STN,STN,KNMI,2,,1 uur,,204000,408000,,,,,,,,,,,,X
+923,923,ARCEN,,STN,STN,STN,KNMI,2,,1 uur,,210000,388000,,,,,,,,,,,,X
+950,950,EIJSDEN BREUST,,STN,STN,STN,KNMI,2,,1 uur,,178000,310000,,,,,,,,,,,,X
+961,961,ROERMOND,,STN,STN,STN,KNMI,2,,1 uur,,196000,355000,,,,,,,,,,,,X
+962,962,UBACHSBERG,,STN,STN,STN,KNMI,2,,1 uur,,192000,318000,,,,,,,,,,,,X
+963,963,VALKENBURG,,STN,STN,STN,KNMI,2,,1 uur,,187000,319000,,,,,,,,,,,,X
+964,964,WEERT,,STN,STN,STN,KNMI,2,,1 uur,,177000,363000,,,,,,,,,,,,X
+965,965,SCHAESBERG,,STN,STN,STN,KNMI,2,,1 uur,,200000,323000,,,,,,,,,,,,X
+966,966,SCHINNEN,,STN,STN,STN,KNMI,2,,1 uur,,189000,327000,,,,,,,,,,,,X
+967,967,HEIBLOEM,,STN,STN,STN,KNMI,2,,1 uur,,190000,367000,,,,,,,,,,,,X
+968,968,VAALS,,STN,STN,STN,KNMI,2,,1 uur,,198000,309000,,,,,,,,,,,,X
+969,969,STEIN,,STN,STN,STN,KNMI,2,,1 uur,,181000,330000,,,,,,,,,,,,X
+970,970,STRAMPROY,,STN,STN,STN,KNMI,2,,1 uur,,178000,355000,,,,,,,,,,,,X
+971,971,NOORBEEK,,STN,STN,STN,KNMI,2,,1 uur,,185000,310000,,,,,,,,,,,,X
+973,973,BEEK N,,STN,STN,STN,KNMI,2,,1 uur,,185000,326000,,,,,,,,,,,,X
+974,974,BUCHTEN,,STN,STN,STN,KNMI,2,,1 uur,,185000,339000,,,,,,,,,,,,X
+977,977,REUVER,,STN,STN,STN,KNMI,2,,1 uur,,203000,366000,,,,,,,,,,,,X
+979,979,ECHT,,STN,STN,STN,KNMI,2,,1 uur,,192000,345000,,,,,,,,,,,,X
+980,980,EPEN,,STN,STN,STN,KNMI,2,,1 uur,,192000,308000,,,,,,,,,,,,X
+981,981,OOST MAARLAND,,STN,STN,STN,KNMI,2,,1 uur,,178000,312000,,,,,,,,,,,,X
+982,982,SCHINVELD,,STN,STN,STN,KNMI,2,,1 uur,,197000,332000,,,,,,,,,,,,X
+E704,E704,Bentheim Bad,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,273986,480698,1,,,,,Rainfall,,,,,,
+E008,E008,Borkum-Flugplatz,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,242090,624404,2,,,,,Rainfall,,,,,,
+E402,E402,Doerpen,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,284793,553599,3,,,,,Rainfall,,,,,,
+E207,E207,Dollart-Kanalpolder,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,277299,583986,4,,,,,Rainfall,,,,,,
+10200,10200,Emden (WEWA),,DWD,duitsland,duitsland,DWD,1,,1 minuut,,277346,601738,5,,,,,Rainfall,,,,,,
+E212,E212,Moormerland-Neermoor,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,291285,593331,6,,,,,Rainfall,,,,,,
+E103,E103,Norden-Leybuchtpolder,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,270070,614453,7,,,,,Rainfall,,,,,,
+E601,E601,Ringe-Grossringe,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,257555,513375,8,,,,,Rainfall,,,,,,
+E501,E501,Twist-Hebelermeer,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,268975,529766,9,,,,,Rainfall,,,,,,
+10309,10309,Ahaus,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,261498,455931,10,,,,,Rainfall,,,,,,
+H119,H119,Coesfeld,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,258227,432649,11,,,,,Rainfall,,,,,,
+H411,H411,Borken i.W.,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,276727,442956,12,,,,,Rainfall,,,,,,
+H401,H401,Geldern-Walbeck,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,214660,389819,13,,,,,Rainfall,,,,,,
+H203,H203,Kleve,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,203879,419400,14,,,,,Rainfall,,,,,,
+H512,H512,Nettetal-Huelst,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,211778,368123,15,,,,,Rainfall,,,,,,
+H522,H522,Toenisvorst,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,228741,367259,16,,,,,Rainfall,,,,,,
+H311,H311,Xanten,,DWD,duitsland,duitsland,DWD,1,,1 minuut,,224839,412509,17,,,,,Rainfall,,,,,,
