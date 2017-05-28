@@ -12,7 +12,15 @@ RASTERDIR = os.path.join(VAR, 'raster')
 if not os.path.exists(RASTERDIR):
     os.mkdir(RASTERDIR)
 
+# shape folder
+SHAPEDIR = os.path.join(VAR, 'shape')
+if not os.path.exists(SHAPEDIR):
+    os.mkdir(SHAPEDIR)
+
 # plot folder
 PLOTDIR = os.path.join(VAR, 'plot')
 if not os.path.exists(PLOTDIR):
     os.mkdir(PLOTDIR)
+
+# misc folder
+MISCDIR = os.path.join('.', 'misc')
