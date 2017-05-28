@@ -8,15 +8,9 @@ Run using pytest:
 # Royal HaskoningDHV
 
 from radar_calibrate import gridtools
+from radar_calibrate import utils
 
 import numpy
-
-
-def safe_first(array):
-    try:
-        return array.flatten()[0]
-    except IndexError:
-        return numpy.nan
 
 
 def test_sample_first():
@@ -32,7 +26,7 @@ def test_sample_first():
     # sample grid
     samples = gridtools.sample_grid(test_coords, test_grid, test_geotransform,
         blocksize=1,
-        agg=safe_first,
+        agg=utils.safe_first,
         )
 
     # compare result
@@ -59,7 +53,7 @@ def test_sample_multiple():
     # sample grid
     samples = gridtools.sample_grid(test_coords, test_grid, test_geotransform,
         blocksize=1,
-        agg=safe_first,
+        agg=utils.safe_first,
         )
 
     # compare result
