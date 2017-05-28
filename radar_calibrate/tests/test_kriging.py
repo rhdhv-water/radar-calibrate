@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Royal HaskoningDHV
 
+from radar_calibrate import config
 from radar_calibrate import gridtools
 from radar_calibrate import files
 from radar_calibrate import kriging
@@ -23,7 +24,7 @@ def krige_py(x, y, z, radar, xi, yi, zi):
     return kriging.ked_py_v(x, y, z, radar, xi, yi, zi)
 
 
-def test_ked():
+def test_compare_ked(plot_comparison=False):
     # test data from files
     aggregatefile = r'data\24uur_20170223080000.h5'
     calibratefile = r'data\RAD_TF2400_U_20170223080000.h5'
@@ -44,13 +45,14 @@ def test_ked():
     calibrate_py = timedresult_py.result.reshape(calibrate.shape)
 
     # plot
-    plot.compare_ked(z, radar, aggregate, calibrate, calibrate_r, calibrate_py)
-
-
-def main():
-    test_ked()
-
+    if plot_comparison:
+        imagefile = os.path.join(config.PLOTFOLDER, 'compare_ked.png')
+        plot.compare_ked(
+            z, radar, aggregate,
+            calibrate, calibrate_r, calibrate_py,
+            imagefile=imagefile,
+            )
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    main()
+    test_compare_ked(plot_comparison=True)
