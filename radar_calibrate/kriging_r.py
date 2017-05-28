@@ -50,13 +50,12 @@ def ked(x, y, z, radar, xi, yi, zi):
                            model=residual, nmax=40)
         result = robj.r.predict(ked, radar_frame, nsim=0)
         rain_est = numpy.array(result[2])
-        # self.crossval_ked = robj.r('gstat.cv')(ked)
     except:
         logging.exception('Exception during kriging:')
         rain_est = zi
 
     # handle extreme outcomes of kriging
-    zero_or_no_data = numpy.logical_or(zi == 0, zi == -9999)
+    zero_or_no_data = numpy.logical_or(zi == 0., numpy.isnan(zi))
     correction_factor = numpy.ones(zi.shape)
     correction_factor[~zero_or_no_data] = (
         rain_est[~zero_or_no_data] / zi[~zero_or_no_data]
