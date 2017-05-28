@@ -14,8 +14,7 @@ def vgm_r(vgm_py, residual_py):
     plt.title('R variogram')
     return figure
 
-
-def compare_ked(z, radar, aggregate, calibrate, calibrate_r, calibrate_py):
+def plot_error(z, radar):
     #Plot error of rainstations vs radar in (mm)
     plt.figure()
     plt.scatter(z, radar)
@@ -25,6 +24,26 @@ def compare_ked(z, radar, aggregate, calibrate, calibrate_r, calibrate_py):
     plt.axis([0, 40, 0, 40])
     plt.show()
 
+
+def plot_histogram(calibrate, calibrate_r, calibrate_py):
+    # Plot histgram error
+    plt.figure()
+    plt.subplot(2, 1, 1)
+    plt.hist(calibrate_r.flatten() - calibrate.flatten(), bins=range(-10, 10, 1))
+    plt.xlim([-10, 10])
+    plt.title('$histogram\/\/of\/\/error\/\/ked_R$')
+    plt.subplot(2, 1, 2)
+    plt.hist(calibrate_py.flatten() - calibrate.flatten(), bins=range(-10, 10, 1))
+    plt.xlim([-10, 10])
+    plt.title('$histogram\/\/of\/\/error\/\/ked_{py}$')
+    plt.tight_layout()
+    plt.show()
+
+
+def compare_ked(aggregate,
+    calibrate, calibrate_r, calibrate_py,
+    imagefile=None,
+    ):
     # Plot radar_calibrate_R
     plt.figure()
     f221 = plt.subplot(2, 2, 1)
@@ -44,17 +63,7 @@ def compare_ked(z, radar, aggregate, calibrate, calibrate_r, calibrate_py):
     plt.xlabel('x-coordinate')
     plt.title('$calibrate_{py}$')
     plt.tight_layout()
-    plt.show()
-
-    # Plot histgram error
-    plt.figure()
-    plt.subplot(2, 1, 1)
-    plt.hist(calibrate_r.flatten() - calibrate.flatten(), bins=range(-10, 10, 1))
-    plt.xlim([-10, 10])
-    plt.title('$histogram\/\/of\/\/error\/\/ked_R$')
-    plt.subplot(2, 1, 2)
-    plt.hist(calibrate_py.flatten() - calibrate.flatten(), bins=range(-10, 10, 1))
-    plt.xlim([-10, 10])
-    plt.title('$histogram\/\/of\/\/error\/\/ked_{py}$')
-    plt.tight_layout()
-    plt.show()
+    if imagefile is not None:
+        plt.savefig(imagefile, bbox_inches='tight')
+    else:
+        plt.show()
