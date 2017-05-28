@@ -12,7 +12,8 @@ from openradar.gridtools import BaseGrid
 import numpy
 
 
-def sample_grid(coords, grid, geotransform, blocksize=2, agg=numpy.median):
+def sample_grid(coords, grid, geotransform,
+    fill_value=None, blocksize=2, agg=numpy.median):
     """Sample georeferenced grid at given coordinates
     Parameters
     ----------
@@ -54,4 +55,8 @@ def sample_grid(coords, grid, geotransform, blocksize=2, agg=numpy.median):
             block = grid[row_idx, col_idx]
         except IndexError:
             block = numpy.nan
+
+        if (fill_value is not None) and numpy.any(block == fill_value):
+            yield numpy.nan
+
         yield agg(block)

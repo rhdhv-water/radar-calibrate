@@ -61,23 +61,37 @@ def get_testdata(aggregatefile, calibratefile):
         calibrate = get_imagedata(ds)
         cal_station_coords = ds.attrs['cal_station_coords']
         cal_station_values = ds.attrs['cal_station_measurements']
+        fill_value = ds.attrs['fill_value']
+
+    # select measurements which are equal or larger than zero
+    rain_ge_zero = cal_station_values >= 0.
+    cal_station_coords = cal_station_coords[rain_ge_zero, :]
+    cal_station_values = cal_station_values[rain_ge_zero]
+
 
     # sample aggregate at calibration station coordinates
     radar_values = gridtools.sample_grid(
         coords=cal_station_coords,
         grid=aggregate,
         geotransform=basegrid.get_geotransform(),
+        fill_value=fill_value,
         )
+    radar = numpy.array([v for v in radar_values])
+
+    # unselect measurement if radar is NaN
+    radar_nan = numpy.isnan(radar)
+    cal_station_coords = cal_station_coords[~radar_nan, :]
+    cal_station_values = cal_station_values[~radar_nan]
+    radar = radar[~radar_nan]
+
+    # unpack and rename coordinates
+    x = cal_station_coords[:, 0]
+    y = cal_station_coords[:, 1]
+    z = cal_station_values
 
     # transform aggregate grid to coordinate and value vectors
     xi, yi = [numpy.float32(a).flatten() for a in basegrid.get_grid()]
     zi = aggregate.flatten()
-
-    # back to vague naming
-    x = cal_station_coords[:, 0]
-    y = cal_station_coords[:, 1]
-    z = cal_station_values
-    radar = numpy.array([v for v in radar_values])
 
     # return tuple
     return x, y, z, radar, xi, yi, zi, aggregate, calibrate
