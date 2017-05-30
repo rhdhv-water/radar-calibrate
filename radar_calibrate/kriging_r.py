@@ -18,6 +18,9 @@ def ked(x, y, z, radar, xi, yi, zi):
     Returns calibrated grid
     """
     robj.r.library('gstat')
+    
+    # xi, yi, zi to vectors
+    
 
     # Modification to prevent singular matrix (Tom)
     radar += (1e-9 * numpy.random.rand(len(radar)))

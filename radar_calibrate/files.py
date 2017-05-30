@@ -92,10 +92,13 @@ def get_testdata(aggregatefile, calibratefile):
     y = cal_station_coords[:, 1]
     z = cal_station_values
 
-    # transform aggregate grid to coordinate and value vectors
-    xi, yi = [numpy.float32(a).flatten() for a in basegrid.get_grid()]
-    zi = aggregate.flatten()
-
+    # coordinate index vectors
+    nrows, ncols = grid_size
+    left, right, top, bottom = grid_extent
+    xi = numpy.linspace(left, right, num=ncols)
+    yi = numpy.linspace(bottom, top, num=nrows)
+    zi = aggregate
+    
     # calibrate kwargs to dict
     calibrate_kwargs = {
         'x': x,

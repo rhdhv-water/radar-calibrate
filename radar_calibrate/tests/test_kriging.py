@@ -24,7 +24,7 @@ def krige_py(x, y, z, radar, xi, yi, zi):
     return kriging.ked_py_v(x, y, z, radar, xi, yi, zi)
 
 
-def test_compare_ked(plot_comparison=False, timestamp='20170305080000'):
+def test_compare_ked(plot_comparison=False, timestamp='20170228080000'):
     # test data from files
     aggregatefile = r'data\24uur_{}.h5'.format(timestamp)
     calibratefile = r'data\RAD_TF2400_U_{}.h5'.format(timestamp)
@@ -36,12 +36,11 @@ def test_compare_ked(plot_comparison=False, timestamp='20170305080000'):
     nan_mask = numpy.isnan(aggregate)
 
     # ked using R
-    # timedresult_r = krige_r(**calibrate_kwargs)
-    # logging.info('ked in R took {dt:.2f} seconds'.format(dt=timedresult_r.dt))
-    # calibrate_r = utils.apply_countrymask(
-    #     timedresult_r.result.reshape(calibrate.shape), aggregate)
-    # calibrate_r[nan_mask] = numpy.nan
-    calibrate_r = aggregate
+    timedresult_r = krige_r(**calibrate_kwargs)
+    logging.info('ked in R took {dt:.2f} seconds'.format(dt=timedresult_r.dt))
+    calibrate_r = utils.apply_countrymask(
+        timedresult_r.result.reshape(calibrate.shape), aggregate)
+    calibrate_r[nan_mask] = numpy.nan
 
     # ked using Python
     timedresult_py = krige_py(**calibrate_kwargs)
