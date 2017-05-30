@@ -40,7 +40,23 @@ def histogram(calibrate, calibrate_r, calibrate_py):
     plt.tight_layout()
     plt.show()
 
-
+def timedresults(reshapes, timedresults, imagefile=None,):
+    """
+    Show a graph to understand relation of time to run the KED and the reshape size
+    
+    """
+    plt.figure()
+    plt.scatter(reshapes, timedresults, s=200, alpha=0.5)
+    plt.xlabel('$Downscaled\/\/factor$')
+    plt.ylabel('$Time\/(s)$')
+    plt.title('$Downscaled\/\/factor\/\/vs\/\/Time\/\/to\/\/execute\/\/Kriging_{KED}$')
+    plt.xlim([0, 10])
+    
+    if imagefile is not None:
+        plt.savefig(imagefile, bbox_inches='tight')
+    else:
+        plt.show()
+    
 def compare_ked(aggregate,
     calibrate, calibrate_r, calibrate_py,
     imagefile=None,

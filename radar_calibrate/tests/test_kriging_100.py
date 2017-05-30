@@ -5,6 +5,8 @@ from radar_calibrate import gridtools
 from radar_calibrate import files
 from radar_calibrate import kriging
 from radar_calibrate import utils
+from radar_calibrate import plot
+from radar_calibrate import config 
 
 import numpy
 
@@ -19,35 +21,38 @@ def test_compare_grid(plot_comparison=False, timestamp='20170223080000'):
     # test data from files
     aggregatefile = r'data\24uur_{}.h5'.format(timestamp)
     calibratefile = r'data\RAD_TF2400_U_{}.h5'.format(timestamp)
-    calibrate_kwargs, aggregate, calibrate = files.get_testdata(
+
+    # initialize variables    
+    reshapes = [1, 1.5, 2, 4, 5]
+    timedresults = []
+    reshapes_size = []
+    
+    for i in range(len(reshapes)):
+        # get test data
+        calibrate_kwargs, aggregate, calibrate = files.get_testdata(
         aggregatefile,
         calibratefile,
+        reshape = reshapes[i],
         )
-    # NaN mask
-    nan_mask = numpy.isnan(aggregate)
+        # NaN mask
+        nan_mask = numpy.isnan(aggregate)
+        
+        # ked using Python with a reshaped grid
+        timedresult = krige_py(**calibrate_kwargs)
+        logging.info('ked in python took {dt:.2f} seconds'.format(
+            dt=timedresult.dt))
+        timedresults.append(timedresult.dt)
+        rain_est, sigma = timedresult.result
+        reshapes_size.append(rain_est.size)
+#        calibrate = utils.apply_countrymask(
+#            rain_est.reshape(calibrate.shape), aggregate)
+#        calibrate[nan_mask] = numpy.nan
 
-    # ked using Python 1000*1000
-    timedresult = krige_py(**calibrate_kwargs)
-    logging.info('ked in python took {dt:.2f} seconds'.format(
-        dt=timedresult.dt))
-    rain_est, sigma = timedresult.result
-    calibrate = utils.apply_countrymask(
-        rain_est.reshape(calibrate.shape), aggregate)
-    calibrate[nan_mask] = numpy.nan
-
-    # ked using Python 500*500
-    calibrate_kwargs, aggregate, calibrate = files.get_testdata(
-        aggregatefile,
-        calibratefile,
-        reshape = 2,
-        )
-    timedresult_reshape = krige_py(**calibrate_kwargs)
-    logging.info('ked in python took {dt:.2f} seconds'.format(
-        (timedresult_reshape.dt))
-    rain_est_reshape, sigma = timedresult_reshape.result
-#    calibrate_py = utils.apply_countrymask(
-#        rain_est_py.reshape(calibrate.shape), aggregate)
-#    calibrate_py[nan_mask] = numpy.nan
+    # plot
+    if plot_comparison:
+        imagefile = os.path.join(config.PLOTDIR, 'time_ked_{}.png'.format(
+            timestamp))
+        plot.timedresults(reshapes, timedresults, imagefile=imagefile,)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -67,3 +72,4 @@ if __name__ == '__main__':
 #vals = numpy.reshape(aggregate, (len(aggregate[:][0]) * len(aggregate[:])))
 #pts = numpy.array([[i,j] for i in xi[:,0] for j in yi[0,:]] )
 #zi_smooth = inter.griddata(pts, vals, (xi_smooth, yi_smooth), method='linear')
+
