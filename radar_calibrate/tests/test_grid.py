@@ -5,11 +5,9 @@
 import numpy
 
 def grid_arjan():
-#    cellwidth, cellheight = self.get_cellsize()
-#    left, right, top, bottom = self.extent
-    xcount, ycount = 20, 10
-    left,right,top,bottom = 0,20,30,20
-    cellwidth,cellheight = 1,1
+    ncols, nrows = 20, 10  # Similar to ncols, nrows
+    left, right, top, bottom = 0,20,30,20
+    cellwidth, cellheight = 1,1
         
     xmin = left + cellwidth / 2
     xmax = right - cellwidth / 2
@@ -17,11 +15,10 @@ def grid_arjan():
     ymax = top - cellheight / 2
     
     yi, xi = numpy.mgrid[
-        ymax:ymin:ycount * 1j, xmin:xmax:xcount * 1j]
+        ymax:ymin:nrows * 1j, xmin:xmax:ncols * 1j]
     return xi,yi
 
 def grid():
-#    cellwidth, cellheight = self.get_cellsize()
     ncols, nrows = 20, 10
     left,right,top,bottom = 0,20,30,20
     cellwidth,cellheight = 1,1
