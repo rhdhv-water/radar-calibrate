@@ -10,6 +10,8 @@ from radar_calibrate import gridtools
 
 from affine import Affine
 from fiona.crs import from_epsg
+import scipy.interpolate as inter
+import scipy.ndimage.interpolation as interpolation
 import rasterio
 import numpy
 import fiona
@@ -37,7 +39,7 @@ def get_imagedata(ds, fill_value=65535):
     return imagedata.astype(numpy.float64).filled(numpy.nan) * 1e-2
 
 
-def get_testdata(aggregatefile, calibratefile):
+def get_testdata(aggregatefile, calibratefile, reshape = None):
     """Summary
 
     Parameters
@@ -46,7 +48,8 @@ def get_testdata(aggregatefile, calibratefile):
         Description
     calibratefile : TYPE
         Description
-
+    reshape : INT
+        Resamples the aggregate grid to a higher resolution as dummy input
     Returns
     -------
     TYPE
@@ -96,10 +99,30 @@ def get_testdata(aggregatefile, calibratefile):
     ncols, nrows = grid_size
     cellwidth, cellheight = basegrid.get_cellsize()
     left, right, top, bottom = grid_extent
-    xi = numpy.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
-    yi = numpy.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
-    zi = aggregate
     
+    if reshape == None:
+        # define xi and yi arrays and zi
+        xi = numpy.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
+        yi = numpy.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
+        zi = aggregate
+    else:
+        # recalculate the coordinate index vectors
+        ncols = ncols * reshape
+        nrows = nrows * reshape
+        cellwidth = cellwidth / reshape
+        cellheight = cellheight / reshape
+        # define xi and yi arrays and zi based on interpolation of the aggregate
+#        zi = numpy.empty(numpy.array(aggregate.shape) * 10)
+        xi = numpy.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
+        yi = numpy.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
+        zi = interpolation.zoom(aggregate,reshape)
+        
+#        xi = numpy.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
+#        yi = numpy.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
+#        vals = numpy.reshape(aggregate, (len(aggregate[:][0]) * len(aggregate[:])))
+#        pts = numpy.array([[i,j] for i in xi[:,0] for j in yi[0,:]] )
+#        zi = inter.griddata(pts, vals, (xi, yi), method='linear')
+#    
     # calibrate kwargs to dict
     calibrate_kwargs = {
         'x': x,
@@ -111,6 +134,7 @@ def get_testdata(aggregatefile, calibratefile):
         'zi': zi,
         }
 
+        
     # return tuple
     return calibrate_kwargs, aggregate, calibrate
 

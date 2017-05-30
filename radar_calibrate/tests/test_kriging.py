@@ -10,6 +10,7 @@ from radar_calibrate import plot
 from radar_calibrate import utils
 
 import numpy
+import scipy.interpolate as inter
 
 import logging
 import os
