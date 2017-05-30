@@ -94,9 +94,10 @@ def get_testdata(aggregatefile, calibratefile):
 
     # coordinate index vectors
     nrows, ncols = grid_size
+    cellwidth, cellheight = basegrid.get_cellsize()
     left, right, top, bottom = grid_extent
-    xi = numpy.linspace(left, right, num=ncols)
-    yi = numpy.linspace(bottom, top, num=nrows)
+    xi = numpy.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
+    yi = numpy.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
     zi = aggregate
     
     # calibrate kwargs to dict

@@ -2,12 +2,11 @@
 # Royal HaskoningDHV
 
 import pykrige
-import numpy
 
 import logging
 
 
-def ked_py_v(x, y, z, radar, xi, yi, zi, plot_vario=False):
+def ked_py(x, y, z, radar, xi, yi, zi, plot_vario=False):
     """
     Run the kriging method using the Python module Pykrige using vectorized backend to save time (high memory).
     Kriging External Drift (or universal kriging).
@@ -32,11 +31,10 @@ def ked_py_v(x, y, z, radar, xi, yi, zi, plot_vario=False):
     if plot_vario:
         ked.display_variogram_model()
     # Run predictor
-    y_pred = ked.execute('grid', xi, yi,
+    rain_est,sigma = ked.execute('grid', xi, yi,
                          specified_drift_arrays = [zi,],
                          backend="vectorized",
     )
-    rain_est = numpy.squeeze(y_pred)[0]
-    return rain_est
+    return rain_est, sigma
 
 

@@ -8,6 +8,7 @@ import logging
 
 
 def ked(x, y, z, radar, xi, yi, zi):
+    
     """
     Run the kriging method using the R module "gstat".
     Kriging External Drift (or universal kriging).
@@ -18,9 +19,12 @@ def ked(x, y, z, radar, xi, yi, zi):
     Returns calibrated grid
     """
     robj.r.library('gstat')
-    
     # xi, yi, zi to vectors
     
+    yi, xi = numpy.meshgrid(yi, xi, indexing='xy')
+    xi = numpy.float32(xi).flatten()
+    yi = numpy.float32(yi).flatten()
+    zi = numpy.float32(zi).flatten()
 
     # Modification to prevent singular matrix (Tom)
     radar += (1e-9 * numpy.random.rand(len(radar)))
