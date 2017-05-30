@@ -73,7 +73,7 @@ def compare_ked(aggregate,
     for x, y in files.read_bg_shape():
         axes[1, 0].plot(x, y, color='skyblue', linewidth=0.5)
 
-    axes[1, 1].imshow(calibrate_r - calibrate, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
+    axes[1, 1].imshow(abs((calibrate_r - calibrate) / calibrate)*100, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
     axes[1, 1].set_title('$calibrate_R - calibrate_{original}$')
     axes[1, 1].grid(linestyle= '--', linewidth=0.5)
     axes[1, 1].xaxis.set_ticklabels([])
@@ -89,7 +89,7 @@ def compare_ked(aggregate,
     for x, y in files.read_bg_shape():
         axes[2, 0].plot(x, y, color='skyblue', linewidth=0.5)
 
-    im = axes[2, 1].imshow(calibrate_py - calibrate, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
+    im = axes[2, 1].imshow(abs((calibrate_py - calibrate) / calibrate)*100, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
     axes[2, 1].set_title('$calibrate_{py} - calibrate_{original}$')
     axes[2, 1].grid(linestyle= '--', linewidth=0.5)
     axes[2, 1].xaxis.set_ticklabels([])
@@ -100,7 +100,7 @@ def compare_ked(aggregate,
     fig.subplots_adjust(right=0.92)
     cbar_ax = fig.add_axes([0.94, 0.67, 0.02, 0.2])
     fig.colorbar(im, cax=cbar_ax)
-
+    
     # plt.tight_layout()
     if imagefile is not None:
         plt.savefig(imagefile, bbox_inches='tight')

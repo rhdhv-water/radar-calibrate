@@ -24,7 +24,7 @@ def krige_py(x, y, z, radar, xi, yi, zi):
     return kriging.ked_py(x, y, z, radar, xi, yi, zi)
 
 
-def test_compare_ked(plot_comparison=False, timestamp='20170228080000'):
+def test_compare_ked(plot_comparison=False, timestamp='20170305080000'):
     # test data from files
     aggregatefile = r'data\24uur_{}.h5'.format(timestamp)
     calibratefile = r'data\RAD_TF2400_U_{}.h5'.format(timestamp)

@@ -16,7 +16,7 @@ def grid_arjan():
     
     yi, xi = numpy.mgrid[
         ymax:ymin:nrows * 1j, xmin:xmax:ncols * 1j]
-    return xi,yi
+    return xi, yi 
 
 def grid():
     ncols, nrows = 20, 10
@@ -27,8 +27,6 @@ def grid():
     yi = numpy.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
     
     
-    yi, xi = numpy.meshgrid(yi, xi, indexing='xy')
-    xi = xi.T
-    yi = yi.T
-    return xi,yi
+    xi, yi = numpy.meshgrid(xi, yi, indexing='xy')
+    return xi, yi
 

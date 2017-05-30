@@ -21,7 +21,7 @@ def ked(x, y, z, radar, xi, yi, zi):
     robj.r.library('gstat')
     # xi, yi, zi to vectors
     
-    yi, xi = numpy.meshgrid(yi, xi, indexing='xy')
+    xi, yi = numpy.meshgrid(xi, yi, indexing='xy')
     xi = numpy.float32(xi).flatten()
     yi = numpy.float32(yi).flatten()
     zi = numpy.float32(zi).flatten()

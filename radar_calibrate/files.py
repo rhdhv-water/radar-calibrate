@@ -93,7 +93,7 @@ def get_testdata(aggregatefile, calibratefile):
     z = cal_station_values
 
     # coordinate index vectors
-    nrows, ncols = grid_size
+    ncols, nrows = grid_size
     cellwidth, cellheight = basegrid.get_cellsize()
     left, right, top, bottom = grid_extent
     xi = numpy.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
