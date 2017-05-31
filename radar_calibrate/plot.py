@@ -40,18 +40,35 @@ def histogram(calibrate, calibrate_r, calibrate_py):
     plt.tight_layout()
     plt.show()
 
-def timedresults(reshapes, timedresults, imagefile=None,):
+def timedresults(reshapes, timedresults1, timedresults2=None, imagefile=None,):
     """
     Show a graph to understand relation of time to run the KED and the reshape size
     
     """
-    plt.figure()
-    plt.scatter(reshapes, timedresults, s=200, alpha=0.5)
-    plt.xlabel('$Downscaled\/\/factor$')
-    plt.ylabel('$Time\/(s)$')
-    plt.title('$Downscaled\/\/factor\/\/vs\/\/Time\/\/to\/\/execute\/\/Kriging_{KED}$')
-    plt.xlim([0, 10])
-    
+    if timedresults2 is None:
+        plt.figure()
+        plt.scatter(reshapes, timedresults1, s=200, alpha=0.5)
+        plt.xlabel('$Downscaled\/\/factor$')
+        plt.ylabel('$Time\/(s)$')
+        plt.title('$Downscaled\/\/factor\/\/vs\/\/Time\/\/to\/\/execute\/\/Kriging_{KED}$')
+        plt.xlim([0, 10])
+    else:
+        plt.figure()
+        plt.subplot(2, 1, 1)
+        plt.scatter(reshapes, timedresults1, s=200, alpha=0.5)
+        plt.xlim([0, 10])
+        plt.title('$histogram\/\/of\/\/error\/\/ked_R$')
+        plt.xlabel('$Downscaled\/\/factor$')
+        plt.ylabel('$Time\/(s)$')
+        plt.title('$Downscaled\/\/factor\/\/vs\/\/Time\/\/to\/\/execute\/\/Kriging_{KED}$')
+        
+        plt.subplot(2, 1, 2)
+        plt.scatter(reshapes, timedresults2, s=200, alpha=0.5)
+        plt.xlim([0, 10])
+        plt.xlabel('$Downscaled\/\/factor$')
+        plt.title('$Downscaled\/\/factor\/\/vs\/\/Time\/\/to\/\/execute\/\/Kriging_{KED}$')
+        plt.tight_layout()
+
     if imagefile is not None:
         plt.savefig(imagefile, bbox_inches='tight')
     else:

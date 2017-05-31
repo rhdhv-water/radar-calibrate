@@ -115,7 +115,7 @@ def get_testdata(aggregatefile, calibratefile, reshape = None):
 #        zi = numpy.empty(numpy.array(aggregate.shape) * 10)
         xi = numpy.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
         yi = numpy.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
-        zi = interpolation.zoom(aggregate,reshape)
+        zi = interpolation.zoom(aggregate, reshape, order=0)
         
 #        xi = numpy.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
 #        yi = numpy.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
