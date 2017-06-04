@@ -7,7 +7,7 @@ from radar_calibrate import files
 from radar_calibrate import kriging
 from radar_calibrate import kriging_r
 from radar_calibrate import plot
-from radar_calibrate import utils
+from radar_calibrate import testutils
 
 import numpy
 import scipy.interpolate as inter
@@ -15,12 +15,12 @@ import scipy.interpolate as inter
 import logging
 import os
 
-@utils.timethis
+@testutils.timethis
 def krige_r(x, y, z, radar, xi, yi, zi):
     return kriging_r.ked(x, y, z, radar, xi, yi, zi)
 
 
-@utils.timethis
+@testutils.timethis
 def krige_py(x, y, z, radar, xi, yi, zi):
     return kriging.ked_py(x, y, z, radar, xi, yi, zi)
 

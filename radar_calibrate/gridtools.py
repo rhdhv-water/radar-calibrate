@@ -56,3 +56,29 @@ def sample_grid(coords, grid, geotransform, blocksize=2, agg=numpy.median):
             block = numpy.nan
 
         yield agg(block)
+
+
+def add_vector_layer(shapefile, geotransform):
+    left, cellwidth, _, top, _, cellheight = geotransform
+    with fiona.open(shapefile) as src:
+        for row in src:
+            x, y = zip(*row['geometry']['coordinates'])
+            x = numpy.array(x)
+            y = numpy.array(y)
+            x = (x - left) / cellwidth
+            y = (y - top) / cellheight
+            yield x, y
+
+
+countrymask_path = os.path.join(config.MISCDIR, 'countrymask.h5')
+with h5py.File(countrymask_path, 'r') as ds:
+    mask = ds['mask'][:]
+
+
+def apply_countrymask(calibrate, aggregate):
+    """
+    Get a prefabricated country mask, 1 everywhere in the country and 0
+    50 km outside the country. If extent and cellsize are not as in
+    config.py, this breaks.
+    """
+    return mask * calibrate + (1 - mask) * aggregate

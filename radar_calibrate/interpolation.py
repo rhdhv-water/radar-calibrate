@@ -1,22 +1,20 @@
 # -*- coding: utf-8 -*-
 # Royal HaskoningDHV
 
-from radar_calibrate import files
+from radar_calibrate import utils
 
-class CalibratedProduct(object):
+import logging
+
+class Interpolator(object):
     def __init__(self, aggregatefile, rainstations, method):
         # data aggregate
-        
+
         # geotransform
-        
+
         # rainstations
-        files.read_rainstations        
-        
-    def make(self, res):
-        
-    
+        files.read_rainstations
+
+    def interpolate(self, res):
+
+
     def save(calibratefile):
-        
-        
-    
-    

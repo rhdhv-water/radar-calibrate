@@ -7,7 +7,7 @@ from radar_calibrate import kriging
 from radar_calibrate import kriging_r
 from radar_calibrate import utils
 from radar_calibrate import plot
-from radar_calibrate import config 
+from radar_calibrate import config
 
 import numpy
 
@@ -27,11 +27,11 @@ def test_compare_grid(plot_comparison=False, timestamp='20170223080000'):
     aggregatefile = r'data\24uur_{}.h5'.format(timestamp)
     calibratefile = r'data\RAD_TF2400_U_{}.h5'.format(timestamp)
 
-    # initialize variables    
+    # initialize variables
     reshapes = [1, 1.5, 2, 4, 5]
     timedresults_py = []
     timedresults_r = []
-    
+
     for i in range(len(reshapes)):
         # get test data
         calibrate_kwargs, aggregate, calibrate = files.get_testdata(
@@ -41,18 +41,19 @@ def test_compare_grid(plot_comparison=False, timestamp='20170223080000'):
         )
         # NaN mask
         nan_mask = numpy.isnan(aggregate)
-        
+
         # ked using Python with a reshaped grid
         timedresult = krige_py(**calibrate_kwargs)
         logging.info('ked in python took {dt:.2f} seconds'.format(
                 dt=timedresult.dt))
         timedresults_py.append(timedresult.dt)
-        
+
         # ked using R with a reshaped grid
-        timedresult = krige_r(**calibrate_kwargs)
-        logging.info('ked in R took {dt:.2f} seconds'.format(
-                dt=timedresult.dt))
-        timedresults_r.append(timedresult.dt)
+        # timedresult = krige_r(**calibrate_kwargs)
+        # logging.info('ked in R took {dt:.2f} seconds'.format(
+        #         dt=timedresult.dt))
+        # timedresults_r.append(timedresult.dt)
+        timedresults_r = None
 
     # plot
     if plot_comparison:

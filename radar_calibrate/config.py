@@ -3,7 +3,7 @@
 import os
 
 # variable folder
-VAR = os.path.join('.', 'var')
+VAR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'var')
 if not os.path.exists(VAR):
     os.mkdir(VAR)
 
