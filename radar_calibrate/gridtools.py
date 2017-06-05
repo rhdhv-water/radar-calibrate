@@ -9,10 +9,12 @@ To be merged with openradar.gridtools.
 # add all from openradar.gridtools
 from openradar.gridtools import BaseGrid
 
-import numpy
+import numpy as np
+
+import os
 
 
-def sample_grid(coords, grid, geotransform, blocksize=2, agg=numpy.median):
+def sample_grid(coords, grid, geotransform, blocksize=2, agg=np.median):
     """Sample georeferenced grid at given coordinates
     Parameters
     ----------
@@ -38,11 +40,11 @@ def sample_grid(coords, grid, geotransform, blocksize=2, agg=numpy.median):
     values = []
     for x, y in coords:
         # x, y to row and column indices
-        col_left = int(numpy.floor((x - left) / cellwidth))
-        row_top = int(numpy.floor((y - top) / cellheight)) # cellheight is < 0
+        col_left = int(np.floor((x - left) / cellwidth))
+        row_top = int(np.floor((y - top) / cellheight)) # cellheight is < 0
 
         if (col_left < 0) or (row_top < 0):  # prevent negative indexing
-            yield numpy.nan
+            yield np.nan
             continue
 
         # add blocksize
@@ -53,7 +55,7 @@ def sample_grid(coords, grid, geotransform, blocksize=2, agg=numpy.median):
         try:
             block = grid[row_idx, col_idx]
         except IndexError:
-            block = numpy.nan
+            block = np.nan
 
         yield agg(block)
 
@@ -63,16 +65,11 @@ def add_vector_layer(shapefile, geotransform):
     with fiona.open(shapefile) as src:
         for row in src:
             x, y = zip(*row['geometry']['coordinates'])
-            x = numpy.array(x)
-            y = numpy.array(y)
+            x = np.array(x)
+            y = np.array(y)
             x = (x - left) / cellwidth
             y = (y - top) / cellheight
             yield x, y
-
-
-countrymask_path = os.path.join(config.MISCDIR, 'countrymask.h5')
-with h5py.File(countrymask_path, 'r') as ds:
-    mask = ds['mask'][:]
 
 
 def apply_countrymask(calibrate, aggregate):

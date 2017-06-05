@@ -2,11 +2,20 @@
 """Summary
 """
 # Royal HaskoningDHV
-from radar_calibrate import config
+from radar_calibrate import files
+from radar_calibrate import gridtools
 
+import scipy.interpolate as inter
+import scipy.ndimage.interpolation as interpolation
+from affine import Affine
+import rasterio
+from fiona.crs import from_epsg
+import numpy as np
+import fiona
 import h5py
 
 from collections import namedtuple
+import logging
 import time
 import os
 
@@ -42,7 +51,7 @@ def safe_first(array):
     try:
         return array.flatten()[0]
     except IndexError:
-        return numpy.nan
+        return np.nan
 
 
 def get_testdata(aggregatefile, calibratefile, reshape = None):
@@ -63,7 +72,7 @@ def get_testdata(aggregatefile, calibratefile, reshape = None):
     """
     # read aggregate and grid properties from aggregate file
     with h5py.File(aggregatefile, 'r') as ds:
-        aggregate = get_imagedata(ds)
+        aggregate = files.get_imagedata(ds)
         grid_extent = ds.attrs['grid_extent']
         grid_size = [int(i) for i in ds.attrs['grid_size']]
 
@@ -73,7 +82,7 @@ def get_testdata(aggregatefile, calibratefile, reshape = None):
 
     # read calibrate and station measurements from calibrate file
     with h5py.File(calibratefile, 'r') as ds:
-        calibrate = get_imagedata(ds)
+        calibrate = files.get_imagedata(ds)
         cal_station_coords = ds.attrs['cal_station_coords']
         cal_station_values = ds.attrs['cal_station_measurements']
 
@@ -88,10 +97,10 @@ def get_testdata(aggregatefile, calibratefile, reshape = None):
         grid=aggregate,
         geotransform=basegrid.get_geotransform(),
         )
-    radar = numpy.array([v for v in radar_values])
+    radar = np.array([v for v in radar_values])
 
     # unselect measurement if radar is NaN
-    radar_nan = numpy.isnan(radar)
+    radar_nan = np.isnan(radar)
     cal_station_coords = cal_station_coords[~radar_nan, :]
     cal_station_values = cal_station_values[~radar_nan]
     radar = radar[~radar_nan]
@@ -108,8 +117,8 @@ def get_testdata(aggregatefile, calibratefile, reshape = None):
 
     if reshape == None:
         # define xi and yi arrays and zi
-        xi = numpy.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
-        yi = numpy.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
+        xi = np.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
+        yi = np.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
         zi = aggregate
     else:
         # recalculate the coordinate index vectors
@@ -118,15 +127,15 @@ def get_testdata(aggregatefile, calibratefile, reshape = None):
         cellwidth = cellwidth / reshape
         cellheight = cellheight / reshape
         # define xi and yi arrays and zi based on interpolation of the aggregate
-#        zi = numpy.empty(numpy.array(aggregate.shape) * 10)
-        xi = numpy.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
-        yi = numpy.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
+#        zi = np.empty(np.array(aggregate.shape) * 10)
+        xi = np.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
+        yi = np.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
         zi = interpolation.zoom(aggregate, reshape, order=0)
 
-#        xi = numpy.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
-#        yi = numpy.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
-#        vals = numpy.reshape(aggregate, (len(aggregate[:][0]) * len(aggregate[:])))
-#        pts = numpy.array([[i,j] for i in xi[:,0] for j in yi[0,:]] )
+#        xi = np.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
+#        yi = np.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
+#        vals = np.reshape(aggregate, (len(aggregate[:][0]) * len(aggregate[:])))
+#        pts = np.array([[i,j] for i in xi[:,0] for j in yi[0,:]] )
 #        zi = inter.griddata(pts, vals, (xi, yi), method='linear')
 #
     # calibrate kwargs to dict
@@ -166,7 +175,7 @@ def hdf2raster(h5file, rasterfile,
     """
     # open h5 file and get values and attributes
     with h5py.File(h5file, 'r') as ds:
-        values = get_imagedata(ds)
+        values = files.get_imagedata(ds)
         grid_extent = ds.attrs['grid_extent']
         grid_size = [int(i) for i in ds.attrs['grid_size']]
 
@@ -224,7 +233,7 @@ def write_raster(array, rasterfile, transform,
         }
 
     # replace NaN with fill_value
-    array[numpy.isnan(array)] = fill_value
+    array[np.isnan(array)] = fill_value
 
     # write to file
     logging.debug('writing to {}'.format(os.path.basename(rasterfile)))
@@ -233,7 +242,7 @@ def write_raster(array, rasterfile, transform,
 
 
 def rainstations2shape(aggregatefile, calibratefile, shapefile,
-    calibrate=None, epsg=28992, driver='ESRI Shapefile', agg=numpy.median):
+    calibrate=None, epsg=28992, driver='ESRI Shapefile', agg=np.median):
     """Summary
 
     Parameters
@@ -253,7 +262,7 @@ def rainstations2shape(aggregatefile, calibratefile, shapefile,
     """
     # read aggregate and grid properties from aggregate file
     with h5py.File(aggregatefile, 'r') as ds:
-        aggregate = get_imagedata(ds)
+        aggregate = files.get_imagedata(ds)
         grid_extent = ds.attrs['grid_extent']
         grid_size = [int(i) for i in ds.attrs['grid_size']]
 
@@ -264,7 +273,7 @@ def rainstations2shape(aggregatefile, calibratefile, shapefile,
     # read calibrate and station measurements from calibrate file
     with h5py.File(calibratefile, 'r') as ds:
         if calibrate is None:
-            calibrate = get_imagedata(ds)
+            calibrate = files.get_imagedata(ds)
         cal_station_coords = ds.attrs['cal_station_coords']
         cal_station_values = ds.attrs['cal_station_measurements']
 
@@ -275,7 +284,7 @@ def rainstations2shape(aggregatefile, calibratefile, shapefile,
         geotransform=basegrid.get_geotransform(),
         agg=agg,
         )
-    radar = numpy.array([v for v in radar_values])
+    radar = np.array([v for v in radar_values])
 
     # sample calibrate at calibration station coordinates
     cal_radar_values = gridtools.sample_grid(
@@ -284,7 +293,7 @@ def rainstations2shape(aggregatefile, calibratefile, shapefile,
         geotransform=basegrid.get_geotransform(),
         agg=agg,
         )
-    cal_radar = numpy.array([v for v in cal_radar_values])
+    cal_radar = np.array([v for v in cal_radar_values])
 
     # records
     zipped_rows = zip(cal_station_coords, cal_station_values, radar, cal_radar)

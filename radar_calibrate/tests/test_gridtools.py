@@ -8,9 +8,9 @@ Run using pytest:
 # Royal HaskoningDHV
 
 from radar_calibrate import gridtools
-from radar_calibrate import utils
+from radar_calibrate.tests import utils
 
-import numpy
+import numpy as np
 
 
 def test_sample_first():
@@ -18,7 +18,7 @@ def test_sample_first():
     test_coords = [(25., 5.), ]  # second column, second row
 
     # test array
-    test_grid = numpy.array([[0, 1], [2, 3]])
+    test_grid = np.array([[0, 1], [2, 3]])
 
     # geotransform (left, cellwidth, 0., top, 0., -cellheight)
     test_geotransform = 10., 10., 0., 20., 0., -10.
@@ -31,7 +31,7 @@ def test_sample_first():
 
     # compare result
     result = next(samples)
-    assert numpy.isclose(result, 3.)
+    assert np.isclose(result, 3.)
 
 
 def test_sample_multiple():
@@ -45,7 +45,7 @@ def test_sample_multiple():
             ]
 
     # test array
-    test_grid = numpy.array([[0, 1], [2, 3]])
+    test_grid = np.array([[0, 1], [2, 3]])
 
     # geotransform (left, cellwidth, 0., top, 0., -cellheight)
     test_geotransform = 10., 10., 0., 20., 0., -10.
@@ -57,9 +57,9 @@ def test_sample_multiple():
         )
 
     # compare result
-    result = numpy.array([s for s in samples])
-    desired = [numpy.nan, 3., 2., 1., numpy.nan]
-    numpy.testing.assert_allclose(result, desired)
+    result = np.array([s for s in samples])
+    desired = [np.nan, 3., 2., 1., np.nan]
+    np.testing.assert_allclose(result, desired)
 
 
 def test_sample_median():
@@ -69,7 +69,7 @@ def test_sample_median():
             ]
 
     # test array
-    test_grid = numpy.array([[0, 1], [2, 3]])
+    test_grid = np.array([[0, 1], [2, 3]])
 
     # geotransform (left, cellwidth, 0., top, 0., -cellheight)
     test_geotransform = 10., 10., 0., 20., 0., -10.
@@ -77,9 +77,9 @@ def test_sample_median():
     # sample grid
     samples = gridtools.sample_grid(test_coords, test_grid, test_geotransform,
         blocksize=2,
-        agg=numpy.median,
+        agg=np.median,
         )
 
     # compare result
     result = next(samples)
-    assert numpy.isclose(result, 1.5)
+    assert np.isclose(result, 1.5)

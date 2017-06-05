@@ -2,6 +2,9 @@
 # Royal HaskoningDHV
 import os
 
+# data folder
+DATADIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+
 # variable folder
 VAR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'var')
 if not os.path.exists(VAR):
@@ -23,4 +26,4 @@ if not os.path.exists(PLOTDIR):
     os.mkdir(PLOTDIR)
 
 # misc folder
-MISCDIR = os.path.join('.', 'misc')
+MISCDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'misc')
