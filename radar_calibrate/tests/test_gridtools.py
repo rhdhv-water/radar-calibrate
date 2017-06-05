@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""tests for grid tools module.
+"""tests for gridtools module.
 
 Run using pytest:
 > python -m pytest test_gridtools.py
@@ -18,13 +18,13 @@ def test_sample_first():
     test_coords = [(25., 5.), ]  # second column, second row
 
     # test array
-    test_grid = np.array([[0, 1], [2, 3]])
+    test_array = np.array([[0, 1], [2, 3]])
 
     # geotransform (left, cellwidth, 0., top, 0., -cellheight)
     test_geotransform = 10., 10., 0., 20., 0., -10.
 
-    # sample grid
-    samples = gridtools.sample_grid(test_coords, test_grid, test_geotransform,
+    # sample array
+    samples = gridtools.sample_array(test_coords, test_array, test_geotransform,
         blocksize=1,
         agg=utils.safe_first,
         )
@@ -45,13 +45,13 @@ def test_sample_multiple():
             ]
 
     # test array
-    test_grid = np.array([[0, 1], [2, 3]])
+    test_array = np.array([[0, 1], [2, 3]])
 
     # geotransform (left, cellwidth, 0., top, 0., -cellheight)
     test_geotransform = 10., 10., 0., 20., 0., -10.
 
-    # sample grid
-    samples = gridtools.sample_grid(test_coords, test_grid, test_geotransform,
+    # sample array
+    samples = gridtools.sample_array(test_coords, test_array, test_geotransform,
         blocksize=1,
         agg=utils.safe_first,
         )
@@ -69,13 +69,13 @@ def test_sample_median():
             ]
 
     # test array
-    test_grid = np.array([[0, 1], [2, 3]])
+    test_array = np.array([[0, 1], [2, 3]])
 
     # geotransform (left, cellwidth, 0., top, 0., -cellheight)
     test_geotransform = 10., 10., 0., 20., 0., -10.
 
-    # sample grid
-    samples = gridtools.sample_grid(test_coords, test_grid, test_geotransform,
+    # sample array
+    samples = gridtools.sample_array(test_coords, test_array, test_geotransform,
         blocksize=2,
         agg=np.median,
         )

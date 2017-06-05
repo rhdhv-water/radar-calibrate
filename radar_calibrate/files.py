@@ -13,22 +13,19 @@ import h5py
 import logging
 
 
-def get_imagedata(ds, fill_value=65535):
-    """Summary
-
-    Parameters
-    ----------
-    ds : TYPE
-        Description
-
-    Returns
-    -------
-    TYPE
-        Description
-    """
+def get_imagedata(ds, fill_value=65535, mm_factor=1e-2):
+    '''get precipitation as masked array from image1/image_data group'''
     imagedata = ds['image1/image_data'][:]
     imagedata = np.ma.masked_equal(imagedata, fill_value)
-    return imagedata.astype(np.float64).filled(np.nan) * 1e-2
+    return imagedata.astype(np.float64) * mm_factor
+
+
+def add_imagedata(ds, data, int_factor=1e2):
+    '''add data as integer array to HDF5 dataset'''
+    dataset = ds.create_dataset('image1/image_data',
+        data.shape,
+        dtype='u2', compression='gzip', shuffle=True)
+    dataset[...] = np.uint16(np.round(data * int_factor)).filled()
 
 
 def read_aggregate(aggregatefile):
@@ -49,13 +46,18 @@ def read_calibrate(calibratefile):
     '''read calibrate and station measurements from calibrate file'''
     with h5py.File(calibratefile, 'r') as ds:
         calibrate = get_imagedata(ds)
-        rainstation_coords = ds.attrs['cal_station_coords']
-        rainstation_values = ds.attrs['cal_station_measurements']
-        rainstations = np.concat()
+        station_coords = ds.attrs['cal_station_coords']
+        station_values = ds.attrs['cal_station_measurements']
 
-    return calibrate, rainstations
+    return calibrate, (station_coords, station_values)
 
 
-def save_calibrate(calibratefile, attrs):
-    with h5py.File(calibratefile, 'w') as ds:
-        pass
+def save_result(resultfile, result, attrs):
+    '''save result to HDF5 format'''
+    with h5py.File(resultfile, 'w') as ds:
+        # save result to image dataset
+        add_imagedata(ds, result)
+
+        # save attributes
+        for key, value in attrs.items():
+            ds.attrs[key] = value
