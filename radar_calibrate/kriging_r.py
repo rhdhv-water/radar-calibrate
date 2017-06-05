@@ -2,13 +2,13 @@
 # Royal HaskoningDHV
 
 import rpy2.robjects as robj
-import numpy
+import numpy as np
 
 import logging
 
 
 def ked(x, y, z, radar, xi, yi, zi):
-    
+
     """
     Run the kriging method using the R module "gstat".
     Kriging External Drift (or universal kriging).
@@ -20,14 +20,14 @@ def ked(x, y, z, radar, xi, yi, zi):
     """
     robj.r.library('gstat')
     # xi, yi, zi to vectors
-    
-    xi, yi = numpy.meshgrid(xi, yi, indexing='xy')
-    xi = numpy.float32(xi).flatten()
-    yi = numpy.float32(yi).flatten()
-    zi = numpy.float32(zi).flatten()
+
+    xi, yi = np.meshgrid(xi, yi, indexing='xy')
+    xi = np.float32(xi).flatten()
+    yi = np.float32(yi).flatten()
+    zi = np.float32(zi).flatten()
 
     # Modification to prevent singular matrix (Tom)
-    radar += (1e-9 * numpy.random.rand(len(radar)))
+    radar += (1e-9 * np.random.rand(len(radar)))
 
     # variables to R dataframes
     rain_radar_frame = robj.DataFrame({
@@ -56,18 +56,18 @@ def ked(x, y, z, radar, xi, yi, zi):
                            data=rain_radar_frame,
                            model=residual, nmax=40)
         result = robj.r.predict(ked, radar_frame, nsim=0)
-        rain_est = numpy.array(result[2])
+        rain_est = np.array(result[2])
     except:
         logging.exception('Exception during kriging:')
         rain_est = zi
 
     # handle extreme outcomes of kriging
-    zero_or_no_data = numpy.logical_or(zi == 0., numpy.isnan(zi))
-    correction_factor = numpy.ones(zi.shape)
+    zero_or_no_data = np.logical_or(zi == 0., np.isnan(zi))
+    correction_factor = np.ones(zi.shape)
     correction_factor[~zero_or_no_data] = (
         rain_est[~zero_or_no_data] / zi[~zero_or_no_data]
     )
-    leave_uncalibrated = numpy.logical_or(
+    leave_uncalibrated = np.logical_or(
         correction_factor < 0, correction_factor > 10
     )
     logging.info('Leaving {} extreme pixels uncalibrated.'.format(
