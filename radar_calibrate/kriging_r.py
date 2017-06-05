@@ -7,7 +7,7 @@ import numpy as np
 import logging
 
 
-def ked(x, y, z, radar, xi, yi, zi):
+def ked_r(x, y, z, radar, xi, yi, zi):
 
     """
     Run the kriging method using the R module "gstat".
@@ -75,4 +75,4 @@ def ked(x, y, z, radar, xi, yi, zi):
     ))
     rain_est[leave_uncalibrated] = zi[leave_uncalibrated]
 
-    return rain_est
+    return rain_est, None

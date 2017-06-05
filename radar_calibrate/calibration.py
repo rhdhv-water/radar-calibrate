@@ -1,30 +1,65 @@
 # -*- coding: utf-8 -*-
 # Royal HaskoningDHV
 
-from radar_calibrate import utils
+from radar_calibrate import files
 
 import numpy as np
 import pykrige
 
 import logging
+import os
 
-class Interpolator(object):
-    def __init__(self, aggregatefile, calibratefile, rainstations):
+class Calibrator(object):
+    def __init__(self, aggregatefile, calibratefile=None, rainstations=None):
         # read aggregate
+        self.aggregatefile = os.path.basename(aggregatefile)
+        self.aggregate, self.geotransform = files.read_aggregate(aggregatefile)
 
-        # geotransform
+        # read calibrate
+        if calibratefile is not None:
+            self.calibratefile = calibratefile
+            self.calibrate, self.rainstations = files.read_calibrate(calibratefile)
+        else:
+            self.calibrate = None
+            self.rainstations = None
 
         # read rainstations
-        files.read_rainstations
+        if rainstations is not None:
+            self.rainstations = files.read_rainstations(rainstations)
+        else:
+            self.rainstations = None
 
-    def interpolate(self, method, res):
-        pass
+        # result
+        self.result = None
+
+    def interpolate(self, method, res, **interpolate_kwargs):
+        logging.info('interpolate using {method.__name__:}'.format(
+            method=method))
+
+        # get radar values for rainstations, drop NaN values
+        x, y, z, radar = self.get_radar_for_rainstations()
+
+        interpolate_kwargs.update({
+            'x': x,
+            'y': y,
+            'z': z,
+            'radar': radar,
+            'xi': xi,
+            'yi': yi,
+            'zi': zi,
+            })
+
+        # run interpolation method and set result to self
+        self.result = method(**interpolate_kwargs)
 
     def bootstrap(self, method, res):
         pass
 
     def save(calibratefile):
-        pass
+        if self.result is None:
+            logging.warning('Interpolator does not contain result, passing')
+            pass
+        est, sigma = self.result
 
 
 def idw(x, y, z, xi, yi, p=2):
