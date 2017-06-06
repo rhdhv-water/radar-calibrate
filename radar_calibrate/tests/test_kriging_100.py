@@ -22,13 +22,13 @@ def krige_r(x, y, z, radar, xi, yi, zi):
 def krige_py(x, y, z, radar, xi, yi, zi):
     return kriging.ked_py(x, y, z, radar, xi, yi, zi)
 
-def test_compare_grid(plot_comparison=False, timestamp='20170223080000'):
+def test_compare_grid(plot_comparison=False, timestamp='20170305080000'):
     # test data from files
     aggregatefile = r'data\24uur_{}.h5'.format(timestamp)
     calibratefile = r'data\RAD_TF2400_U_{}.h5'.format(timestamp)
 
     # initialize variables    
-    reshapes = [1, 1.5, 2, 4, 5]
+    reshapes = [4]
     timedresults_py = []
     timedresults_r = []
     
