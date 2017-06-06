@@ -52,6 +52,12 @@ def read_calibrate(calibratefile):
     return calibrate, (station_coords, station_values)
 
 
+def read_mask(maskfile):
+    with h5py.File(maskfile, 'r') as ds:
+        mask = ds['mask'][...]
+        return mask
+        
+
 def save_result(resultfile, result, attrs):
     '''save result to HDF5 format'''
     with h5py.File(resultfile, 'w') as ds:
