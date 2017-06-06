@@ -57,7 +57,7 @@ class Calibrator(object):
             )
         radar = np.array([v for v in radar_values])
 
-        # unselect measurement if radar is NaN
+        # unselect measurement if radar is masked
         radar_nan = np.isnan(radar)
         station_coords = station_coords[~radar_nan, :]
         station_values = station_values[~radar_nan]
@@ -70,17 +70,15 @@ class Calibrator(object):
 
         return x, y, z, radar
 
-    def interpolate(self, method, res, factor_bounds=None,
+    def interpolate(self, method, resolution=None, factor_bounds=None,
         countrymask=None, **interpolate_kwargs):
-        logging.info('sampling aggregate at rainstation locations')
         # values for rainstations, drop where radar is NaN
         x, y, z, radar = self.get_radar_for_rainstations()
 
         # interpolation grid at desired resolution
-        logging.info('creating interpolation grid')
         xi, yi = self.basegrid.get_grid()
         zi = self.aggregate
-        xi_interp, yi_interp = self.basegrid.get_grid(res)
+        xi_interp, yi_interp = self.basegrid.get_grid(resolution)
         zi_interp = gridtools.resample(xi, yi, zi, xi_interp, yi_interp)
 
         # create mask
@@ -118,7 +116,7 @@ class Calibrator(object):
         est, sigma, params = result
         self.result = {
             'method': method.__name__,
-            'dt', dt,
+            'dt': dt,
             'est': est,
             'sigma': sigma,
             'params': params,
@@ -179,9 +177,9 @@ class Calibrator(object):
             raise NotImplementedError('what to do')
 
 
-def ked(x, y, z, radar, xi, yi, zi, mask,
-    varogram_model='spherical', weights=False, verbose=False,
-    backend='vectorized'):
+def ked(x, y, z, radar, xi, yi, zi,
+    mask=None, variogram_model='spherical', nlags=40,
+    weight=False, verbose=False, backend='vectorized'):
     """
     Run the kriging method using the Python module Pykrige using vectorized backend to save time (high memory).
     Kriging External Drift (or universal kriging).
@@ -196,7 +194,8 @@ def ked(x, y, z, radar, xi, yi, zi, mask,
                                    drift_terms=['specified'],
                                    specified_drift=[radar,],
                                    variogram_model=variogram_model,
-                                   weights=weights,
+                                   nlags=nlags,
+                                   weight=weight,
                                    verbose=verbose,
                                    )
     # run predictor
@@ -204,6 +203,9 @@ def ked(x, y, z, radar, xi, yi, zi, mask,
                          specified_drift_arrays=[zi,],
                          backend=backend,
                          )
+
+    # get optimized parameter values (order: sill, range, nugget)
+    params = ked.variogram_model_parameters
 
     # return prediction result (est), variance (sigma) and parameters (params)
     return est, sigma, params
