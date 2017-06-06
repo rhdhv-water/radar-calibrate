@@ -3,11 +3,12 @@
 
 """
 # Royal HaskoningDHV
-from radar_calibrate import config
-from radar_calibrate import files
+from radar_calibrate.tests import testconfig
 
 import matplotlib.pyplot as plt
+import numpy as np
 
+from itertools import cycle
 import os
 
 def vgm_r(vgm_py, residual_py):
@@ -43,37 +44,42 @@ def histogram(calibrate, calibrate_r, calibrate_py):
     plt.tight_layout()
     plt.show()
 
-def timedresults(reshapes, timedresults1, timedresults2=None, imagefile=None,):
+def timedresults(reshapes, results, nstations, imagefile=None, xlim=None, ylim=None):
     """
     Show a graph to understand relation of time to run the KED and the reshape size
 
     """
-    if timedresults2 is None:
-        plt.figure()
-        plt.scatter(reshapes, timedresults1, s=200, alpha=0.5)
-        plt.xlabel('$Downscaled\/\/factor$')
-        plt.ylabel('$Time\/(s)$')
-        plt.title('$Downscaled\/\/factor\/\/vs\/\/Time\/\/to\/\/execute\/\/Kriging_{KED}$')
-        plt.xlim([0, 10])
-    else:
-        plt.figure()
-        plt.subplot(2, 1, 1)
-        plt.scatter(reshapes, timedresults1, s=200, alpha=0.5)
-        plt.xlim([0, 10])
-        plt.title('$histogram\/\/of\/\/error\/\/ked_R$')
-        plt.xlabel('$Downscaled\/\/factor$')
-        plt.ylabel('$Time\/(s)$')
-        plt.title('$Downscaled\/\/factor\/\/vs\/\/Time\/\/to\/\/execute\/\/Kriging_{KED}$')
 
-        plt.subplot(2, 1, 2)
-        plt.scatter(reshapes, timedresults2, s=200, alpha=0.5)
-        plt.xlim([0, 10])
-        plt.xlabel('$Downscaled\/\/factor$')
-        plt.title('$Downscaled\/\/factor\/\/vs\/\/Time\/\/to\/\/execute\/\/Kriging_{KED}$')
-        plt.tight_layout()
+    fig, ax = plt.subplots()
+    bxa = []
+    markers = cycle(['o', 's', 'v', '+', 'd'])
+    for result in results:
+        marker = next(markers)
+        for timestamp, values in sorted(result.items()):
+            ax.plot(reshapes, values,
+            linestyle='', marker=marker, markersize=8, alpha=0.5,
+            label='{} ({:d}) '.format(timestamp, nstations[timestamp]))
+
+    ax.plot([0., 10.], np.exp(np.array([0., 10.])), color='indianred', label='$e^{x}$')
+
+    ax.grid(linestyle=':', linewidth=0.5, color='black')
+    ax.set_yscale('log')
+
+    if xlim is not None:
+        ax.set_xlim(xlim)
+    if ylim is not None:
+        ax.set_ylim(ylim)
+
+    ax.set_xlabel('$downscale\/\/factor$')
+    ax.set_ylabel('$time\/(s)$')
+    ttl = ax.set_title('$downscale\/\/factor\/\/vs\/\/time\/\/to\/\/execute\/\/Kriging_{KED}$')
+    bxa.append(ttl)
+
+    lgd = ax.legend(loc='upper left', bbox_to_anchor=(1.01, 1))
+    bxa.append(lgd)
 
     if imagefile is not None:
-        plt.savefig(imagefile, bbox_inches='tight')
+        plt.savefig(imagefile, bbox_inches='tight', bbox_extra_artists=bxa)
     else:
         plt.show()
 
@@ -81,7 +87,7 @@ def compare_ked(aggregate,
     calibrate, calibrate_r, calibrate_py,
     imagefile=None,
     ):
-    bg_shape = os.path.join(config.MISCDIR, 'nederland_lijn.shp')
+    bg_shape = testconfig.BG_SHAPE
 
     fig, axes  = plt.subplots(nrows=3, ncols=2,
         figsize=(8.27, 11.7), sharex=True, sharey=True)
