@@ -1,42 +1,41 @@
 # -*- coding: utf-8 -*-
 # Royal HaskoningDHV
 
-from radar_calibrate import config
+from radar_calibrate.tests import testconfig
+from radar_calibrate.tests import testutils
 from radar_calibrate import gridtools
-from radar_calibrate import files
-from radar_calibrate import kriging
+from radar_calibrate import calibration
 from radar_calibrate import kriging_r
 from radar_calibrate import plot
-from radar_calibrate import testutils
+from radar_calibrate import utils
 
-import numpy
-import scipy.interpolate as inter
+import numpy as np
 
 import logging
 import os
 
-@testutils.timethis
+@utils.timethis
 def krige_r(x, y, z, radar, xi, yi, zi):
-    return kriging_r.ked(x, y, z, radar, xi, yi, zi)
+    return kriging_r.ked_r(x, y, z, radar, xi, yi, zi)
 
 
-@testutils.timethis
+@utils.timethis
 def krige_py(x, y, z, radar, xi, yi, zi):
-    return kriging.ked_py(x, y, z, radar, xi, yi, zi)
+    return calibration.ked(x, y, z, radar, xi, yi, zi)
 
 
 def test_compare_ked(plot_comparison=False, timestamp='20170305080000'):
     # test data from files
     aggregatefile = r'data\24uur_{}.h5'.format(timestamp)
     calibratefile = r'data\RAD_TF2400_U_{}.h5'.format(timestamp)
-    calibrate_kwargs, aggregate, calibrate = files.get_testdata(
+    calibrate_kwargs, aggregate, calibrate = testutils.get_testdata(
         aggregatefile,
         calibratefile,
         )
     # NaN mask
     nan_mask = numpy.isnan(aggregate)
 
-#    # ked using R
+    # ked using R
     timedresult_r = krige_r(**calibrate_kwargs)
     logging.info('ked in R took {dt:.2f} seconds'.format(dt=timedresult_r.dt))
     rain_est_r = timedresult_r.result
@@ -55,8 +54,8 @@ def test_compare_ked(plot_comparison=False, timestamp='20170305080000'):
 
     # plot
     if plot_comparison:
-        imagefile = os.path.join(config.PLOTDIR, 'compare_ked_{}.png'.format(
-            timestamp))
+        imagefile = os.path.join(testconfig.PLOTDIR,
+            'compare_ked_{}.png'.format(timestamp))
         plot.compare_ked(aggregate,
             calibrate, calibrate_r, calibrate_py,
             imagefile=imagefile,

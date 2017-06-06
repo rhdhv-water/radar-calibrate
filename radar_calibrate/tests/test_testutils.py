@@ -7,8 +7,8 @@ Run using pytest:
 """
 # Royal HaskoningDHV
 
-from radar_calibrate.tests import config
-from radar_calibrate.tests import utils
+from radar_calibrate.tests import testconfig
+from radar_calibrate.tests import testutils
 
 import numpy as np
 
@@ -17,13 +17,13 @@ import glob
 import os
 
 def test_hdf2raster():
-    h5files = glob.glob(os.path.join(config.DATADIR, '*.h5'))
+    h5files = glob.glob(os.path.join(testconfig.DATADIR, '*.h5'))
     for h5file in h5files:
         logging.info('writing {} to raster'.format(os.path.basename(h5file)))
         filename = os.path.basename(h5file)
         name, ext = os.path.splitext(filename)
-        rasterfile = os.path.join(config.RASTERDIR, name + '.tif')
-        utils.hdf2raster(h5file, rasterfile)
+        rasterfile = os.path.join(testconfig.RASTERDIR, name + '.tif')
+        testutils.hdf2raster(h5file, rasterfile)
 
 
 def test_rainstations2shape():
@@ -37,8 +37,8 @@ def test_rainstations2shape():
             os.path.basename(calibratefile)))
         filename = os.path.basename(calibratefile)
         name, ext = os.path.splitext(filename)
-        shapefile = os.path.join(config.SHAPEDIR, name + '.shp')
-        aggregatefile = os.path.join(config.DATADIR, aggregatefile)
-        calibratefile = os.path.join(config.DATADIR, calibratefile)
-        utils.rainstations2shape(aggregatefile, calibratefile, shapefile,
-            agg=utils.safe_first)
+        shapefile = os.path.join(testconfig.SHAPEDIR, name + '.shp')
+        aggregatefile = os.path.join(testconfig.DATADIR, aggregatefile)
+        calibratefile = os.path.join(testconfig.DATADIR, calibratefile)
+        testutils.rainstations2shape(aggregatefile, calibratefile, shapefile,
+            agg=testutils.safe_first)

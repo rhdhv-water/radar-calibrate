@@ -27,3 +27,9 @@ if not os.path.exists(PLOTDIR):
 
 # misc folder
 MISCDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'misc')
+
+# background shape
+BG_SHAPE = os.path.join(MISCDIR, 'nederland_lijn.shp')
+
+# countrymask
+COUNTRYMASK = os.path.join(MISCDIR, 'countrymask.h5')

@@ -25,7 +25,7 @@ def safe_first(array):
         return np.nan
 
 
-def get_testdata(aggregatefile, calibratefile, reshape = None):
+def get_testdata(aggregatefile, calibratefile, resize=None):
     """Summary
 
     Parameters
@@ -34,7 +34,7 @@ def get_testdata(aggregatefile, calibratefile, reshape = None):
         Description
     calibratefile : TYPE
         Description
-    reshape : INT
+    resize : FLOAT
         Resamples the aggregate grid to a higher resolution as dummy input
     Returns
     -------
@@ -63,9 +63,9 @@ def get_testdata(aggregatefile, calibratefile, reshape = None):
     cal_station_values = cal_station_values[rain_ge_zero]
 
     # sample aggregate at calibration station coordinates
-    radar_values = gridtools.sample_grid(
+    radar_values = gridtools.sample_array(
         coords=cal_station_coords,
-        grid=aggregate,
+        array=aggregate,
         geotransform=basegrid.get_geotransform(),
         )
     radar = np.array([v for v in radar_values])
@@ -86,26 +86,26 @@ def get_testdata(aggregatefile, calibratefile, reshape = None):
     cellwidth, cellheight = basegrid.get_cellsize()
     left, right, top, bottom = grid_extent
 
-    if reshape == None:
+    if resize == None:
         # define xi and yi arrays and zi
         xi = np.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
         yi = np.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
         zi = aggregate
     else:
         # recalculate the coordinate index vectors
-        ncols = ncols * reshape
-        nrows = nrows * reshape
-        cellwidth = cellwidth / reshape
-        cellheight = cellheight / reshape
+        ncols = ncols * resize
+        nrows = nrows * resize
+        cellwidth = cellwidth / resize
+        cellheight = cellheight / resize
         # define xi and yi arrays and zi based on interpolation of the aggregate
 #        zi = np.empty(np.array(aggregate.shape) * 10)
         xi = np.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
         yi = np.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
-        zi = interpolation.zoom(aggregate, reshape, order=0)
+        zi = interpolation.zoom(aggregate, resize, order=0)
 
 #        xi = np.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
 #        yi = np.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
-#        vals = np.reshape(aggregate, (len(aggregate[:][0]) * len(aggregate[:])))
+#        vals = np.resize(aggregate, (len(aggregate[:][0]) * len(aggregate[:])))
 #        pts = np.array([[i,j] for i in xi[:,0] for j in yi[0,:]] )
 #        zi = inter.griddata(pts, vals, (xi, yi), method='linear')
 #
@@ -249,18 +249,18 @@ def rainstations2shape(aggregatefile, calibratefile, shapefile,
         cal_station_values = ds.attrs['cal_station_measurements']
 
     # sample aggregate at calibration station coordinates
-    radar_values = gridtools.sample_grid(
+    radar_values = gridtools.sample_array(
         coords=cal_station_coords,
-        grid=aggregate,
+        array=aggregate,
         geotransform=basegrid.get_geotransform(),
         agg=agg,
         )
     radar = np.array([v for v in radar_values])
 
     # sample calibrate at calibration station coordinates
-    cal_radar_values = gridtools.sample_grid(
+    cal_radar_values = gridtools.sample_array(
         coords=cal_station_coords,
-        grid=calibrate,
+        array=calibrate,
         geotransform=basegrid.get_geotransform(),
         agg=agg,
         )

@@ -8,7 +8,7 @@ Run using pytest:
 # Royal HaskoningDHV
 
 from radar_calibrate import gridtools
-from radar_calibrate.tests import utils
+from radar_calibrate.tests import testutils
 
 import numpy as np
 
@@ -26,7 +26,7 @@ def test_sample_first():
     # sample array
     samples = gridtools.sample_array(test_coords, test_array, test_geotransform,
         blocksize=1,
-        agg=utils.safe_first,
+        agg=testutils.safe_first,
         )
 
     # compare result
@@ -53,7 +53,7 @@ def test_sample_multiple():
     # sample array
     samples = gridtools.sample_array(test_coords, test_array, test_geotransform,
         blocksize=1,
-        agg=utils.safe_first,
+        agg=testutils.safe_first,
         )
 
     # compare result
