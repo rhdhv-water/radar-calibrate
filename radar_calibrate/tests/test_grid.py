@@ -14,8 +14,9 @@ def test_grid_equal():
     np.testing.assert_allclose(xi, xi2)
     np.testing.assert_allclose(yi, yi2)
 
+
 def grid_mgrid(size, extent, cellsize):
-    ncols, nrows = size # Similar to ncols, nrows
+    ncols, nrows = size
     left, right, top, bottom = extent
     cellwidth, cellheight = cellsize
 
@@ -29,7 +30,7 @@ def grid_mgrid(size, extent, cellsize):
     return xi, yi
 
 def grid_meshgrid(size, extent, cellsize):
-    ncols, nrows = size # Similar to ncols, nrows
+    ncols, nrows = size
     left, right, top, bottom = extent
     cellwidth, cellheight = cellsize
 

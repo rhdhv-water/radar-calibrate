@@ -17,6 +17,8 @@ import h5py
 import logging
 import os
 
+log = logging.getLogger(os.path.basename(__file__))
+
 
 def safe_first(array):
     try:
@@ -207,7 +209,7 @@ def write_raster(array, rasterfile, transform,
     array[np.isnan(array)] = fill_value
 
     # write to file
-    logging.debug('writing to {}'.format(os.path.basename(rasterfile)))
+    log.debug('writing to {}'.format(os.path.basename(rasterfile)))
     with rasterio.open(rasterfile, 'w', **profile) as dst:
         dst.write(array.astype(dtype), 1)
 
@@ -299,7 +301,7 @@ def rainstations2shape(aggregatefile, calibratefile, shapefile,
         }
 
     # write to file
-    logging.debug('writing to {}'.format(os.path.basename(shapefile)))
+    log.debug('writing to {}'.format(os.path.basename(shapefile)))
     write_shape(records, shapefile, crs, schema, driver=driver)
 
 

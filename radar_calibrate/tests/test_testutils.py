@@ -16,10 +16,13 @@ import logging
 import glob
 import os
 
+log = logging.getLogger(os.path.basename(__file__))
+
+
 def test_hdf2raster():
     h5files = glob.glob(os.path.join(testconfig.DATADIR, '*.h5'))
     for h5file in h5files:
-        logging.info('writing {} to raster'.format(os.path.basename(h5file)))
+        log.info('writing {} to raster'.format(os.path.basename(h5file)))
         filename = os.path.basename(h5file)
         name, ext = os.path.splitext(filename)
         rasterfile = os.path.join(testconfig.RASTERDIR, name + '.tif')
@@ -33,7 +36,7 @@ def test_rainstations2shape():
         (r'24uur_20170305080000.h5', r'RAD_TF2400_U_20170305080000.h5'),
         ]
     for aggregatefile, calibratefile in h5files:
-        logging.info('writing {} to shapefile'.format(
+        log.info('writing {} to shapefile'.format(
             os.path.basename(calibratefile)))
         filename = os.path.basename(calibratefile)
         name, ext = os.path.splitext(filename)
