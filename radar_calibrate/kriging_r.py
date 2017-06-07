@@ -6,6 +6,8 @@ import numpy as np
 
 import logging
 
+log = logging.getLogger(os.path.basename(__file__))
+
 
 def ked_r(x, y, z, radar, xi, yi, zi):
 
@@ -58,21 +60,7 @@ def ked_r(x, y, z, radar, xi, yi, zi):
         result = robj.r.predict(ked, radar_frame, nsim=0)
         rain_est = np.array(result[2])
     except:
-        logging.exception('Exception during kriging:')
+        log.exception('Exception during kriging:')
         rain_est = zi
 
-    # handle extreme outcomes of kriging
-    zero_or_no_data = np.logical_or(zi == 0., np.isnan(zi))
-    correction_factor = np.ones(zi.shape)
-    correction_factor[~zero_or_no_data] = (
-        rain_est[~zero_or_no_data] / zi[~zero_or_no_data]
-    )
-    leave_uncalibrated = np.logical_or(
-        correction_factor < 0, correction_factor > 10
-    )
-    logging.info('Leaving {} extreme pixels uncalibrated.'.format(
-        leave_uncalibrated.sum(),
-    ))
-    rain_est[leave_uncalibrated] = zi[leave_uncalibrated]
-
-    return rain_est, None
+    return rain_est, None, None
