@@ -14,13 +14,17 @@ def get_parser():
 
     # Command line arguments
     parser.add_argument('aggregatefile', type=str,
-            help=('input aggregate path to HDF5 file'))
-    parser.add_argument('-c', '--calibratefile', type=str,
+        help=('input aggregate path to HDF5 file'))
+    parser.add_argument('-cal', '--calibratefile', type=str,
         help=('input pre-existing calibrate file path to HDF5 file'))
-    parser.add_argument('-r', '--rainstations', type=str,
-            help=('rainstation coords and values in JSON file'))
-    parser.add_argument('rainstations', type=str,
-                help=('rainstation coords and values in JSON file'))
+    parser.add_argument('-rain', '--rainstations', type=str,
+        help=('rainstation coords and values in JSON file'))
+    parser.add_argument('-cs', '--cellsize', type=tuple,
+        help=('grid cellsize for interpolation'))
+    parser.add_argument('-fbnd', '--factor_bounds', type=tuple,
+        help=('min-max bounds for calibration correction factor'))
+    parser.add_argument('resultfile', type=str,
+        help=('output calibrate path to HDF5 file'))
     return parser
 
 def calibrate(**kwargs):
@@ -32,12 +36,16 @@ def calibrate(**kwargs):
         }
     cal = Calibrator(**calibrator_kwargs)
 
+    # read mask
+    if kwargs.get('areamaskfile'):
+        areamask = files.read_mask(kwargs['areamaskfile'])
+
     # perform calibration by interpolation
     interpolate_kwargs = {
         'method': ked,
-        'res': kwargs['res'],
+        'cellsize': kwargs['cellsize'],
         'factor_bounds': kwargs['factor_bounds'],
-        'countrymask': config.COUNTRYMASK,
+        'areamask': areamask,
         }
     cal.interpolate(**interpolate_kwargs)
     if cal.result is None:
@@ -46,14 +54,16 @@ def calibrate(**kwargs):
         if cal.result is None:
             cal.use_aggregate()
 
-    resultfile = kwargs['resultfile']
     # save result to HDF5 file
+    resultfile = kwargs['resultfile']
     cal.save_result(resultfile)
 
 
 def main():
     # parse command line arguments
     arguments = get_parser().parse_args()
+
+    # run
     calibrate(**vars(arguments))
 
 
