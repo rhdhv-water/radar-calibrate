@@ -10,11 +10,15 @@ import pykrige
 import logging
 import os
 
+log = logging.getLogger(os.path.basename(__file__))
+
+
 class Calibrator(object):
-    def __init__(self, aggregatefile, calibratefile=None, rainstations=None):
+    def __init__(self, aggregatefile,
+        calibratefile=None, rainstationsfile=None):
         # read aggregate
         self.aggregatefile = os.path.basename(aggregatefile)
-        self.aggregate, self.basegrid = files.read_aggregate(
+        self.aggregate, self.basegrid, self.timestamp = files.read_aggregate(
             aggregatefile)
 
         # read calibrate
@@ -27,10 +31,11 @@ class Calibrator(object):
             self.rainstations = None
 
         # read rainstations
-        if rainstations is not None:
-            self.rainstations = files.read_rainstations(rainstations)
-        else:
-            self.rainstations = None
+        if rainstationsfile is not None:
+            self.rainstations = files.read_rainstations(
+                rainstationsfile=rainstationsfile,
+                timestamp=self.timestamp,
+                )
 
         # initialize result
         self.result = None
@@ -39,6 +44,10 @@ class Calibrator(object):
         return 'Calibrator(aggregatefile={aggregatefile:})'.format(
             aggregatefile=self.aggregatefile,
             )
+
+    @property
+    def number_of_stations(self):
+        return len(self.rainstations[0])
 
     def get_radar_for_locations(self):
         # station coordinates and values
@@ -52,7 +61,7 @@ class Calibrator(object):
         # sample aggregate at calibration station coordinates
         radar_values = gridtools.sample_array(
             coords=station_coords,
-            array=self.aggregate,
+            array=self.aggregate.filled(np.nan),
             geotransform=self.basegrid.get_geotransform(),
             )
         radar = np.array([v for v in radar_values])
@@ -70,20 +79,28 @@ class Calibrator(object):
 
         return x, y, z, radar
 
-    def interpolate(self, method, resolution=None, factor_bounds=None,
-        countrymask=None, **interpolate_kwargs):
+    def interpolate(self, method,
+        cellsize=None, factor_bounds=(0., 10.),
+        areamask=None, **interpolate_kwargs):
         # values for rainstations, drop where radar is NaN
         x, y, z, radar = self.get_radar_for_rainstations()
 
-        # interpolation grid at desired resolution
+        # interpolation grid at desired cellsize
         xi, yi = self.basegrid.get_grid()
         zi = self.aggregate
-        xi_interp, yi_interp = self.basegrid.get_grid(resolution)
-        zi_interp = gridtools.resample(xi, yi, zi, xi_interp, yi_interp)
+        if cellsize is not None:
+            xi_interp, yi_interp = self.basegrid.get_grid(cellsize)
+            zi_interp = gridtools.resample(xi, yi, zi,
+                xi_interp, yi_interp)
+        else:
+            zi_interp = zi
 
         # create mask
-        if countrymask is not None:
-            mask = np.logical_or(zi_interp.mask, ~countrymask.astype(np.bool))
+        if areamask is not None:
+            mask = np.logical_or(
+                zi_interp.mask,
+                ~areamask.astype(np.bool,
+                ))
         else:
             mask = zi_interp.mask
 
@@ -99,15 +116,15 @@ class Calibrator(object):
             })
 
         # run interpolation method
-        logging.info('interpolate using {method.__name__:}'.format(
+        log.info('interpolate using {method.__name__:}'.format(
             method=method))
         timed_method = utils.timethis(method)
         try:
             timed_result = timed_method(**interpolate_kwargs)
         except:
-            logging.warning('interpolation failed')
+            log.warning('interpolation failed')
             pass
-        logging.info('interpolation took {dt:2.f} seconds'.format(
+        log.info('interpolation took {dt:2.f} seconds'.format(
             dt=timed_result.dt,
             ))
 
@@ -128,7 +145,9 @@ class Calibrator(object):
         factor[gt_zero] = est[gt_zero] / zi_interp[gt_zero]
 
         # resample factor to aggregate resolution
-        factor = gridtools.resample(xi_interp, yi_interp, factor, xi, yi)
+        if cellsize is not None:
+            factor = gridtools.resample(xi_interp, yi_interp,
+                factor, xi, yi)
 
         # apply factor bounds
         min_factor, max_factor = factor_bounds
@@ -141,8 +160,9 @@ class Calibrator(object):
         calibrate[~leave_uncalibrated] = calibrate * factor
 
         # apply country mask border (gradual)
-        calibrate = (
-            countrymask * calibrate + (1 - countrymask) * self.aggregate)
+        if areamask is not None:
+            calibrate = (
+                areamask * calibrate + (1 - areamask) * self.aggregate)
 
         self.result.update({
             'calibrate': calibrate,
@@ -150,16 +170,16 @@ class Calibrator(object):
 
     def use_aggregate(self):
         '''use aggregate directly without modification'''
-        logging.warning('using aggregate as calibrate')
+        log.warning('using aggregate as calibrate')
         self.result = {
             'method': 'use aggregate',
             'calibrate': self.aggregate,
             }
 
-    def save(resultfile, attrs=None, save_sigma=False):
+    def save_result(resultfile, attrs=None, add_sigma=False):
         '''save calibration result to file'''
         if self.result is None:
-            logging.warning('Calibrator does not contain result, passing')
+            log.warning('Calibrator does not contain result, passing')
             pass
 
         # update attributes with calibration result
@@ -170,11 +190,11 @@ class Calibrator(object):
             })
 
         # save to file
-        files.save_result(resultfile, self.calibrate, attrs)
-
-        # save sigma (prediction variance) to separate file?
-        if save_sigma:
-            raise NotImplementedError('what to do')
+        if add_sigma and 'sigma' in self.result:
+            sigma = self.result['sigma']
+        else:
+            sigma = None
+        files.save_result(resultfile, self.calibrate, sigma, attrs)
 
 
 def ked(x, y, z, radar, xi, yi, zi,
