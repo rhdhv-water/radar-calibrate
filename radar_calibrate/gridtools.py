@@ -15,25 +15,7 @@ import os
 
 
 def sample_array(coords, array, geotransform, blocksize=2, agg=np.median):
-    """Sample georeferenced array at given coordinates
-    Parameters
-    ----------
-    coords : Sequence
-        Sequence or iterator yielding X,Y coordinate pairs
-    array : Array
-        Description
-    geotransform : TYPE
-        Description
-    blocksize : int, optional
-        Description
-    agg : TYPE, optional
-        Description
-
-    Yields
-    ------
-    TYPE
-        Description
-    """
+    '''sample georeferenced array at given coordinates'''
     # unpack geotransform
     left, cellwidth, _, top, _, cellheight = geotransform
 
@@ -47,7 +29,7 @@ def sample_array(coords, array, geotransform, blocksize=2, agg=np.median):
             yield np.nan
             continue
 
-        # add blocksize
+        # add blocksize note: block is not centered around x,y
         col_idx = slice(col_left, col_left + blocksize)
         row_idx = slice(row_top, row_top + blocksize)
 
@@ -61,13 +43,15 @@ def sample_array(coords, array, geotransform, blocksize=2, agg=np.median):
 
 
 def resample(xi, yi, zi, xi_new, yi_new, method='linear'):
+    '''resample array given old and new grid coordinates'''
     grid = np.meshgrid(xi, yi, indexing='xy')
     grid_new = np.meshgrid(xi_new, yi_new, indexing='xy')
     resampled = griddata(grid, zi, grid_new, method=method)
     return resampled
 
 
-def add_vector_layer(shapefile, geotransform):
+def read_shapefile(shapefile, geotransform):
+    '''read geometry from shapefile and transform for plotting'''
     left, cellwidth, _, top, _, cellheight = geotransform
     with fiona.open(shapefile) as src:
         for row in src:
@@ -81,6 +65,7 @@ def add_vector_layer(shapefile, geotransform):
 
 class BaseGrid(OpenRadarBaseGrid):
     def get_grid(self, res=None):
+        '''get x, y grid coordinates as 1-D vectors'''
         left, right, top, bottom = self.extent
         ncols, nrows = self.size
 
@@ -88,7 +73,7 @@ class BaseGrid(OpenRadarBaseGrid):
             cellwidth, cellheight = res
         else:
             cellwidth, cellheight = self.get_cellsize()
-            
+
         xi = np.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
         yi = np.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
         return xi, yi
