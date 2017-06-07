@@ -11,6 +11,9 @@ import numpy as np
 from itertools import cycle
 import os
 
+log = logging.getLogger(os.path.basename(__file__))
+
+
 def vgm_r(vgm_py, residual_py):
     figure = plt.figure()
     plt.plot(vgm_py[1,:], vgm_py[0,:], 'r*')
@@ -87,8 +90,6 @@ def compare_ked(aggregate,
     calibrate, calibrate_r, calibrate_py,
     imagefile=None,
     ):
-    bg_shape = testconfig.BG_SHAPE
-
     fig, axes  = plt.subplots(nrows=3, ncols=2,
         figsize=(8.27, 11.7), sharex=True, sharey=True)
 
@@ -97,7 +98,7 @@ def compare_ked(aggregate,
     axes[0, 0].grid(linestyle= '--', linewidth=0.5)
     axes[0, 0].xaxis.set_ticklabels([])
     axes[0, 0].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(bg_shape):
+    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
         axes[0, 0].plot(x, y, color='skyblue', linewidth=0.5)
 
     axes[0, 1].imshow(calibrate, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
@@ -105,7 +106,7 @@ def compare_ked(aggregate,
     axes[0, 1].grid(linestyle= '--', linewidth=0.5)
     axes[0, 1].xaxis.set_ticklabels([])
     axes[0, 1].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(bg_shape):
+    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
         axes[0, 1].plot(x, y, color='skyblue', linewidth=0.5)
 
     axes[1, 0].imshow(calibrate_r, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
@@ -113,7 +114,7 @@ def compare_ked(aggregate,
     axes[1, 0].grid(linestyle= '--', linewidth=0.5)
     axes[1, 0].xaxis.set_ticklabels([])
     axes[1, 0].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(bg_shape):
+    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
         axes[1, 0].plot(x, y, color='skyblue', linewidth=0.5)
 
     axes[1, 1].imshow(abs((calibrate_r - calibrate) / calibrate)*100, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
@@ -121,7 +122,7 @@ def compare_ked(aggregate,
     axes[1, 1].grid(linestyle= '--', linewidth=0.5)
     axes[1, 1].xaxis.set_ticklabels([])
     axes[1, 1].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(bg_shape):
+    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
         axes[1, 1].plot(x, y, color='skyblue', linewidth=0.5)
 
     axes[2, 0].imshow(calibrate_py, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
@@ -129,7 +130,7 @@ def compare_ked(aggregate,
     axes[2, 0].grid(linestyle= '--', linewidth=0.5)
     axes[2, 0].xaxis.set_ticklabels([])
     axes[2, 0].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(bg_shape):
+    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
         axes[2, 0].plot(x, y, color='skyblue', linewidth=0.5)
 
     im = axes[2, 1].imshow(abs((calibrate_py - calibrate) / calibrate)*100, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
@@ -137,7 +138,7 @@ def compare_ked(aggregate,
     axes[2, 1].grid(linestyle= '--', linewidth=0.5)
     axes[2, 1].xaxis.set_ticklabels([])
     axes[2, 1].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(bg_shape):
+    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
         axes[2, 1].plot(x, y, color='skyblue', linewidth=0.5)
 
     fig.subplots_adjust(right=0.92)
