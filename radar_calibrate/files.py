@@ -3,6 +3,7 @@
 from radar_calibrate import gridtools
 
 import numpy as np
+import fiona
 import h5py
 
 import datetime
@@ -60,8 +61,13 @@ def read_aggregate(aggregatefile):
         aggregate = get_integerdata(ds, 'image1/image_data')
         grid_extent = ds.attrs['grid_extent']
         grid_size = [int(i) for i in ds.attrs['grid_size']]
-        timestamp = datetime.datetime.strptime(
-            ds.attrs['timestamp_last_composite'].decode('utf-8') ,
+
+        timestamp = ds.attrs['timestamp_last_composite']
+        try:
+            timestamp = timestamp.decode('utf-8')
+        except AttributeError:
+            pass
+        timestamp = datetime.datetime.strptime(timestamp,
             '%Y%m%d%H%M%S')
 
     # construct basegrid
@@ -90,6 +96,19 @@ def read_mask(maskfile):
     with h5py.File(maskfile, 'r') as ds:
         mask = ds['mask'][...]
         return mask
+
+
+def read_shape(shapefile, geotransform):
+    '''read geometry from shapefile and transform for plotting'''
+    left, cellwidth, _, top, _, cellheight = geotransform
+    with fiona.open(shapefile) as src:
+        for row in src:
+            x, y = zip(*row['geometry']['coordinates'])
+            x = np.array(x)
+            y = np.array(y)
+            x = (x - left) / cellwidth
+            y = (y - top) / cellheight
+            yield x, y
 
 
 def save_result(resultfile, result, sigma, attrs):
