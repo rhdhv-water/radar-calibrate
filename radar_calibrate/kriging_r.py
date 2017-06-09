@@ -5,11 +5,12 @@ import rpy2.robjects as robj
 import numpy as np
 
 import logging
+import os
 
 log = logging.getLogger(os.path.basename(__file__))
 
 
-def ked_r(x, y, z, radar, xi, yi, zi):
+def ked_r(x, y, z, radar, xi, yi, zi, mask):
 
     """
     Run the kriging method using the R module "gstat".
@@ -21,15 +22,18 @@ def ked_r(x, y, z, radar, xi, yi, zi):
     Returns calibrated grid
     """
     robj.r.library('gstat')
-    # xi, yi, zi to vectors
 
+    # save zi shape
+    zi_shape = zi.shape
+
+    # xi, yi, zi to vectors
     xi, yi = np.meshgrid(xi, yi, indexing='xy')
     xi = np.float32(xi).flatten()
     yi = np.float32(yi).flatten()
     zi = np.float32(zi).flatten()
 
     # Modification to prevent singular matrix (Tom)
-    radar += (1e-9 * np.random.rand(len(radar)))
+    # radar += (1e-9 * np.random.rand(len(radar)))
 
     # variables to R dataframes
     rain_radar_frame = robj.DataFrame({
@@ -45,22 +49,25 @@ def ked_r(x, y, z, radar, xi, yi, zi):
         'radar': robj.FloatVector(zi),
         })
 
-    # try kriging
-    try:
-        vgm = robj.r.variogram(robj.r("z~radar"), robj.r('~ x + y'),
-                               data=rain_radar_frame,
-                               cutoff=50000, width=5000)
-        residual_callable = robj.r('fit.variogram')
-        residual = residual_callable(vgm, robj.r.vgm(1, 'Sph', 25000, 1))
-        ked = robj.r('NULL')
-        ked = robj.r.gstat(ked, 'raingauge', robj.r("z~radar"),
-                           robj.r('~ x + y'),
+    # kriging
+    vgm = robj.r.variogram(robj.r("z~radar"), robj.r('~ x + y'),
                            data=rain_radar_frame,
-                           model=residual, nmax=40)
-        result = robj.r.predict(ked, radar_frame, nsim=0)
-        rain_est = np.array(result[2])
-    except:
-        log.exception('Exception during kriging:')
-        rain_est = zi
+                           cutoff=50000, width=5000)
+    residual_callable = robj.r('fit.variogram')
+    residual = residual_callable(vgm, robj.r.vgm(1, 'Sph', 25000, 1))
+    ked = robj.r('NULL')
+    ked = robj.r.gstat(ked, 'raingauge', robj.r("z~radar"),
+                       robj.r('~ x + y'),
+                       data=rain_radar_frame,
+                       model=residual, nmax=40)
+    result = robj.r.predict(ked, radar_frame, nsim=0)
 
-    return rain_est, None, None
+    # unpack result
+    xi_new, yi_new, est, sigma = result
+    est = np.array(est).reshape(zi_shape)
+    sigma = np.array(sigma).reshape(zi_shape)
+
+    # get optimized parameter values (order: sill, range, nugget)
+    params = [residual[1][1], residual[2][1], residual[1][0]]
+
+    return est, sigma, params
