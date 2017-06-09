@@ -44,35 +44,32 @@ def sample_array(coords, array, geotransform, blocksize=2, agg=np.median):
 
 def resample(xi, yi, zi, xi_new, yi_new, method='linear'):
     '''resample array given old and new grid coordinates'''
-    grid = np.meshgrid(xi, yi, indexing='xy')
-    grid_new = np.meshgrid(xi_new, yi_new, indexing='xy')
-    resampled = griddata(grid, zi, grid_new, method=method)
-    return resampled
-
-
-def read_shapefile(shapefile, geotransform):
-    '''read geometry from shapefile and transform for plotting'''
-    left, cellwidth, _, top, _, cellheight = geotransform
-    with fiona.open(shapefile) as src:
-        for row in src:
-            x, y = zip(*row['geometry']['coordinates'])
-            x = np.array(x)
-            y = np.array(y)
-            x = (x - left) / cellwidth
-            y = (y - top) / cellheight
-            yield x, y
+    xi, yi = np.meshgrid(xi, yi, indexing='xy')
+    xi_new, yi_new = np.meshgrid(xi_new, yi_new, indexing='xy')
+    zi = np.ma.filled(zi, fill_value=np.nan)
+    zi_new = griddata(
+        (xi.flatten(), yi.flatten()),
+        zi.flatten(),
+        (xi_new.flatten(), yi_new.flatten()),
+        method=method,
+        )
+    zi_new = zi_new.reshape(xi_new.shape)
+    zi_new = np.ma.masked_invalid(zi_new)
+    return zi_new
 
 
 class BaseGrid(OpenRadarBaseGrid):
-    def get_grid(self, res=None):
+    def get_grid(self, cellsize=None):
         '''get x, y grid coordinates as 1-D vectors'''
         left, right, top, bottom = self.extent
-        ncols, nrows = self.size
 
-        if res is not None:
-            cellwidth, cellheight = res
+        if cellsize is not None:
+            cellwidth, cellheight = cellsize
+            ncols = int((right - left) / cellwidth)
+            nrows = int((top- bottom) / cellheight)
         else:
             cellwidth, cellheight = self.get_cellsize()
+            ncols, nrows = self.size
 
         xi = np.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
         yi = np.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
