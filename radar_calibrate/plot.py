@@ -1,17 +1,61 @@
 # -*- coding: utf-8 -*-
-"""
-
-"""
 # Royal HaskoningDHV
+
 from radar_calibrate.tests import testconfig
 
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.pyplot as plt
 import numpy as np
 
 from itertools import cycle
+import logging
 import os
 
 log = logging.getLogger(os.path.basename(__file__))
+
+def image(array,
+    imagefile=None, figsize=None,
+    features=None, color='black', linewidth=0.5,
+    cmap='viridis', cmap_under='white', cmap_over=None, cmap_bad='white',
+    vmin=1., vmax=30., alpha=0.8,
+    title=None, no_ticklabels=True):
+
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=figsize)
+    bxa = []
+
+    cmap = plt.get_cmap(cmap)
+    if cmap_under is not None:
+        cmap.set_under(cmap_under)
+    if cmap_over is not None:
+        cmap.set_over(cmap_over)
+    if cmap_bad is not None:
+        cmap.set_bad(cmap_bad)
+    im = ax.imshow(array, cmap=cmap, vmin=vmin, vmax=vmax, alpha=alpha)
+
+    if features is not None:
+        for x, y in features:
+            ax.plot(x, y, color=color, linewidth=linewidth)
+
+    ax.grid(linestyle= '--', linewidth=linewidth)
+    if no_ticklabels:
+        ax.xaxis.set_ticklabels([])
+        ax.yaxis.set_ticklabels([])
+
+    if title is not None:
+        ttl = ax.set_title(title)
+        bxa.append(ttl)
+
+    divider = make_axes_locatable(ax)
+    cax = divider.new_horizontal(size="5%", pad=0.3, pack_start=False)
+    fig.add_axes(cax)
+    fig.colorbar(im, cax=cax, orientation='vertical')
+
+    if imagefile is not None:
+        logging.debug('writing image to {file:}'.format(
+            file=os.path.basename(imagefile)))
+        plt.savefig(imagefile, bbox_inches='tight', bbox_extra_artists=bxa)
+    else:
+        plt.show()
 
 
 def vgm_r(vgm_py, residual_py):
@@ -98,7 +142,7 @@ def compare_ked(aggregate,
     axes[0, 0].grid(linestyle= '--', linewidth=0.5)
     axes[0, 0].xaxis.set_ticklabels([])
     axes[0, 0].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
+    for x, y in files.read_shape(testconfig.BG_SHAPEFILE):
         axes[0, 0].plot(x, y, color='skyblue', linewidth=0.5)
 
     axes[0, 1].imshow(calibrate, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
@@ -106,7 +150,7 @@ def compare_ked(aggregate,
     axes[0, 1].grid(linestyle= '--', linewidth=0.5)
     axes[0, 1].xaxis.set_ticklabels([])
     axes[0, 1].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
+    for x, y in files.read_shape(testconfig.BG_SHAPEFILE):
         axes[0, 1].plot(x, y, color='skyblue', linewidth=0.5)
 
     axes[1, 0].imshow(calibrate_r, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
@@ -114,7 +158,7 @@ def compare_ked(aggregate,
     axes[1, 0].grid(linestyle= '--', linewidth=0.5)
     axes[1, 0].xaxis.set_ticklabels([])
     axes[1, 0].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
+    for x, y in files.read_shape(testconfig.BG_SHAPEFILE):
         axes[1, 0].plot(x, y, color='skyblue', linewidth=0.5)
 
     axes[1, 1].imshow(abs((calibrate_r - calibrate) / calibrate)*100, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
@@ -122,7 +166,7 @@ def compare_ked(aggregate,
     axes[1, 1].grid(linestyle= '--', linewidth=0.5)
     axes[1, 1].xaxis.set_ticklabels([])
     axes[1, 1].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
+    for x, y in files.read_shape(testconfig.BG_SHAPEFILE):
         axes[1, 1].plot(x, y, color='skyblue', linewidth=0.5)
 
     axes[2, 0].imshow(calibrate_py, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
@@ -130,7 +174,7 @@ def compare_ked(aggregate,
     axes[2, 0].grid(linestyle= '--', linewidth=0.5)
     axes[2, 0].xaxis.set_ticklabels([])
     axes[2, 0].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
+    for x, y in files.read_shape(testconfig.BG_SHAPEFILE):
         axes[2, 0].plot(x, y, color='skyblue', linewidth=0.5)
 
     im = axes[2, 1].imshow(abs((calibrate_py - calibrate) / calibrate)*100, cmap='inferno', vmin=0, vmax=40, alpha=0.8)
@@ -138,7 +182,7 @@ def compare_ked(aggregate,
     axes[2, 1].grid(linestyle= '--', linewidth=0.5)
     axes[2, 1].xaxis.set_ticklabels([])
     axes[2, 1].yaxis.set_ticklabels([])
-    for x, y in gridtools.add_vector_layer(testconfig.BG_SHAPEFILE):
+    for x, y in files.read_shape(testconfig.BG_SHAPEFILE):
         axes[2, 1].plot(x, y, color='skyblue', linewidth=0.5)
 
     fig.subplots_adjust(right=0.92)
