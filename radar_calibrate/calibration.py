@@ -2,6 +2,7 @@
 # Royal HaskoningDHV
 
 from radar_calibrate import files
+from radar_calibrate import gridtools
 from radar_calibrate import utils
 
 import numpy as np
@@ -83,7 +84,7 @@ class Calibrator(object):
         cellsize=None, factor_bounds=(0., 10.),
         areamask=None, **interpolate_kwargs):
         # values for rainstations, drop where radar is NaN
-        x, y, z, radar = self.get_radar_for_rainstations()
+        x, y, z, radar = self.get_radar_for_locations()
 
         # interpolation grid at desired cellsize
         xi, yi = self.basegrid.get_grid()
@@ -93,16 +94,18 @@ class Calibrator(object):
             zi_interp = gridtools.resample(xi, yi, zi,
                 xi_interp, yi_interp)
         else:
+            xi_interp = xi
+            yi_interp = yi
             zi_interp = zi
 
         # create mask
         if areamask is not None:
-            mask = np.logical_or(
+            mask_interp = np.logical_or(
                 zi_interp.mask,
                 ~areamask.astype(np.bool,
                 ))
         else:
-            mask = zi_interp.mask
+            mask_interp = zi_interp.mask
 
         interpolate_kwargs.update({
             'x': x,
@@ -112,7 +115,7 @@ class Calibrator(object):
             'xi': xi_interp,
             'yi': yi_interp,
             'zi': zi_interp,
-            'mask': mask,
+            'mask': mask_interp,
             })
 
         # run interpolation method
@@ -123,8 +126,8 @@ class Calibrator(object):
             timed_result = timed_method(**interpolate_kwargs)
         except:
             log.warning('interpolation failed')
-            pass
-        log.info('interpolation took {dt:2.f} seconds'.format(
+            return
+        log.info('interpolation took {dt:.2f} seconds'.format(
             dt=timed_result.dt,
             ))
 
@@ -141,23 +144,31 @@ class Calibrator(object):
 
         # apply correction factor
         gt_zero = np.logical_and(~zi_interp.mask, zi_interp > 0.)
-        factor = np.ones(est.shape)
-        factor[gt_zero] = est[gt_zero] / zi_interp[gt_zero]
+        factor = np.where(gt_zero, self.result['est'] / zi_interp, 1.)
 
         # resample factor to aggregate resolution
         if cellsize is not None:
             factor = gridtools.resample(xi_interp, yi_interp,
                 factor, xi, yi)
 
-        # apply factor bounds
+        # apply mask and factor bounds
         min_factor, max_factor = factor_bounds
         leave_uncalibrated = np.logical_or(
-            self.aggregate.mask, factor < min_factor, factor > max_factor
-        )
+            self.aggregate.mask,
+            factor < min_factor,
+            factor > max_factor,
+            )
+        log.info('leaving {:d} extreme pixels uncalibrated'.format(
+            leave_uncalibrated.sum(),
+        ))
 
         # apply factor to aggregate
-        calibrate = np.copy(self.aggregate)
-        calibrate[~leave_uncalibrated] = calibrate * factor
+        calibrate = np.where(
+            leave_uncalibrated,
+            self.aggregate,
+            self.aggregate * factor,
+            )
+
 
         # apply country mask border (gradual)
         if areamask is not None:
