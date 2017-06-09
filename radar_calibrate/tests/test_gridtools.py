@@ -83,3 +83,6 @@ def test_sample_median():
     # compare result
     result = next(samples)
     assert np.isclose(result, 1.5)
+
+
+def test_resample():

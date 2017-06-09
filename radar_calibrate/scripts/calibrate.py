@@ -6,6 +6,7 @@ from radar_calibrate.calibration import Calibrator, ked, idw
 import argparse
 import logging
 
+
 def get_parser():
     '''get argumentparser and add arguments'''
     parser = argparse.ArgumentParser(
@@ -26,6 +27,7 @@ def get_parser():
     parser.add_argument('resultfile', type=str,
         help=('output calibrate path to HDF5 file'))
     return parser
+
 
 def calibrate(**kwargs):
     # calibrator instance
