@@ -14,7 +14,7 @@ import os
 log = logging.getLogger(os.path.basename(__file__))
 
 
-def get_integerdata(ds, name,
+def get_imagedata(ds, name,
     fill_value=65535, dtype=np.float64, multiplier=1e-2):
     '''get precipitation as masked array from image1/image_data group'''
     data = ds[name][:]
@@ -22,12 +22,13 @@ def get_integerdata(ds, name,
     return data.astype(dtype) * multiplier
 
 
-def add_integerdata(ds, name, data, fill_value=65535, multiplier=1e2):
+def add_imagedata(ds, name, data, fill_value=65535, multiplier=1e2):
     '''add data as integer array to HDF5 dataset'''
     int_dataset = ds.create_dataset(name,
         data.shape,
         dtype='u2', compression='gzip', shuffle=True)
-    int_dataset[...] = np.uint16(np.round(data * multiplier)).filled(fill_value)
+    int_dataset[...] = np.ma.filled(np.uint16(np.round(data * multiplier)),
+        fill_value=fill_value)
 
 
 def add_floatdata(ds, name, data, fill_value=-9999):
@@ -53,12 +54,12 @@ def read_rainstations(rainstationsfile, timestamp):
         return station_coords, station_values
 
 
-def read_aggregate(aggregatefile):
-    '''read aggregate and grid properties from aggregate file'''
-    log.debug('reading aggregate from file {file:}'.format(
-        file=os.path.basename(aggregatefile)))
-    with h5py.File(aggregatefile, 'r') as ds:
-        aggregate = get_integerdata(ds, 'image1/image_data')
+def read_file(datafile):
+    '''read data and grid properties from HDF5 file'''
+    log.debug('reading data from file {file:}'.format(
+        file=os.path.basename(datafile)))
+    with h5py.File(datafile, 'r') as ds:
+        data = get_imagedata(ds, 'image1/image_data')
         grid_extent = ds.attrs['grid_extent']
         grid_size = [int(i) for i in ds.attrs['grid_size']]
 
@@ -74,25 +75,24 @@ def read_aggregate(aggregatefile):
     basegrid = gridtools.BaseGrid(extent=grid_extent,
         size=grid_size)
 
-    return aggregate, basegrid, timestamp
+    return data, basegrid, timestamp
 
 
-def read_calibrate(calibratefile):
+def rainstations_from_calibrate(calibratefile):
     '''read calibrate and station measurements from calibrate file'''
     log.debug('reading calibrate from file {file:}'.format(
         file=os.path.basename(calibratefile)))
     with h5py.File(calibratefile, 'r') as ds:
-        calibrate = get_integerdata(ds, 'image1/image_data')
+        calibrate = get_imagedata(ds, 'image1/image_data')
         station_coords = ds.attrs['cal_station_coords']
         station_values = ds.attrs['cal_station_measurements']
 
-    return calibrate, (station_coords, station_values)
-
+    return station_coords, station_values
 
 def read_mask(maskfile):
     '''read mask from HDF5 file'''
-    log.debug('reading calibrate from file {file:}'.format(
-        file=os.path.basename(calibratefile)))
+    log.debug('reading mask from file {file:}'.format(
+        file=os.path.basename(maskfile)))
     with h5py.File(maskfile, 'r') as ds:
         mask = ds['mask'][...]
         return mask
@@ -117,7 +117,7 @@ def save_result(resultfile, result, sigma, attrs):
         file=os.path.basename(resultfile)))
     with h5py.File(resultfile, 'w') as ds:
         # save result to image dataset
-        add_integerdata(ds, 'image1/image_data', result)
+        add_imagedata(ds, 'image1/image_data', result)
 
         # save sigma (kriging variance)
         if sigma is not None:
