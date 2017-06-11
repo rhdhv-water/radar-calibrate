@@ -104,10 +104,11 @@ def timedresults(reshapes, results, nstations, imagefile=None, xlim=None, ylim=N
         marker = next(markers)
         for timestamp, values in sorted(result.items()):
             ax.plot(reshapes, values,
-            linestyle='', marker=marker, markersize=8, alpha=0.5,
+            linestyle='', marker=marker, markersize=8, alpha=0.5, zorder=3,
             label='{} ({:d}) '.format(timestamp, nstations[timestamp]))
 
-    ax.plot([0., 10.], np.exp(np.array([0., 10.])), color='indianred', label='$e^{x}$')
+    ax.plot([0., 10.], np.exp(np.array([0., 10.])), color='lightcoral', label='$e^{x}$', zorder=1)
+    ax.plot([0., 10.], np.array([1, 11.])**2, color='skyblue', label='$x^{2} + 1$', zorder=1)
 
     ax.grid(linestyle=':', linewidth=0.5, color='black')
     ax.set_yscale('log')
@@ -119,7 +120,7 @@ def timedresults(reshapes, results, nstations, imagefile=None, xlim=None, ylim=N
 
     ax.set_xlabel('$downscale\/\/factor$')
     ax.set_ylabel('$time\/(s)$')
-    ttl = ax.set_title('$downscale\/\/factor\/\/vs\/\/time\/\/to\/\/execute\/\/Kriging_{KED}$')
+    ttl = ax.set_title('$downscale\/\/factor\/\/vs\/\/time\/\/to\/\/execute\/\/Kriging_{KED}\/\/in\/\/Python$')
     bxa.append(ttl)
 
     lgd = ax.legend(loc='upper left', bbox_to_anchor=(1.01, 1))
