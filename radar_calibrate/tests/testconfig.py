@@ -10,6 +10,11 @@ VAR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'var')
 if not os.path.exists(VAR):
     os.mkdir(VAR)
 
+# result folder
+RESULTDIR = os.path.join(VAR, 'result')
+if not os.path.exists(RESULTDIR):
+    os.mkdir(RESULTDIR)
+
 # raster folder
 RASTERDIR = os.path.join(VAR, 'raster')
 if not os.path.exists(RASTERDIR):

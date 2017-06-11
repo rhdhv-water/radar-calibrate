@@ -8,6 +8,7 @@ from radar_calibrate import gridtools
 import scipy.interpolate as inter
 import scipy.ndimage.interpolation as interpolation
 from affine import Affine
+from rasterio.crs import CRS
 import rasterio
 from fiona.crs import from_epsg
 import numpy as np
@@ -45,7 +46,7 @@ def get_testdata(aggregatefile, calibratefile, resize=None):
     """
     # read aggregate and grid properties from aggregate file
     with h5py.File(aggregatefile, 'r') as ds:
-        aggregate = files.get_imagedata(ds)
+        aggregate = files.get_imagedata(ds,'image1/image_data')
         grid_extent = ds.attrs['grid_extent']
         grid_size = [int(i) for i in ds.attrs['grid_size']]
 
@@ -55,7 +56,7 @@ def get_testdata(aggregatefile, calibratefile, resize=None):
 
     # read calibrate and station measurements from calibrate file
     with h5py.File(calibratefile, 'r') as ds:
-        calibrate = files.get_imagedata(ds)
+        calibrate = files.get_imagedata(ds,'image1/image_data')
         cal_station_coords = ds.attrs['cal_station_coords']
         cal_station_values = ds.attrs['cal_station_measurements']
 
@@ -148,7 +149,7 @@ def hdf2raster(h5file, rasterfile,
     """
     # open h5 file and get values and attributes
     with h5py.File(h5file, 'r') as ds:
-        values = files.get_imagedata(ds)
+        values = files.get_imagedata(ds, 'image1/image_data')
         grid_extent = ds.attrs['grid_extent']
         grid_size = [int(i) for i in ds.attrs['grid_size']]
 
@@ -186,7 +187,7 @@ def write_raster(array, rasterfile, transform,
     """
     if epsg is not None:
         try:
-            crs = rasterio.crs.CRS.from_epsg(epsg)
+            crs = CRS.from_epsg(epsg)
         except ValueError:
             pass
     else:
@@ -235,7 +236,7 @@ def rainstations2shape(aggregatefile, calibratefile, shapefile,
     """
     # read aggregate and grid properties from aggregate file
     with h5py.File(aggregatefile, 'r') as ds:
-        aggregate = files.get_imagedata(ds)
+        aggregate = files.get_imagedata(ds, 'image1/image_data')
         grid_extent = ds.attrs['grid_extent']
         grid_size = [int(i) for i in ds.attrs['grid_size']]
 
@@ -246,7 +247,7 @@ def rainstations2shape(aggregatefile, calibratefile, shapefile,
     # read calibrate and station measurements from calibrate file
     with h5py.File(calibratefile, 'r') as ds:
         if calibrate is None:
-            calibrate = files.get_imagedata(ds)
+            calibrate = files.get_imagedata(ds, 'image1/image_data')
         cal_station_coords = ds.attrs['cal_station_coords']
         cal_station_values = ds.attrs['cal_station_measurements']
 

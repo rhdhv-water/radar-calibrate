@@ -4,6 +4,7 @@
 from radar_calibrate.tests import testconfig
 from radar_calibrate.calibration import Calibrator, ked
 from radar_calibrate.kriging_r import ked_r
+from radar_calibrate import gridtools
 
 import numpy as np
 import os
@@ -54,6 +55,9 @@ class TestCalibrator(object):
             calibratefile=calibratefile,
             )
         cal.interpolate(method=ked)
+        resultfile = os.path.join(testconfig.RESULTDIR,
+            'ked_20170223080000.h5')
+        cal.save(resultfile=resultfile)
         assert (cal.result is not None) and ('calibrate' in cal.result)
 
     def test_interpolate_ked_r(self):
@@ -66,6 +70,9 @@ class TestCalibrator(object):
             calibratefile=calibratefile,
             )
         cal.interpolate(method=ked_r)
+        resultfile = os.path.join(testconfig.RESULTDIR,
+            'ked_r_20170223080000.h5')
+        cal.save(resultfile=resultfile)
         assert (cal.result is not None) and ('calibrate' in cal.result)
 
     def test_interpolate_ked_cellsize_2000(self):
@@ -77,7 +84,10 @@ class TestCalibrator(object):
             aggregatefile=aggregatefile,
             calibratefile=calibratefile,
             )
-        cal.interpolate(method=ked, cellsize=[2000., 2000.])
+        cal.interpolate(method=ked, to_cellsize=[2000., 2000.])
+        resultfile = os.path.join(testconfig.RESULTDIR,
+            'ked_cellsize_2000_20170223080000.h5')
+        cal.save(resultfile=resultfile)
         assert (cal.result is not None) and ('calibrate' in cal.result)
 
     def test_interpolate_ked_r_cellsize_2000(self):
@@ -89,5 +99,64 @@ class TestCalibrator(object):
             aggregatefile=aggregatefile,
             calibratefile=calibratefile,
             )
-        cal.interpolate(method=ked_r, cellsize=[2000., 2000.])
+        cal.interpolate(method=ked_r, to_cellsize=[2000., 2000.])
+        resultfile = os.path.join(testconfig.RESULTDIR,
+            'ked_r_cellsize_2000_20170223080000.h5')
+        cal.save(resultfile=resultfile)
+        assert (cal.result is not None) and ('calibrate' in cal.result)
+
+    def test_interpolate_ked_cellsize_1000_from_100(self):
+        aggregatefile = r'24uur_20170223080000.h5'
+        calibratefile = r'RAD_TF2400_U_20170223080000.h5'
+        aggregatefile = os.path.join(testconfig.DATADIR, aggregatefile)
+        calibratefile = os.path.join(testconfig.DATADIR, calibratefile)
+        cal = Calibrator(
+            aggregatefile=aggregatefile,
+            calibratefile=calibratefile,
+            areamaskfile=testconfig.AREAMASKFILE,
+            )
+
+        # resample to 100 x 100 cellsize
+        cal.resample(to_cellsize=[100., 100.])
+
+        # interpolate
+        cal.interpolate(method=ked,
+            to_cellsize=[1000., 1000.],
+            )
+
+        # resample back to 1000 x 1000 cellsize
+        cal.resample(to_cellsize=[1000., 1000.])
+
+        # save
+        resultfile = os.path.join(testconfig.RESULTDIR,
+            'ked_cellsize_1000_from_100_20170223080000.h5')
+        cal.save(resultfile=resultfile)
+        assert (cal.result is not None) and ('calibrate' in cal.result)
+
+    def test_interpolate_ked_r_cellsize_1000_from_100(self):
+        aggregatefile = r'24uur_20170223080000.h5'
+        calibratefile = r'RAD_TF2400_U_20170223080000.h5'
+        aggregatefile = os.path.join(testconfig.DATADIR, aggregatefile)
+        calibratefile = os.path.join(testconfig.DATADIR, calibratefile)
+        cal = Calibrator(
+            aggregatefile=aggregatefile,
+            calibratefile=calibratefile,
+            areamaskfile=testconfig.AREAMASKFILE,
+            )
+
+        # resample to 100 x 100 cellsize
+        cal.resample(to_cellsize=[100., 100.])
+
+        # interpolate
+        cal.interpolate(method=ked_r,
+            to_cellsize=[1000., 1000.],
+            )
+
+        # resample back to 1000 x 1000 cellsize
+        cal.resample(to_cellsize=[1000., 1000.])
+
+        # save
+        resultfile = os.path.join(testconfig.RESULTDIR,
+            'ked_r_cellsize_1000_from_100_20170223080000.h5')
+        cal.save(resultfile=resultfile)
         assert (cal.result is not None) and ('calibrate' in cal.result)

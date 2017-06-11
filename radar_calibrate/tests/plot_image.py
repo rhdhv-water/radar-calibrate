@@ -34,7 +34,7 @@ def get_parser():
 def plot_image(**kwargs):
     # read HDF5 file
     h5file = kwargs['file']
-    array, basegrid, timestamp = files.read_aggregate(h5file)
+    array, basegrid, timestamp = files.read_file(h5file)
 
     # plot to image file
     imagefile = kwargs.get('imagefile')

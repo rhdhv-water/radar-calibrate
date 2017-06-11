@@ -3,7 +3,8 @@
 
 from radar_calibrate.tests import testconfig
 from radar_calibrate.tests import testutils
-from radar_calibrate import calibration
+from radar_calibrate.calibration import ked
+from radar_calibrate.kriging_r import ked_r
 from radar_calibrate import plot
 from radar_calibrate import utils
 
@@ -16,15 +17,15 @@ import os
 
 @utils.timethis
 def krige_r(x, y, z, radar, xi, yi, zi):
-    return kriging_r.ked_r(x, y, z, radar, xi, yi, zi)
+    return ked_r(x, y, z, radar, xi, yi, zi, mask=None)
 
 @utils.timethis
 def krige_py(x, y, z, radar, xi, yi, zi):
-    return calibration.ked(x, y, z, radar, xi, yi, zi, backend='vectorized')
+    return ked(x, y, z, radar, xi, yi, zi, mask=None, backend='vectorized')
 
 def compare_time():
     timestamps=['20170223080000', '20170228080000', '20170305080000']
-    resizes = [1., 1.5, 2.]
+    resizes = [1., 1.5, 2., 2.5, 3., 3.5, 4.]
 
     # initialize variables
     nstations = {}
@@ -51,26 +52,30 @@ def compare_time():
             nstations[timestamp] = len(calibrate_kwargs['x'])
 
             # ked using Python with a resized grid
+            # try:
+            #     timedresult = krige_py(**calibrate_kwargs)
+            #     logging.info('ked in python took {dt:.2f} seconds'.format(
+            #             dt=timedresult.dt))
+            #     timedresults_py[timestamp].append(timedresult.dt)
+            # except MemoryError:
+            #     logging.warning('memory error, passing')
+            #     timedresults_py[timestamp].append(np.nan)
+
+            # ked using r with a resized grid
             try:
-                timedresult = krige_py(**calibrate_kwargs)
-                logging.info('ked in python took {dt:.2f} seconds'.format(
+                timedresult = krige_r(**calibrate_kwargs)
+                logging.info('ked in r took {dt:.2f} seconds'.format(
                         dt=timedresult.dt))
                 timedresults_py[timestamp].append(timedresult.dt)
             except MemoryError:
                 logging.warning('memory error, passing')
                 timedresults_py[timestamp].append(np.nan)
 
-            # ked using R with a resized grid
-            # timedresult = krige_r(**calibrate_kwargs)
-            # logging.info('ked in R took {dt:.2f} seconds'.format(
-            #         dt=timedresult.dt))
-            # timedresults_r.append(timedresult.dt)
-
     # plot
     imagefile = os.path.join(testconfig.PLOTDIR, 'time_ked.png'.format())
     results = [timedresults_py, ]
     plot.timedresults(resizes, results, nstations,
-        imagefile=imagefile, xlim=[0., 3.], ylim=[1., 1000.])
+        imagefile=imagefile, xlim=[0., 5.], ylim=[1., 1000.])
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)

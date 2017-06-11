@@ -19,9 +19,9 @@ def get_parser():
 
     # Command line arguments
     parser.add_argument('firstfile', type=str,
-        help=('input path to first HDF5 file'))
+        help=('input path to first HDF5 file (first - second)'))
     parser.add_argument('secondfile', type=str,
-            help=('input path to second HDF5 file'))
+            help=('input path to second HDF5 file (first - second)'))
     parser.add_argument('-f', '--imagefile', type=str,
         help=('output calibrate path to HDF5 file'))
     parser.add_argument('--figsize', type=float, nargs=2,
@@ -41,11 +41,11 @@ def get_parser():
 def plot_image(**kwargs):
     # read first HDF5 file
     firstfile = kwargs['firstfile']
-    first, basegrid, timestamp = files.read_aggregate(firstfile)
+    first, basegrid, timestamp = files.read_file(firstfile)
 
     # read second HDF5 file
     secondfile = kwargs['secondfile']
-    second, basegrid, timestamp = files.read_aggregate(secondfile)
+    second, basegrid, timestamp = files.read_file(secondfile)
 
     # difference
     difference = first - second

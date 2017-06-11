@@ -10,6 +10,7 @@ Run using pytest:
 from radar_calibrate import gridtools
 from radar_calibrate.tests import testutils
 
+from rasterio.enums import Resampling
 import numpy as np
 
 
@@ -85,4 +86,27 @@ def test_sample_median():
     assert np.isclose(result, 1.5)
 
 
-def test_resample():
+def test_resample_nearest():
+    nrows, ncols = 2, 50
+    extent = 0., 50., 2., 0.
+    to_cellsize = 10., 1.
+    test_array = np.linspace(0., 50., num=100).reshape(nrows, ncols)
+    test_grid = gridtools.BaseGrid(extent=extent, size=(ncols, nrows))
+    resampled = gridtools.resample(test_array, test_grid,
+        to_cellsize=to_cellsize,
+        resampling=Resampling.nearest,
+        )
+    assert np.isclose(resampled[0, 0], test_array[0, 5])
+
+
+def test_resample_average():
+    nrows, ncols = 2, 50
+    extent = 0., 50., 2., 0.
+    to_cellsize = 10., 1.
+    test_array = np.linspace(0., 50., num=100).reshape(nrows, ncols)
+    test_grid = gridtools.BaseGrid(extent=extent, size=(ncols, nrows))
+    resampled = gridtools.resample(test_array, test_grid,
+        to_cellsize=to_cellsize,
+        resampling=Resampling.average,
+        )
+    assert np.isclose(resampled[0, 0], test_array[0, 5].mean())
