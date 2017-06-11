@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-"""Collection of functions operating on georeferenced grids.
-
-To be merged with openradar.gridtools.
-
-"""
 # Royal HaskoningDHV
 
-# add all from openradar.gridtools
+
 from openradar.gridtools import BaseGrid as OpenRadarBaseGrid
-from scipy.interpolate import griddata
+from rasterio.crs import CRS
+from rasterio.enums import Resampling
+from rasterio.warp import reproject
+from affine import Affine
 import numpy as np
 
 import os
@@ -33,7 +31,7 @@ def sample_array(coords, array, geotransform, blocksize=2, agg=np.median):
         col_idx = slice(col_left, col_left + blocksize)
         row_idx = slice(row_top, row_top + blocksize)
 
-        # sample array and aggregate block values
+        # sampe array and aggregate block values
         try:
             block = array[row_idx, col_idx]
         except IndexError:
@@ -42,35 +40,67 @@ def sample_array(coords, array, geotransform, blocksize=2, agg=np.median):
         yield agg(block)
 
 
-def resample(xi, yi, zi, xi_new, yi_new, method='linear'):
-    '''resample array given old and new grid coordinates'''
-    xi, yi = np.meshgrid(xi, yi, indexing='xy')
-    xi_new, yi_new = np.meshgrid(xi_new, yi_new, indexing='xy')
-    zi = np.ma.filled(zi, fill_value=np.nan)
-    zi_new = griddata(
-        (xi.flatten(), yi.flatten()),
-        zi.flatten(),
-        (xi_new.flatten(), yi_new.flatten()),
-        method=method,
+def resample(array, basegrid, to_cellsize,
+    resampling=Resampling.nearest, epsg=28992):
+    '''resample array to new cellsize using rasterio warp'''
+    # unpack extent
+    left, right, top, bottom = basegrid.extent
+
+    # cellsize to scaling
+    cellwidth, cellheight = to_cellsize
+
+    # construct Affine geotransforms
+    src_transform = Affine.from_gdal(*basegrid.get_geotransform())
+    dst_transform = (
+        Affine.translation(left, top) * Affine.scale(cellwidth, -cellheight)
         )
-    zi_new = zi_new.reshape(xi_new.shape)
-    zi_new = np.ma.masked_invalid(zi_new)
-    return zi_new
+
+    # crs
+    src_crs = CRS.from_epsg(epsg)
+    dst_crs = src_crs
+
+    # initialize destination array
+    new_grid = basegrid.rescale(to_cellsize)
+    new_ncols, new_nrows = new_grid.size
+    resampled = np.empty((new_nrows, new_ncols))
+
+    # fill masked values with NaN
+    array_filled = np.ma.filled(array, fill_value=np.nan)
+
+    # reproject
+    reproject(array_filled, resampled,
+        src_transform=src_transform,
+        src_crs=src_crs,
+        dst_transform=dst_transform,
+        dst_crs=dst_crs,
+        resampling=resampling,
+        )
+
+    # mask NaN values
+    resampled_masked = np.ma.masked_invalid(resampled)
+
+    return resampled_masked
 
 
 class BaseGrid(OpenRadarBaseGrid):
-    def get_grid(self, cellsize=None):
+    def get_grid(self):
         '''get x, y grid coordinates as 1-D vectors'''
         left, right, top, bottom = self.extent
 
-        if cellsize is not None:
-            cellwidth, cellheight = cellsize
-            ncols = int((right - left) / cellwidth)
-            nrows = int((top- bottom) / cellheight)
-        else:
-            cellwidth, cellheight = self.get_cellsize()
-            ncols, nrows = self.size
+        cellwidth, cellheight = self.get_cellsize()
+        ncols, nrows = self.size
 
         xi = np.linspace(left + cellwidth/2, right - cellwidth/2, num=ncols)
         yi = np.linspace(top - cellheight/2, bottom + cellheight/2, num=nrows)
         return xi, yi
+
+    def rescale(self, to_cellsize):
+        '''return rescaled grid with given cellsize (cellheight is negative)'''
+        left, right, top, bottom = self.extent
+        new_cellwidth, new_cellheight = to_cellsize
+
+        new_ncols = int((right - left) / new_cellwidth)
+        new_nrows = int((top - bottom) / new_cellheight)
+        new_size = new_ncols, new_nrows
+
+        return BaseGrid(extent=self.extent, size=new_size)
