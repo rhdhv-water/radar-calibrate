@@ -120,7 +120,7 @@ def timedresults(reshapes, results, nstations, imagefile=None, xlim=None, ylim=N
 
     ax.set_xlabel('$downscale\/\/factor$')
     ax.set_ylabel('$time\/(s)$')
-    ttl = ax.set_title('$downscale\/\/factor\/\/vs\/\/time\/\/to\/\/execute\/\/Kriging_{KED}\/\/in\/\/Python$')
+    ttl = ax.set_title('$downscale\/\/factor\/\/vs\/\/time\/\/to\/\/execute\/\/Kriging_{KED}\/\/in\/\/R$')
     bxa.append(ttl)
 
     lgd = ax.legend(loc='upper left', bbox_to_anchor=(1.01, 1))
