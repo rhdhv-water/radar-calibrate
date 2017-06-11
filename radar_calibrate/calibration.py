@@ -5,6 +5,7 @@ from radar_calibrate import files
 from radar_calibrate import gridtools
 from radar_calibrate import utils
 
+from rasterio.enums import Resampling
 import numpy as np
 import pykrige
 
@@ -16,34 +17,50 @@ log = logging.getLogger(os.path.basename(__file__))
 
 class Calibrator(object):
     def __init__(self, aggregatefile,
-        calibratefile=None, rainstationsfile=None):
+        calibratefile=None, rainstationsfile=None, areamaskfile=None):
         # read aggregate
         self.aggregatefile = os.path.basename(aggregatefile)
-        self.aggregate, self.basegrid, self.timestamp = files.read_aggregate(
+        self.aggregate, self.basegrid, self.timestamp = files.read_file(
             aggregatefile)
 
-        # read calibrate
+        # read rainstations from calibrate calibrate
         if calibratefile is not None:
-            self.calibratefile = calibratefile
-            self.calibrate, self.rainstations = files.read_calibrate(
+            self.rainstationsfile = os.path.basename(calibratefile)
+            self.rainstations = files.rainstations_from_calibrate(
                 calibratefile)
         else:
-            self.calibrate = None
+            self.rainstationsfile = None
             self.rainstations = None
 
-        # read rainstations
+        # read rainstations from JSON
         if rainstationsfile is not None:
+            self.rainstationsfile = os.path.basename(rainstationsfile)
             self.rainstations = files.read_rainstations(
                 rainstationsfile=rainstationsfile,
                 timestamp=self.timestamp,
                 )
 
+        # read mask
+        if areamaskfile is not None:
+            self.areamaskfile = os.path.basename(areamaskfile)
+            self.areamask = files.read_mask(
+                maskfile=areamaskfile,
+                )
+        else:
+            self.areamaskfile = None
+            self.areamask = None
+
         # initialize result
         self.result = None
 
     def __repr__(self):
-        return 'Calibrator(aggregatefile={aggregatefile:})'.format(
+        return ('Calibrator('
+            'aggregatefile={aggregatefile:}, '
+            'rainstationsfile={rainstationsfile:}, '
+            'areamaskfile={areamaskfile:})').format(
             aggregatefile=self.aggregatefile,
+            rainstationsfile=self.rainstationsfile,
+            areamaskfile=self.areamaskfile,
             )
 
     @property
@@ -80,33 +97,83 @@ class Calibrator(object):
 
         return x, y, z, radar
 
+    def resample(self, to_cellsize):
+        self.aggregate = gridtools.resample(self.aggregate,
+            basegrid=self.basegrid,
+            to_cellsize=to_cellsize,
+            resampling=Resampling.nearest,
+            )
+        if self.areamask is not None:
+            self.areamask = gridtools.resample(self.areamask,
+                basegrid=self.basegrid,
+                to_cellsize=to_cellsize,
+                resampling=Resampling.nearest,
+                )
+        if (self.result is not None) and ('calibrate' in self.result):
+            self.result['calibrate'] = gridtools.resample(
+                self.result['calibrate'],
+                basegrid=self.basegrid,
+                to_cellsize=to_cellsize,
+                resampling=Resampling.nearest,
+                )
+        self.basegrid = self.basegrid.rescale(to_cellsize=to_cellsize)
+
+
     def interpolate(self, method,
-        cellsize=None, factor_bounds=(0., 10.),
-        areamask=None, **interpolate_kwargs):
+        to_cellsize=None, factor_bounds=(0., 10.), **interpolate_kwargs):
         # values for rainstations, drop where radar is NaN
         x, y, z, radar = self.get_radar_for_locations()
 
-        # interpolation grid at desired cellsize
+        # interpolation grid at desired to_cellsize
         xi, yi = self.basegrid.get_grid()
         zi = self.aggregate
-        if cellsize is not None:
-            xi_interp, yi_interp = self.basegrid.get_grid(cellsize)
-            zi_interp = gridtools.resample(xi, yi, zi,
-                xi_interp, yi_interp)
+        if to_cellsize is not None:
+            grid_interp = self.basegrid.rescale(to_cellsize=to_cellsize)
+            xi_interp, yi_interp = grid_interp.get_grid()
+            timed_downsample = utils.timethis(gridtools.resample)
+            resampled_aggregate = timed_downsample(zi,
+                basegrid=self.basegrid,
+                to_cellsize=to_cellsize,
+                resampling=Resampling.average,
+                )
+            log.info(('downsampling aggregate '
+                'to cellsize {cellsize[0]:.2f} x {cellsize[1]:.2f} '
+                'took {dt:.2f} seconds').format(
+                cellsize=to_cellsize, dt=resampled_aggregate.dt))
+            zi_interp = resampled_aggregate.result
+
+            if self.areamask is not None:
+                resampled_areamask = timed_downsample(zi,
+                    basegrid=self.basegrid,
+                    to_cellsize=to_cellsize,
+                    resampling=Resampling.average,
+                    )
+                log.info(('downsampling areamask '
+                    'to cellsize {cellsize[0]:.2f} x {cellsize[1]:.2f} '
+                    'took {dt:.2f} seconds').format(
+                    cellsize=to_cellsize, dt=resampled_areamask.dt))
+                areamask_interp = resampled_areamask.result
+            else:
+                areamask_interp = None
         else:
             xi_interp = xi
             yi_interp = yi
             zi_interp = zi
+            areamask_interp = self.areamask
 
         # create mask
-        if areamask is not None:
+        if areamask_interp is not None:
             mask_interp = np.logical_or(
                 zi_interp.mask,
-                ~areamask.astype(np.bool,
-                ))
+                ~areamask_interp.astype(np.bool),
+                )
         else:
             mask_interp = zi_interp.mask
 
+        # unmask before interpolation
+        zi_interp = np.ma.filled(zi_interp, fill_value=np.nan)
+
+        # collect keyword arguments
         interpolate_kwargs.update({
             'x': x,
             'y': y,
@@ -142,18 +209,31 @@ class Calibrator(object):
             'params': params,
             }
 
+        # re-apply mask to zi
+        zi_interp = np.ma.masked_invalid(zi_interp)
+
         # apply correction factor
-        gt_zero = np.logical_and(~zi_interp.mask, zi_interp > 0.)
-        factor = np.where(gt_zero, self.result['est'] / zi_interp, 1.)
+        gt_zero = zi_interp > 0.
+        factor = np.ma.where(gt_zero, self.result['est'] / zi_interp, 1.)
 
         # resample factor to aggregate resolution
-        if cellsize is not None:
-            factor = gridtools.resample(xi_interp, yi_interp,
-                factor, xi, yi)
+        if to_cellsize is not None:
+            orig_cellsize = self.basegrid.get_cellsize()
+            timed_upsample = utils.timethis(gridtools.resample)
+            resampled_factor = timed_upsample(factor,
+                basegrid=grid_interp,
+                to_cellsize=orig_cellsize,
+                resampling=Resampling.average,
+                )
+            log.info(('upsampling factor '
+                'to cellsize {cellsize[0]:.2f} x {cellsize[1]:.2f} '
+                'took {dt:.2f} seconds').format(
+                cellsize=to_cellsize, dt=resampled_factor.dt))
+            factor = resampled_factor.result
 
         # apply mask and factor bounds
         min_factor, max_factor = factor_bounds
-        leave_uncalibrated = np.logical_or(
+        leave_uncalibrated = np.ma.logical_or(
             self.aggregate.mask,
             factor < min_factor,
             factor > max_factor,
@@ -163,17 +243,17 @@ class Calibrator(object):
         ))
 
         # apply factor to aggregate
-        calibrate = np.where(
+        calibrate = np.ma.where(
             leave_uncalibrated,
             self.aggregate,
             self.aggregate * factor,
             )
 
-
         # apply country mask border (gradual)
-        if areamask is not None:
+        if self.areamask is not None:
             calibrate = (
-                areamask * calibrate + (1 - areamask) * self.aggregate)
+            self.areamask * calibrate + (1 - self.areamask) * self.aggregate
+            )
 
         self.result.update({
             'calibrate': calibrate,
@@ -187,25 +267,35 @@ class Calibrator(object):
             'calibrate': self.aggregate,
             }
 
-    def save_result(resultfile, attrs=None, add_sigma=False):
+    def save(self, resultfile, attrs=None, add_sigma=False):
         '''save calibration result to file'''
         if self.result is None:
             log.warning('Calibrator does not contain result, passing')
             pass
+        log.info('saving result as {file:}'.format(
+            file=os.path.basename(resultfile))
+            )
 
         # update attributes with calibration result
+        attrs = attrs or {}
         attrs.update({
             'interpolation_method': self.result.get('method'),
             'interpolation_time_seconds': self.result.get('dt'),
             'interpolation_parameters': self.result.get('params'),
+            'grid_extent': self.basegrid.extent,
+            'grid_size': self.basegrid.size,
+            'timestamp_last_composite': (self.timestamp
+                .strftime('%Y%m%d%H%M%S')
+                .upper()),
             })
 
         # save to file
+        calibrate = self.result['calibrate']
         if add_sigma and 'sigma' in self.result:
             sigma = self.result['sigma']
         else:
             sigma = None
-        files.save_result(resultfile, self.calibrate, sigma, attrs)
+        files.save_result(resultfile, calibrate, sigma, attrs)
 
 
 def ked(x, y, z, radar, xi, yi, zi,
