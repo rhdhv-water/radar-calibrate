@@ -5,6 +5,9 @@ from radar_calibrate.tests import testconfig
 
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+
+import shapefile as shp
 import numpy as np
 
 from itertools import cycle
@@ -193,5 +196,46 @@ def compare_ked(aggregate,
     # plt.tight_layout()
     if imagefile is not None:
         plt.savefig(imagefile, bbox_inches='tight')
+    else:
+        plt.show()
+
+def bootstrap(result, imagefile=None, zrange=(-10,10)):
+    """
+    Show a map to visualize the result of the bootstrap method for each rainstation
+    
+    INPUT
+    results [dict] comprises of 3 arrays: x, y, difference
+    imagefile [str] path to image file
+    zrange [tup] (zmin, zmax) which is by default -10 to 10
+    """
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.set_title('Result bootstrap {ts}'.format(ts=imagefile[-18:-6]))
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.grid(linestyle= '--', linewidth=0.5)
+    
+    # plot calibrate - measured values
+    cmap = plt.cm.get_cmap('coolwarm',zrange[1]-zrange[0])
+    bounds = range(zrange[0],zrange[1])
+    norm = colors.BoundaryNorm(bounds, cmap.N)
+    im = ax.scatter(result['x'],result['y'],c=result['diff'], cmap=cmap, norm=norm)
+    
+    # plot background shapefile
+    sf = shp.Reader(testconfig.BACKGROUND_SHAPEFILE)
+    for shape in sf.shapeRecords():
+        x = [i[0] for i in shape.shape.points[:]]
+        y = [i[1] for i in shape.shape.points[:]]
+        ax.plot(x, y, color='skyblue', linewidth=0.5)
+    
+    fig.gca().set_aspect('equal', adjustable='box')    
+    cbar = fig.colorbar(im)
+    cbar.ax.set_ylabel('Difference calibration - measured [mm/day]', rotation=270, labelpad=15)
+
+    if imagefile is not None:
+        logging.debug('writing image to {file:}'.format(
+                file=os.path.basename(imagefile)))
+        plt.savefig(imagefile)
     else:
         plt.show()
