@@ -2,7 +2,7 @@
 # Royal HaskoningDHV
 
 from radar_calibrate.tests import testconfig
-from radar_calibrate.calibration import Calibrator, ked
+from radar_calibrate.calibration import Calibrator, ked, idw
 from radar_calibrate.kriging_r import ked_r
 from radar_calibrate import gridtools
 
@@ -45,6 +45,19 @@ class TestCalibrator(object):
         x, y, z, radar = cal.get_radar_for_locations()
         assert len(x) == len(y) == len(z) == len(radar) == 87
 
+    def test_interpolate_idw(self):
+        aggregatefile = r'24uur_20170223080000.h5'
+        calibratefile = r'RAD_TF2400_U_20170223080000.h5'
+        aggregatefile = os.path.join(testconfig.DATADIR, aggregatefile)
+        calibratefile = os.path.join(testconfig.DATADIR, calibratefile)
+        cal = Calibrator(
+            aggregatefile=aggregatefile,
+            calibratefile=calibratefile,
+            )
+        cal.interpolate(method=idw)
+        resultfile = os.path.join(testconfig.RESULTDIR,
+            'ked_20170223080000.h5')
+        
     def test_interpolate_ked(self):
         aggregatefile = r'24uur_20170223080000.h5'
         calibratefile = r'RAD_TF2400_U_20170223080000.h5'

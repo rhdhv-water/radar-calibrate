@@ -2,6 +2,7 @@
 # Royal HaskoningDHV
 
 from radar_calibrate.tests import testconfig
+from radar_calibrate import files
 
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.pyplot as plt
@@ -218,8 +219,7 @@ def bootstrap(result, imagefile=None, zrange=(-10,10)):
     
     # plot calibrate - measured values
     cmap = plt.cm.get_cmap('coolwarm',zrange[1]-zrange[0])
-    bounds = range(zrange[0],zrange[1])
-    norm = colors.BoundaryNorm(bounds, cmap.N)
+    norm = colors.BoundaryNorm(range(zrange[0],zrange[1]), cmap.N)
     im = ax.scatter(result['x'],result['y'],c=result['diff'], cmap=cmap, norm=norm)
     
     # plot background shapefile
@@ -236,6 +236,6 @@ def bootstrap(result, imagefile=None, zrange=(-10,10)):
     if imagefile is not None:
         logging.debug('writing image to {file:}'.format(
                 file=os.path.basename(imagefile)))
-        plt.savefig(imagefile)
+        plt.savefig(imagefile, bbox_inches='tight')
     else:
         plt.show()

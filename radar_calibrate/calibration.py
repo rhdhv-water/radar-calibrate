@@ -12,6 +12,8 @@ import pykrige
 import logging
 import os
 
+import pdb
+
 log = logging.getLogger(os.path.basename(__file__))
 
 
@@ -123,7 +125,7 @@ class Calibrator(object):
         to_cellsize=None, factor_bounds=(0., 10.), **interpolate_kwargs):
         # values for rainstations, drop where radar is NaN
         x, y, z, radar = self.get_radar_for_locations()
-
+        
         # interpolation grid at desired to_cellsize
         xi, yi = self.basegrid.get_grid()
         zi = self.aggregate
@@ -184,8 +186,9 @@ class Calibrator(object):
             'zi': zi_interp,
             'mask': mask_interp,
             })
-
+        
         # run interpolation method
+        pdb.set_trace()
         log.info('interpolate using {method.__name__:}'.format(
             method=method))
         timed_method = utils.timethis(method)
@@ -332,7 +335,9 @@ def ked(x, y, z, radar, xi, yi, zi,
     return est, sigma, params
 
 
-def idw(x, y, z, xi, yi, p=2):
+def idw(x, y, z, radar, xi, yi, zi,
+    mask=None, p=2):
+    pdb.set_trace()
     """
     Simple idw function. Slow, but memory efficient implementation.
 
@@ -342,6 +347,7 @@ def idw(x, y, z, xi, yi, p=2):
 
     Returns calibrated grid (zi)
     """
+    xi, yi = np.meshgrid(xi, yi)
     sum_of_weights = np.zeros(xi.shape)
     sum_of_weighted_gauges = np.zeros(xi.shape)
     for i in range(x.size):
@@ -351,5 +357,7 @@ def idw(x, y, z, xi, yi, p=2):
         sum_of_weights += weight
         sum_of_weighted_gauges += weighted_gauge
     zi = sum_of_weighted_gauges / sum_of_weights
-
-    return zi
+    est = zi
+    sigma = []
+    params = []
+    return est, sigma, params
