@@ -33,7 +33,7 @@ def test_compare_ked(plot_comparison=False, timestamp='20170305080000'):
         calibratefile,
         )
     # NaN mask
-    nan_mask = numpy.isnan(aggregate)
+    nan_mask = np.isnan(aggregate)
 
     # ked using R
     timedresult_r = krige_r(**calibrate_kwargs)
@@ -41,7 +41,7 @@ def test_compare_ked(plot_comparison=False, timestamp='20170305080000'):
     rain_est_r = timedresult_r.result
     calibrate_r = utils.apply_countrymask(
         rain_est_r.reshape(calibrate.shape), aggregate)
-    calibrate_r[nan_mask] = numpy.nan
+    calibrate_r[nan_mask] = np.nan
 
     # ked using Python
     timedresult_py = krige_py(**calibrate_kwargs)
@@ -50,7 +50,7 @@ def test_compare_ked(plot_comparison=False, timestamp='20170305080000'):
     rain_est_py, sigma = timedresult_py.result
     calibrate_py = utils.apply_countrymask(
         rain_est_py.reshape(calibrate.shape), aggregate)
-    calibrate_py[nan_mask] = numpy.nan
+    calibrate_py[nan_mask] = np.nan
 
     # plot
     if plot_comparison:
