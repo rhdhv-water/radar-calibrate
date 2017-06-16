@@ -28,28 +28,12 @@ def bootstrap():
     test = BootStrappedCalibrator(aggregatefile=aggregatefile,calibratefile=calibratefile)
     
     # run bootstrap on BootStrappedCalibrator object
-    result = test.bootstrap_single(method=ked)
+    result = test.bootstrap_single(method=ked_r)
 
     # plot
     imagefile = os.path.join(testconfig.PLOTDIR, 'bootstrap_{ts}.png'.format(ts=timestamp))
     plot.bootstrap(result, imagefile=imagefile, zrange=(-10,10))
 
-def test_interpolate_idw():
-    from radar_calibrate.calibration import Calibrator
-    aggregatefile = r'24uur_20170223080000.h5'
-    calibratefile = r'RAD_TF2400_U_20170223080000.h5'
-    aggregatefile = os.path.join(testconfig.DATADIR, aggregatefile)
-    calibratefile = os.path.join(testconfig.DATADIR, calibratefile)
-    cal = Calibrator(
-        aggregatefile=aggregatefile,
-        calibratefile=calibratefile,
-        )
-    cal.interpolate(method=idw)
-    resultfile = os.path.join(testconfig.RESULTDIR,
-        'ked_20170223080000.h5')
-    cal.save(resultfile=resultfile)
-    assert (cal.result is not None) and ('calibrate' in cal.result)
-        
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     bootstrap()
