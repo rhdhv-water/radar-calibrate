@@ -98,16 +98,18 @@ def read_mask(maskfile):
         return mask
 
 
-def read_shape(shapefile, geotransform):
+def read_shape(shapefile, geotransform=None):
     '''read geometry from shapefile and transform for plotting'''
-    left, cellwidth, _, top, _, cellheight = geotransform
+    if geotransform is not None:
+        left, cellwidth, _, top, _, cellheight = geotransform
     with fiona.open(shapefile) as src:
         for row in src:
             x, y = zip(*row['geometry']['coordinates'])
             x = np.array(x)
             y = np.array(y)
-            x = (x - left) / cellwidth
-            y = (y - top) / cellheight
+            if geotransform is not None:
+                x = (x - left) / cellwidth
+                y = (y - top) / cellheight
             yield x, y
 
 
