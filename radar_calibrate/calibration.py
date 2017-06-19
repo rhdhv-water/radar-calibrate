@@ -188,7 +188,6 @@ class Calibrator(object):
             })
         
         # run interpolation method
-        pdb.set_trace()
         log.info('interpolate using {method.__name__:}'.format(
             method=method))
         timed_method = utils.timethis(method)
@@ -241,6 +240,9 @@ class Calibrator(object):
             factor < min_factor,
             factor > max_factor,
             )
+
+        leave_uncalibrated = np.logical_or(factor < min_factor, factor > max_factor)
+                    
         log.info('leaving {:d} extreme pixels uncalibrated'.format(
             leave_uncalibrated.sum(),
         ))
@@ -337,7 +339,6 @@ def ked(x, y, z, radar, xi, yi, zi,
 
 def idw(x, y, z, radar, xi, yi, zi,
     mask=None, p=2):
-    pdb.set_trace()
     """
     Simple idw function. Slow, but memory efficient implementation.
 
@@ -352,12 +353,11 @@ def idw(x, y, z, radar, xi, yi, zi,
     sum_of_weighted_gauges = np.zeros(xi.shape)
     for i in range(x.size):
         distance = np.sqrt((x[i] - xi) ** 2 + (y[i] - yi) ** 2)
-        weight = 1.0 / distance ** p
-        weighted_gauge = z[i] * weight
+        weight = 1.0 / distance ** p      
+        weighted_gauge = z[i] * weight  
         sum_of_weights += weight
         sum_of_weighted_gauges += weighted_gauge
-    zi = sum_of_weighted_gauges / sum_of_weights
-    est = zi
+    est = sum_of_weighted_gauges / sum_of_weights
     sigma = []
-    params = []
+    params = [p]
     return est, sigma, params

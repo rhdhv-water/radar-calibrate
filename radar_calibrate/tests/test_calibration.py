@@ -56,7 +56,8 @@ class TestCalibrator(object):
             )
         cal.interpolate(method=idw)
         resultfile = os.path.join(testconfig.RESULTDIR,
-            'ked_20170223080000.h5')
+            'idw_20170223080000.h5')
+        cal.save(resultfile=resultfile)
         
     def test_interpolate_ked(self):
         aggregatefile = r'24uur_20170223080000.h5'
